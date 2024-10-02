@@ -14,16 +14,18 @@ export default class Utils{
                     </div>
 
                     <div class="menu-icons">
-                        <i class="material-symbols-outlined">
-                            shopping_cart
-                        </i>
+                        <a href = "/cart">
+                            <i class="material-symbols-outlined">
+                                shopping_cart
+                            </i>
+                        </a>
                         <div>
                             <i class="material-symbols-outlined menu-btn">
                                 account_circle
                             </i>
                             <ul class="nav">
                                 <li>
-                                    <a href="">
+                                    <a href="/personal-infor">
                                         Tài khoản của bạn
                                         <span class="material-symbols-outlined">
                                             shield_person
@@ -31,7 +33,7 @@ export default class Utils{
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="">
+                                    <a href="/order">
                                         Đơn hàng
                                         <span class="material-symbols-outlined">
                                             package_2
@@ -65,8 +67,8 @@ export default class Utils{
                             <h4>ĐĂNG XUẤT</h4>
                             <p>Bạn có chắc chẵn đăng xuất tài khoản không</p>
                             <div class="btn-container">
-                                <button class="cancel">Thoát</button>
-                                <button class="submit">Đăng xuất</button>
+                                <a class="cancel">Thoát</a>
+                                <a href="/login" class="submit">Đăng xuất</a>
                             </div>
                         </div>
                     </div>
@@ -360,6 +362,8 @@ export default class Utils{
 
     static protectAdmin = ()=>{
         const role = localStorage.getItem("role")
-        role === "admin"? true : false
+        if(role !== "admin"){
+            window.location.href = "/login"
+        }
     }
 }

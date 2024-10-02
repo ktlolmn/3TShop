@@ -16,6 +16,10 @@ app.get('/tee', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
 });
 
+app.get('/paint', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
+});
+
 app.get('/jean', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
 });
@@ -34,6 +38,26 @@ app.get('/short', (req, res) => {
 
 app.get('/t-shirt', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
+});
+
+app.get('/cart', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/cart.html'));
+});
+
+app.get('/order', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/order.html'));
+});
+
+app.get('/pay-page', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/pay-page.html'));
+});
+
+app.get('/personal-infor', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/personal-infor.html'));
+});
+
+app.get('/product-detail/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/product-detail.html'));
 });
 
 app.listen(PORT, () => {

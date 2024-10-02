@@ -9,7 +9,6 @@ Utils.getHeader()
 Utils.protectUser()
 Utils.renderCategory(carouselContainer)
 Utils.renderSlide("slide/slide", slider)
-Api.testApi()
 homeContainer.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 

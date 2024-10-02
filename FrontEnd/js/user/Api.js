@@ -45,27 +45,27 @@ export default class Api{
         }
     }
 
-    static getTeeProduct = async ()=>{
+    static getAllTeeProduct = async ()=>{
         const response = await this.get("/tee-product")
         return response.data
     }
-    static getJeanProduct = async ()=>{
+    static getAllJeanProduct = async ()=>{
         const response = await this.get("/jean-product")
         return response.data
     }
-    static getHoodieProduct = async ()=>{
+    static getAllHoodieProduct = async ()=>{
         const response = await this.get("/hoodie-product")
         return response.data
     }
-    static getTShirtProduct = async ()=>{
+    static getAllTShirtProduct = async ()=>{
         const response = await this.get("/t-shirt-product")
         return response.data
     }
-    static getPaintProduct = async ()=>{
+    static getAllPaintProduct = async ()=>{
         const response = await this.get("/paint-product")
         return response.data
     }
-    static getShortProduct = async ()=>{
+    static getAllShortProduct = async ()=>{
         const response = await this.get("/short-product")
         return response.data
     }

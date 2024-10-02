@@ -261,7 +261,7 @@
     text-align: center;
     color: #825B32;
 }
-.content div{
+.modal-logout .content div{
     display: flex;
     justify-content: center;
 }
@@ -274,17 +274,15 @@
     width: 110px;
 
 }
-.btn-container button{
+.btn-container a{
     width: 132px;
-    border: none;
     border-radius: 4px;
-    outline: none;
+    text-decoration: none;
     font-family: Lexend Giga;
     font-size: 14px;
     font-weight: 400;
-    line-height: 21px;
     text-align: center;
-    padding: 6px 0;
+    padding: 10px 0;
     cursor: pointer;
 }
 

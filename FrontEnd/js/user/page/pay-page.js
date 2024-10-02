@@ -8,7 +8,7 @@ const container = document.querySelector('.pay-container')
 
 
 Utils.getHeader()
-Utils.protectUser()
+// Utils.protectUser()
 container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 openModalBtn.addEventListener("click",()=>{
