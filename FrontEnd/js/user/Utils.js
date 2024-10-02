@@ -38,7 +38,7 @@ export default class Utils{
                                         </span>
                                     </a>
                                 </li>
-                                <li>
+                                <li class="btn-logout">
                                     <a href="#">
                                         Đăng xuất
                                         <span class="material-symbols-outlined">
@@ -53,6 +53,24 @@ export default class Utils{
                 <div id="toast-container">
                     
                 </div>
+                <div id="logout">
+                    <div class="modal-logout">
+                        <span class="close material-symbols-outlined">
+                            close
+                        </span>
+                        <div class="content">
+                            <div>
+                                <img src="../../img/utils/quit.png" />
+                            </div>
+                            <h4>ĐĂNG XUẤT</h4>
+                            <p>Bạn có chắc chẵn đăng xuất tài khoản không</p>
+                            <div class="btn-container">
+                                <button class="cancel">Thoát</button>
+                                <button class="submit">Đăng xuất</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </header>
         `
         document.body.insertAdjacentHTML('afterbegin', html) 
@@ -65,6 +83,24 @@ export default class Utils{
         if (menuBtn) {
             menuBtn.addEventListener('click', openMenu);
         }
+        const logoutContainer = document.querySelector("#logout")
+        const close = document.querySelector("#logout .close")
+        const cancel = document.querySelector("#logout .cancel")
+        const btnLogout = document.querySelector(".btn-logout")
+        btnLogout.addEventListener("click",()=>{
+            this.openModal(logoutContainer)
+        })
+        close.addEventListener("click",()=>{
+            this.closeModal(logoutContainer)
+        })
+        cancel.addEventListener("click",()=>{
+            this.closeModal(logoutContainer)
+        })
+        logoutContainer.addEventListener("click",(e)=>{
+            if(e.target === logoutContainer){
+                this.closeModal(logoutContainer)
+            }
+        })
     }
 
     static getToast(type){
@@ -227,22 +263,22 @@ export default class Utils{
         const html  = `
         <div class="item-list">
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category1.png" alt=""></a>
+                <a href="/hoodie"><img src="../../img/items/Category1.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category2.png" alt=""></a>
+                <a href="/t-shirt"><img src="../../img/items/Category2.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category3.png" alt=""></a>
+                <a href="/short"><img src="../../img/items/Category3.png" alt=""></a>
                 </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category4.png" alt=""></a>
+                <a href="/paint"><img src="../../img/items/Category4.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/hello-world"><img src="../../img/items/Category5.png" alt=""></a>
+                <a href="/jean"><img src="../../img/items/Category5.png" alt=""></a>
             </div>
             <div class="item">
-                <a href="/view/user/tee.html"><img src="../../img/items/Category6.png" alt=""></a>
+                <a href="/tee"><img src="../../img/items/Category6.png" alt=""></a>
             </div>
         </div>
         <button class="prev prev-item">
@@ -315,6 +351,5 @@ export default class Utils{
     static openModal = (e)=>{
         e.style.display = "flex"
     }
-    
 
 }
