@@ -5,3 +5,4 @@ const container = document.querySelector('.personal-infor-container')
 container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 Utils.getHeader()
+Utils.protectUser()

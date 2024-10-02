@@ -5,10 +5,9 @@ const closeModalBtn = document.querySelector(".modal-body span")
 const openModalBtn = document.querySelector(".guide")
 const modal = document.querySelector("#modal-guide-container")
 
-container.insertAdjacentHTML("beforeend", Utils.getFooter())
-
-
 Utils.getHeader()
+Utils.protectUser()
+container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 const btnAddAnimation = document.querySelectorAll(".btn")
 btnAddAnimation.forEach((b)=>{

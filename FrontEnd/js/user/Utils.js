@@ -351,5 +351,15 @@ export default class Utils{
     static openModal = (e)=>{
         e.style.display = "flex"
     }
+    static protectUser = ()=>{
+        const role = localStorage.getItem("role")
+        if(role !== "user"){
+            window.location.href = "/login"
+        }
+    }
 
+    static protectAdmin = ()=>{
+        const role = localStorage.getItem("role")
+        role === "admin"? true : false
+    }
 }

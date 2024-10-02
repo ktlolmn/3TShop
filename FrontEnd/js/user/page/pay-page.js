@@ -6,9 +6,10 @@ const modal = document.querySelector("#modal-container")
 const cancelBtn = document.querySelector(".cancel")
 const container = document.querySelector('.pay-container')
 
-container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 Utils.getHeader()
+Utils.protectUser()
+container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 openModalBtn.addEventListener("click",()=>{
     Utils.openModal(modal)

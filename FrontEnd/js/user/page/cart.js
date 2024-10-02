@@ -1,10 +1,13 @@
 import Utils from "../Utils.js";
+import Api from "../Api.js";
 
 const container = document.querySelector('.cart-container')
 
-container.insertAdjacentHTML("beforeend", Utils.getFooter())
-
 Utils.getHeader()
+Utils.protectUser()
+Api.testApi()
+
+container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 const decreaseButtons = document.querySelectorAll('#decrease');
 const increaseButtons = document.querySelectorAll('#increase');

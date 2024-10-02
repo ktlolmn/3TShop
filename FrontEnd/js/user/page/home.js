@@ -1,14 +1,17 @@
 import Utils from "../Utils.js";
+import Api from "../Api.js";
 
 const homeContainer = document.querySelector(".home-container");
 const slider = document.querySelector(".slider");
 const carouselContainer = document.querySelector(".carousel-container")
 
+Utils.getHeader()
+Utils.protectUser()
+Utils.renderCategory(carouselContainer)
+Utils.renderSlide("slide/slide", slider)
+Api.testApi()
 homeContainer.insertAdjacentHTML("beforeend", Utils.getFooter())
 
-Utils.getHeader()
-Utils.renderSlide("slide/slide", slider)
-Utils.renderCategory(carouselContainer)
 
 //slide new product
 let currentIndexNewProduct = 0;
@@ -99,5 +102,4 @@ nextHotProductBtn.addEventListener("click",()=>{
 const btnAddAnimation = document.querySelectorAll(".btn")
 btnAddAnimation.forEach((b)=>{
     Utils.addAnimation(b)
-    
 })

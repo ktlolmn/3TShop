@@ -7,6 +7,7 @@ const container = document.querySelector('.container')
 container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 Utils.getHeader()
+Utils.protectUser()
 Utils.renderSlide("slide/slide", slider)
 Utils.renderCategory(carouselContainer)
 
