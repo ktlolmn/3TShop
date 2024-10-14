@@ -6,7 +6,7 @@ const openModalBtn = document.querySelector(".guide")
 const modal = document.querySelector("#modal-guide-container")
 
 Utils.getHeader()
-Utils.protectUser()
+// Utils.protectUser()
 container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 const btnAddAnimation = document.querySelectorAll(".btn")
