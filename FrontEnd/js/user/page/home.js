@@ -6,7 +6,7 @@ const slider = document.querySelector(".slider");
 const carouselContainer = document.querySelector(".carousel-container")
 
 Utils.getHeader()
-Utils.protectUser()
+// Utils.protectUser()
 Utils.renderCategory(carouselContainer)
 Utils.renderSlide("slide/slide", slider)
 homeContainer.insertAdjacentHTML("beforeend", Utils.getFooter())
