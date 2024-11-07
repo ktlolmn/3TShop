@@ -3,7 +3,7 @@ import Utils from "../Utils.js";
 const container = document.querySelector('.personal-infor-container')
 
 Utils.getHeader()
-Utils.protectUser()
+// Utils.protectUser()
 container.insertAdjacentHTML("beforeend", Utils.getFooter())
 
 const decreaseButtons = document.querySelectorAll('#decrease');
@@ -481,7 +481,7 @@ const waitConfirmOrders = ()=>{
                         <span class="value">41/15, đường số 11, phường Trường Thọ, TP. Thủ Đức, TP.HCM</span>
                     </div>
                 </div>
-                <button>Hủy đơn hàng</button>
+                <button class="cancel-order">Hủy đơn hàng</button>
             </div>
         </div>
     </div>
