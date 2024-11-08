@@ -45,6 +45,11 @@ export default class Api{
         }
     }
 
+    static getAllProduct = async () =>{
+        const response = await this.get("/product/get-all")
+        return response.data
+    }
+
     static getAllTeeProduct = async ()=>{
         const response = await this.get("/tee-product")
         return response.data

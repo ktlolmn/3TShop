@@ -81,10 +81,12 @@ function prevHotProduct() {
 }
 
 function nextHotProduct() {
-    if (currentIndexHotProduct < totalHotProduct / itemsPerPageHotProduct) {
+    console.log(totalHotProduct)
+    if (currentIndexHotProduct < totalHotProduct - itemsPerPageHotProduct) {
         currentIndexHotProduct++;
         updateCarouselHotProduct();
-        if(currentIndexHotProduct >= totalHotProduct / itemsPerPageHotProduct){
+        console.log(currentIndexHotProduct)
+        if(currentIndexHotProduct >= totalHotProduct - itemsPerPageHotProduct){
             nextHotProductBtn.style.display = "none"
         }
         prevHotProductBtn.style.display = "block"
