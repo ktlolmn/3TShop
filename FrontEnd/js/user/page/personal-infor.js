@@ -1,3 +1,4 @@
+import Api from "../Api.js";
 import Utils from "../Utils.js";
 
 const container = document.querySelector('.personal-infor-container')
@@ -344,3 +345,31 @@ function handleDelete(addressContainer) {
         addressContainer.remove();
     }
 }
+
+const fillData = (data)=>{
+    name.value = data.f_name + " " + data.l_name
+    phone.value = data.phone
+    birthday.value = data.date_of_birth
+    email.value = data.email
+    if(data.gender){
+        genderMale.checked = true
+    }else{
+        genderFemale.checked = true
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    let data = {}
+    const fetchData = async ()=>{
+        try {
+            const response = await Api.getInforUser()
+            if(response.status === 200){
+                data = response.userDTO
+                fillData(data)
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
+    fetchData()
+})
