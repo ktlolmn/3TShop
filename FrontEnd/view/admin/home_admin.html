@@ -10,364 +10,420 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Exa:wght@100..900&family=Lexend+Zetta:wght@100..900&family=Lexend:wght@100..900&display=swap" rel="stylesheet">
-    <title>DASHBOARD</title>
+    <title>QUẢN LÝ SẢN PHẨM</title>
 </head>
 <body>
-    <div class="wrapper">
-        <h3 id="title__category">
-            XEM THEO DANH MỤC
-        </h3>
-        <div id="category__and__search">
-            <div id="list__category__wrapper">
-                <div id="list__category">
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Quần jean</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo sơ mi</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
-                    </div>
-                    <div class="each__category">
-                        <h5>Áo thun</h5>
+    <div class="parent__div">
+
+        <div class="wrapper">
+            <h3 id="title__category">
+                XEM THEO DANH MỤC
+            </h3>
+            <div id="category__and__search">
+                <div id="list__category__wrapper">
+                    <div id="list__category">
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Quần jean</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo sơ mi</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
+                        <div class="each__category">
+                            <h5>Áo thun</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="search__product__wrapper">
-                <span id="search__icon" class="material-symbols-outlined">
-                    search
-                    </span>
-                <input id="input__search" type="text" placeholder="Tìm kiếm...">
-            </div>
-        </div>
-
-        <h3 id="title__list__product">
-            DANH SÁCH SẢN PHẨM
-        </h3>
-
-        <div class="show__product">
-            <div id="filter__and__sort__wrapper">
-                <div id="filter__wrapper">
-                    <span class="material-symbols-outlined">
-                        filter_alt
+    
+                <div id="search__product__wrapper">
+                    <span id="search__icon" class="material-symbols-outlined">
+                        search
                         </span>
-                    <div class="filter__product" id="stock__filter__wrapper">
-                        <span>Tồn kho ít</span>
-                    </div>
-                    <div class="filter__product" id="hidden__filter__wrapper">
-                        <span>Bị ẩn</span>
-                    </div>
+                    <input id="input__search" type="text" placeholder="Tìm kiếm...">
                 </div>
-                <div id="sort__wrapper">
-                    <span class="material-symbols-outlined">
-                        swap_vert
-                        </span>
-                    <div id="sort__combobox__wrapper">
-                        <select id="sort__combobox">
-                            <option value="price_asc">Giá tăng dần</option>
-                            <option value="price_desc">Giá giảm dần</option>
-                        </select>
+            </div>
+    
+            <div class="outside">
+                <div class="management__prroduct__wrapper">
+                    <!-- Tieu de -->
+                    <div class="product__management__title__wrapper">
+                        <h4 id="title__list__product">
+                            DANH SÁCH SẢN PHẨM
+                        </h4>
+                    </div>
+            
+                    <!-- Phan filter va sort -->
+                    <div id="filter__and__sort__wrapper">
+                        <div id="filter__wrapper">
+                            <span class="material-symbols-outlined">
+                                filter_alt
+                                </span>
+                            <div class="filter__product" id="stock__filter__wrapper">
+                                <span>Tồn kho ít</span>
+                            </div>
+                            <div class="filter__product" id="hidden__filter__wrapper">
+                                <span>Bị ẩn</span>
+                            </div>
+                        </div>
+                        <div id="sort__wrapper">
+                            <span class="material-symbols-outlined">
+                                swap_vert
+                                </span>
+                            <div id="sort__combobox__wrapper">
+                                <select id="sort__combobox">
+                                    <option value="price_asc">Giá tăng dần</option>
+                                    <option value="price_desc">Giá giảm dần</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Quan li san phan -->
+                     <div id="product__management__wrapper">
+                         <div id="product__management">
+                             <div id="add__new__and__column__name">
+                                 <div id="add__new__product__wrapper">
+                                     <span>Thêm sản phẩm mới</span>
+                                 </div>
+                                 <div id="attribute__col">
+                                     <span id="col__price">Giá</span>
+                                     <span id="col__sold">Lượt bán</span>
+                                     <span id="col__stock">Tồn kho</span>
+                                 </div>
+                             </div>
+                             <div id="list__prouduct__wrapper">            
+                                 <div class="product__item">
+                                     <div class="info__product__wrapper">
+                                         <img class="product__image" src="/FrontEnd/img/product/product.png">
+                                         <h4 class="item__name">Basic tea</h4>
+                                         <h4 class="item__price">120.000đ</h4>
+                                         <h4 class="item__sold">1.000.000</h4>
+                                         <h4 class="item__stock">1.000.000</h4>
+                                     </div>
+                                     <div id="operation__wrapper">
+                                         <span id="edit__info__product" class="material-symbols-outlined">
+                                             edit
+                                             </span>
+                                         <span id="toggle__product" class="material-symbols-outlined">
+                                             visibility_off
+                                             </span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+    
+                <!-- CHI TIET SAN PHAM -->
+                <div class="detail__wrapper">
+                    <div class="product__detail">
+                        <div class="product__management__title__wrapper">
+                            <h4 id="title__list__product">
+                                CHI TIẾT SẢN PHẨM
+                            </h4>
+                        </div>
+    
+                        <div class="detail__product__wrapper">
+                            <div class="col__name">
+                                <div class="left__col__name">
+                                    <h5 class="sold__left__col">Lượt bán</h5>
+                                    <h5 class="stock__left__col">Tồn kho</h5>
+                                </div>
+                                <div class="right__col__name">
+                                    <h5 class="sold__right__col">Lượt bán</h5>
+                                    <h5 class="stock__right__col">Tồn kho</h5>
+                                </div>
+                            </div>
+                            <div id="size__product__detail">
+                                <div class="product__detail__size">
+                                    <div id="each__size__field">
+                                        <div class="size__name">
+                                            <h2 class="size">M</h2>
+                                        </div>
+                                        <div class="size__detail__wrapper">
+                                            <div class="size__detail">
+                                                <div class="color__preview"></div>
+                                                <div class="color__name__product">Xanh la</div>
+                                                <div class="soled">45</div>
+                                                <div class="stock">68</div>
+                                                <div class="edit__info">
+                                                    <span class="material-symbols-outlined">
+                                                        edit
+                                                        </span>
+                                                </div>
+                                                <div class="toggle__product__detail">
+                                                    <span class="material-symbols-outlined">
+                                                        visibility_off
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="each__size__field">
+                                        <div class="size__name">
+                                            <h2 class="size">L</h2>
+                                        </div>
+                                        <div class="size__detail__wrapper">
+                                            <div class="size__detail">
+                                                <div class="color__preview"></div>
+                                                <div class="color__name__product">Xanh la</div>
+                                                <div class="soled">45</div>
+                                                <div class="stock">68</div>
+                                                <div class="edit__info">
+                                                    <span class="material-symbols-outlined">
+                                                        edit
+                                                        </span>
+                                                </div>
+                                                <div class="toggle__product__detail">
+                                                    <span class="material-symbols-outlined">
+                                                        visibility_off
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div id="each__size__field">
+                                        <div class="size__name">
+                                            <h2 class="size">XL</h2>
+                                        </div>
+                                        <div class="size__detail__wrapper">
+                                            <div class="size__detail">
+                                                <div class="color__preview"></div>
+                                                <div class="color__name__product">Xanh la</div>
+                                                <div class="soled">45</div>
+                                                <div class="stock">68</div>
+                                                <div class="edit__info">
+                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                        edit
+                                                        </span>
+                                                </div>
+                                                <div class="toggle__product__detail">
+                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                        visibility_off
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div id="each__size__field">
+                                        <div class="size__name">
+                                            <h2 class="size">XXL</h2>
+                                        </div>
+                                        <div class="size__detail__wrapper">
+                                            <div class="size__detail">
+                                                <div class="color__preview"></div>
+                                                <div class="color__name__product">Xanh la</div>
+                                                <div class="soled">45</div>
+                                                <div class="stock">68</div>
+                                                <div class="edit__info">
+                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                        edit
+                                                        </span>
+                                                </div>
+                                                <div class="toggle__product__detail">
+                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                        visibility_off
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="management__area">
+                            <div class="management__category__wrapper">
+                                <div class="header__manage__category">
+                                    <h2 id="category__title">QUẢN LÝ DANH MỤC</h2>
+                                    <div class="add__new__category">
+                                        <h4 id="add__new__title">Thêm danh mục mới</h4>
+                                    </div>
+                                </div>
+                                <div class="management__category">
+                                    <div class="category__list">
+                                        <div class="each__category__wrapepr">
+                                            <img src="/FrontEnd/img/utils/category_img.png">
+                                            <h4 class="category__name">Áo sơ mi</h4>
+                                            <h4 class="category__created">Ngày tạo 10/10/2024 13:00:00</h4>
+                                            <div class="edit__info">
+                                                <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    edit
+                                                    </span>
+                                            </div>
+                                            <div class="toggle__product__detail">
+                                                <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    visibility_off
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="management__color__wrapper">
+                                <div class="header__manage__color">
+                                    <h2 id="color__title">QUẢN LÝ MÀU SẮC</h2>
+                                    <div class="add__new__color__wrapper">
+                                        <h4 id="add__new__color">Thêm màu sắc mới</h4>
+                                    </div>
+                                </div>
+                                <div class="management__color">
+                                    <div class="color__list">
+                                        <div class="each__color__wrapepr">
+                                            <div class="color__preview__wrapper"></div>
+                                            <h4 class="color__name">Xanh dương nhạt nhòa</h4>
+                                            <h4 class="color__code">Mã màu 098445</h4>
+                                            <h4 class="color__created">Ngày tạo 10/10/2024 13:00:00</h4>
+                                            <div class="edit__info">
+                                                <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    edit
+                                                    </span>
+                                            </div>
+                                            <div class="toggle__color">
+                                                <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    visibility_off
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="product__management">
-                <div id="add__new__and__column__name">
-                    <div id="add__new__product__wrapper">
-                        <span>Thêm sản phẩm mới</span>
-                    </div>
-                    <div id="attribute__col">
-                        <span id="col__price">Giá</span>
-                        <span id="col__sold">Lượt bán</span>
-                        <span id="col__stock">Tồn kho</span>
-                    </div>
-                </div>
-                <div id="list__prouduct__wrapper">
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-
-                    <div class="product__item"></div>
-                        <div class="info__product__wrapper">
-                            <img class="product__image" src="/FrontEnd/img/product/product.png">
-                            <h4 class="item__name">Basic tea</h4>
-                            <h4 class="item__price">120.000đ</h4>
-                            <h4 class="item__sold">1.000.000</h4>
-                            <h4 class="item__stock">1.000.000</h4>
-                        </div>
-                        <div id="operation__wrapper">
-                            <span id="edit__info__product" class="material-symbols-outlined">
-                                edit
-                                </span>
-                            <span id="toggle__product" class="material-symbols-outlined">
-                                visibility_off
-                                </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- <div id="list__prouduct__wrapper">
-                <div class="product__item">
-                    <div class="info__product__wrapper">
-                        <img class="product__image" src="/FrontEnd/img/product/product.png">
-                        <h4 class="item__name">Basic tea</h4>
-                        <h4 class="item__price">120.000đ</h4>
-                        <h4 class="item__sold">1.000.000</h4>
-                        <h4 class="item__stock">1.000.000</h4>
-                    </div>
-                    <div id="operation__wrapper">
-                        <span id="edit__info__product" class="material-symbols-outlined">
-                            edit
-                            </span>
-                        <span id="toggle__product" class="material-symbols-outlined">
-                            visibility_off
-                            </span>
-                    </div>
-                </div> -->
-                <!-- <table id="list__prouduct__detail">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th>Giá</th>
-                            <th>Lượt bán</th>
-                            <th>Tồn kho</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <img src="/FrontEnd/img/product/product.png">
-                            </td>
-                            <td>Basic tea</td>
-                            <td>120.000đ</td>
-                            <td>1.000.000đ</td>
-                            <td>1.000.450</td>
-                        </tr>
-                        <tr>
-                            <div class="info__product__wrapper">
-                                <img class="product__image" src="/FrontEnd/img/product/product.png">
-                                <h4 class="item__name">Basic tea</h4>
-                                <h4 class="item__price">120.000đ</h4>
-                                <h4 class="item__sold">1.000.000</h4>
-                                <h4 class="item__stock">1.000.000</h4>
-                            </div>
-                            <div id="operation__wrapper">
-                                <span id="edit__info__product" class="material-symbols-outlined">
-                                    edit
-                                    </span>
-                                <span id="toggle__product" class="material-symbols-outlined">
-                                    visibility_off
-                                    </span>
-                            </div>
-                        </tr>
-                    </tbody>
-                </table> -->
             <!-- </div> -->
-
+        </div>
+        <div id="new__category__background">
+            <div class="add__new__category__wrapper">
+                <div class="icon__close__category__modal">
+                    <span class="material-symbols-outlined">
+                        close
+                        </span>
+                </div>
+                
+                <div class="add__new__outside">
+                    <div class="icon__and__fields">
+                        <img id="category__icon" src="/FrontEnd/img/utils/categories.png" alt="category icon">
+                        <div class="fields">
+                            <h1 style="font-size: 14px">THÊM DANH MỤC MỚI</h1>
+                            <div class="input__wrapper">
+                                <label for="input__category__name" class="label__name">Tên danh mục</label>
+                                <input id="input__category__name" type="text">
+                                <label id="category__name__validate">Vui lòng nhập tên danh mục</label>
+                            </div>
+                            <div class="input__wrapper">
+                                <label for="" class="label__name">Hình ảnh minh họa</label>
+                                <label for="input__category__img" class="input__category__label">
+                                    <span class="material-symbols-outlined" id="icon__add__new__category">
+                                        add_photo_alternate
+                                        </span>
+                                    <span class="material-symbols-outlined" id="success__upload">
+                                        task_alt
+                                        </span>
+                                </label>
+                                <label id="category__img__validate">Vui lòng nhập tên danh mục</label>
+                            </div>
+                            <input id="input__category__img" type="file">
+                        </div>
+                    </div>
+                    <div class="handle__buttons">
+                        <button id="cancel__new__category" class="button">Hủy</button>
+                        <button id="save__new__category" class="button">Lưu</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- THEM MAU SAC MOI -->
+        <div id="new__color__background">
+            <div class="add__new__category__wrapper">
+                <div class="icon__close__color__modal">
+                    <span class="material-symbols-outlined">
+                        close
+                        </span>
+                </div>
+                
+                <div class="add__new__outside">
+                    <div class="icon__and__fields">
+                        <img id="color__icon" src="/FrontEnd/img/utils/color-palette.png" alt="Color icon">
+                        <div class="fields">
+                            <h1 style="font-size: 14px">THÊM MÀU SẮC MỚI</h1>
+                            <div class="input__wrapper">
+                                <label for="input__color__name" class="label__name">Tên màu sắc</label>
+                                <input id="input__color__name" type="text">
+                                <label id="color__name__validate">Vui lòng nhập tên màu sắc</label>
+                            </div>
+                            <div class="input__wrapper">
+                                <label for="" class="label__name">Mã màu</label>
+                                <div id="color__code__wrapper">
+                                    <input id="input__color__code" type="text">
+                                    <div id="color__code__preview">
+                                        <img id="color__preview__icon" src="/FrontEnd/img/utils/paint-bucket.png" alt="Color preview">
+                                    </div>
+                                </div>
+                                <label id="color__code__validate">Vui lòng nhập mã màu</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="handle__buttons">
+                        <button id="cancel__new__color" class="button">Hủy</button>
+                        <button id="save__new__color" class="button">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL XÁC NHẬN ẨN -->
+        <div id="hide__product__background">
+            <div class="hide__product__wrapper">
+                <div class="icon__close__hidden__modal">
+                    <span class="material-symbols-outlined">
+                        close
+                        </span>
+                </div>
+                <div class="content__wrapper">
+                    <img id="icon__hidden" src="/FrontEnd/img/utils/hide.png" alt="Hidden">
+                    <h2 id="title__hidden">XÁC NHẬN</h2>
+                    <h4 id="confirm__hidden">
+                        Bạn có chắc chắc muốn ẩn sản phẩm <br> Áo thun không ?
+                    </h4>
+                    <div class="handle__butons__wrapper">
+                        <button type="button" id="cancel__hidden">Hủy</button>
+                        <button type="submit" id="sure__hidden">Ẩn</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
-</html>
+<script src="/FrontEnd/js/admin/home.js"></script>
+</html> 
