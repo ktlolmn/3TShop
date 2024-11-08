@@ -159,7 +159,7 @@ export default class Utils{
                         <div class="footer-logo">
                             <img src="../../img/utils/footer-logo.png" alt="">
                         </div>
-                        <div class="content">
+                        <div class="content-footer">
                             <h4>THÔNG TIN LIÊN HỆ</h4>
                             <div class="group-paraph">
                                 <span class="material-symbols-outlined">
@@ -265,22 +265,40 @@ export default class Utils{
         const html  = `
         <div class="item-list">
             <div class="item">
-                <a href="/hoodie"><img src="../../img/items/Category1.png" alt=""></a>
+                <a href="/hoodie">
+                    <img src="../../img/items/Category1.png" alt="">
+                    <p class="category-name" >Áo Hoodie</p>
+                </a>
             </div>
             <div class="item">
-                <a href="/t-shirt"><img src="../../img/items/Category2.png" alt=""></a>
+                <a href="/hoodie">
+                    <img src="../../img/items/Category2.png" alt="">
+                    <p class="category-name" >Áo sơ mi</p>
+                </a>
             </div>
             <div class="item">
-                <a href="/short"><img src="../../img/items/Category3.png" alt=""></a>
-                </div>
-            <div class="item">
-                <a href="/paint"><img src="../../img/items/Category4.png" alt=""></a>
+                <a href="/hoodie">
+                    <img src="../../img/items/Category3.png" alt="">
+                    <p class="category-name" >Quần short</p>
+                </a>
             </div>
             <div class="item">
-                <a href="/jean"><img src="../../img/items/Category5.png" alt=""></a>
+                <a href="/hoodie">
+                    <img src="../../img/items/Category4.png" alt="">
+                    <p class="category-name" >Quần kaki</p>
+                </a>
             </div>
             <div class="item">
-                <a href="/tee"><img src="../../img/items/Category6.png" alt=""></a>
+                <a href="/hoodie">
+                    <img src="../../img/items/Category5.png" alt="">
+                    <p class="category-name" >Quần jean</p>
+                </a>
+            </div>
+            <div class="item">
+                <a href="/hoodie">
+                    <img src="../../img/items/Category6.png" alt="">
+                    <p class="category-name" >Áo thun</p>
+                </a>
             </div>
         </div>
         <button class="prev prev-item">
