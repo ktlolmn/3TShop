@@ -12,6 +12,11 @@
     -ms-user-select: none; 
 }
 
+.background {
+    position: relative;
+    z-index: 0;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -67,9 +72,11 @@ h2 {
     align-items: center;
     gap: 12px;
     background-color: #6F809B;
-    padding: 4px 4px;
+    padding: 4px 5px;
     padding-left: 12px;
     border-radius: 50px;
+    transition: all 0.5s ease-in-out;
+    position: relative;
 }
 
 .shipment__wrapper label {
@@ -77,12 +84,43 @@ h2 {
     font-weight: 400;
 }
 
-.shipment__wrapper span {
+.shipment__wrapper span:not(#cancel__edit__shipment) {
     font-size: 16px;
     background-color: white;
     border-radius: 50px;
     padding: 4px;
     cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+    z-index: 3;
+}
+
+.cancel__edit__shipment__wrapper {
+    background-color: #8595b4;
+    margin-right: 4px;
+    display: none;
+    position: absolute;
+    right: 0;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.cancel__edit__shipment__wrapper span:hover {
+    background-color: #8595b4;
+    color: white;
+    transition: all 0.2s ease-in-out;
+    transform: rotate(180deg);
+}
+
+#cancel__edit__shipment {
+    color: white;
+    scale: 0.8;
+}
+
+.cancel__edit__shipment__wrapper.active {
+    transform: translateY(-36px);
+    transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 #input__shipment {
@@ -98,8 +136,9 @@ h2 {
     background-color: transparent;
 }
 
-#edit__shipment.hidden, #save__shipment.hidden {
+#edit__shipment.hidden, #save__shipment.hidden, #cancel__edit__shipment.hidden {
     display: none;
+    transition: all 0.5s ease;
 }
 
 input::-webkit-outer-spin-button,
@@ -508,7 +547,7 @@ thead {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 5;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -519,13 +558,13 @@ thead {
     /* border: 2px solid #6F809B; */
     background-color: #6F809B;
     color: #ffffff;
-    padding: 16px 24px;
-    border-radius: 4px;
+    padding: 16px 4px 16px 24px;
+    border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.4s ease-in-out;
     gap: 12px;
 }
 
@@ -535,7 +574,22 @@ thead {
     border: none;
     font-size: 20px;
     cursor: pointer;
+    padding: 0 8px;
+    border-radius: 4px;
 }
+
+#close__toast {
+    font-size: 16px;
+    color: white;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+#close__toast:hover {
+    background-color: #8595b4;
+    color: #ffffff;
+}
+
 
 @keyframes fadeIn {
     0% {
@@ -550,4 +604,125 @@ thead {
 
 p {
     color: white;
+}
+
+.confirm__order__background, .cancel__order__background {
+    position: fixed;
+    background-color: #22283178;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+.confirm__order__outside {
+    background-color: #ffffff;
+    padding: 28px;
+    border-radius: 8px;
+}
+
+.confirm__order__wrapper {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    background-color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    padding: 32px;
+    scale: 0.5;
+    opacity: 0.5;
+}
+
+.confirm__order__animation.active, .cancel__order__animation.active {
+    transition: all 0.5s ease;
+    scale: 1;
+    opacity: 1
+}
+
+.confirm__order__animation.disabled, .cancel__order__animation.disabled {
+    transition: all 0.5s ease-out;
+    scale: 0.1;
+    opacity: 0.7;
+}
+
+.icon__close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+.icon__close span {
+    font-size: 16px;
+}
+
+.body__modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+.content {
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.confirm__order {
+    width: 100px;
+    height: 100px;
+}
+
+.button__wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 100px;
+}
+
+.button__wrapper button {
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 400
+}
+
+#confirm__order__btn, #cancel__order__btn {
+    background-color: #222831;
+    color: #ffffff;
+}
+
+.content__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+#input__cancel__reason {
+    border: 1px solid #D0D0D0;
+    outline: none;
+    border-radius: 4px;
+    height: 100px;
+    width: 300px;
+    padding: 4px;
+    resize: none;
+}
+
+#validate__input__reason {
+    font-size: 10px;
+    color: #FF7878;
+    opacity: 0;
 }
