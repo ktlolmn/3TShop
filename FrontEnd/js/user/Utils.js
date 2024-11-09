@@ -1,4 +1,15 @@
+import Api from "./Api.js";
 export default class Utils{
+    static async addItemToCart(idProduct) {
+        try {
+            const response = await Api.addCartItem(idProduct);
+            if (response.status === 200) {
+                this.getToast("success", "Thêm vào giỏ hàng thành công!");
+            }
+        } catch (error) {
+            this.getToast("error","Có lỗi xảy ra vui lòng thử lại!");
+        }
+    }    
     static getHeader() {
         const html = `
             <header class="header">
@@ -105,14 +116,14 @@ export default class Utils{
         })
     }
 
-    static getToast(type){
+    static getToast(type, mess){
         const html = `
             <div class="icon">
                 <img src="../../img/toast/${type}.png" alt="">
             </div>
             <div class="toast-body">
                 <h4 class="toast-status">THÀNH CÔNG</h4>
-                <p class="toast-content">Đã thêm sản phẩm vào giỏ hàng</p>
+                <p class="toast-content">${mess}</p>
             </div>
         `;
 
@@ -123,17 +134,15 @@ export default class Utils{
         toastContainer.appendChild(newToast);
         
         const status = newToast.querySelector(".toast-status");
-        console.log(status)
         const content = newToast.querySelector(".toast-content");
         
         if (type === "warning") {
             status.textContent = "CẢNH BÁO";
-            content.textContent = "Chú ý, đã xảy ra lỗi vui lòng thử lại";
         }
         if (type === "error") {
             status.textContent = "THẤT BẠI";
-            content.textContent = "Chú ý, đã xảy ra lỗi vui lòng thử lại";
         }
+        content.textContent = mess;
     
         newToast.addEventListener("click", () => {
             newToast.classList.add('hide');
@@ -355,9 +364,82 @@ export default class Utils{
         })
     }
 
+    static fillCategory(element, categories) {
+        // <img src="${category.image || '../../img/items/Category4.png'}" alt="${category.name || ''}">
+        const categoryItems = categories.map(category => `
+            <div class="item">
+                <a href="${category.url || '#'}">
+                    <img src="../../img/items/Category4.png" alt="${category.name || ''}">
+                    <p class="category-name">${category.name || ''}</p>
+                </a>
+            </div>
+        `).join('');
+    
+        const html = `
+            <div class="item-list">
+                ${categoryItems}
+            </div>
+            <button class="prev prev-item">
+                <span class="material-symbols-outlined btn">
+                    arrow_back_ios
+                </span>
+            </button>
+            <button class="next next-item">
+                <span class="material-symbols-outlined btn">
+                    arrow_forward_ios
+                </span>
+            </button>
+        `;
+    
+        element.innerHTML = html;
+    
+        let currentIndex = 0;
+        const itemsPerPage = 4;
+        const totalItems = categories.length;
+        const nextBtn = element.querySelector(".next-item");
+        const prevBtn = element.querySelector(".prev-item");
+
+        if(categories.length <= 4){
+            console.log(categories.length)
+            nextBtn.style.display = "none"
+        }
+    
+        function updateCarousel() {
+            const itemList = element.querySelector('.item-list');
+            const offset = -(currentIndex * 25);
+            const pixel = currentIndex * 15;
+            itemList.style.transform = `translateX(calc(${offset}% - ${pixel}px))`;
+        }
+    
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+                if (currentIndex <= 0) {
+                    prevBtn.style.display = "none";
+                }
+                nextBtn.style.display = "block";
+            }
+        }
+    
+        function nextSlide() {
+            if (currentIndex < totalItems - itemsPerPage) {
+                currentIndex++;
+                updateCarousel();
+                if (currentIndex >= totalItems - itemsPerPage) {
+                    nextBtn.style.display = "none";
+                }
+                prevBtn.style.display = "block";
+            }
+        }
+    
+        prevBtn.addEventListener("click", prevSlide);
+        nextBtn.addEventListener("click", nextSlide);
+    }
+
     static addAnimation(e) {
         e.addEventListener("mousedown",()=>{
-            this.getToast("success")
+            // this.getToast("success")
             e.style.transform = "scale(.9)"
         })
         e.addEventListener("mouseup",()=>{
