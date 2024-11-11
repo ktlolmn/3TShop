@@ -18,10 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
     async function fetchSpecifications(productId) {
         try {
-            const response = await fetch(`http://localhost:8080/specifications/get-by-product/${productId}`);
-            const data = await response.json();
-            state.specifications = Array.isArray(data.specificationsDTOList) ? data.specificationsDTOList : [];
-            renderOptions();
+            const data = await Api.getSpecByProduct(productId);
+            console.log(data)
+            if(data.status === 200){
+                state.specifications = Array.isArray(data.specificationsDTOList) ? data.specificationsDTOList : [];
+                renderOptions();
+            }
         } catch (error) {
             console.error('Error fetching specifications:', error);
             state.specifications = [];
@@ -35,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function getAvailableItems(items, type) {
+        console.log(items)
         return [...new Set(
             state.specifications
                 .filter(spec => {
@@ -75,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         sizeOption.innerHTML = '';
         const availableSizes = getAvailableItems(state.specifications, 'sizes');
+        console.log(availableSizes)
     
         availableSizes.forEach(size => {
             const li = document.createElement('li');
@@ -253,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 errMess.style.opacity = 1
                 return
             }
-            const cartData = [];
+            const cartData = [];    
             const name = document.querySelector(".product-detail .name").textContent.trim();
             const image = imageSrc.getAttribute("src");
             const colorId = colorOptionChosse.getAttribute("data-color-id");
@@ -346,7 +350,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function addItemToCart() {
-        console.log("add cart");
+        const errMess = document.querySelector(".err-mess")
+        const colorOptionChosse = document.querySelector(".color-option .selected")
+        const sizeOptionChosse = document.querySelector(".size-option .selected")
+        if(!colorOptionChosse ){
+            errMess.textContent = "Vui lòng chọn màu!"
+            errMess.style.opacity = 1
+            return
+        }
+        if(!sizeOptionChosse){
+            errMess.textContent = "Vui lòng chọn kích thước!"
+            errMess.style.opacity = 1
+            return
+        }
+        const colorId = colorOptionChosse.getAttribute("data-color-id");
+        const sizeId = sizeOptionChosse.getAttribute("data-size-id");
+        const quantity = document.querySelector(".product-detail #quantity").value;
+        const data = {
+            productId, 
+            sizeId, 
+            colorId,
+            quantity
+        }
+        try {
+            const response = await Api.addCartItem(data)
+            if(response.status === 200){
+                Utils.getToast("success", "Thêm vào giỏ hàng thành công!")
+                errMess.style.opacity = 0
+            }
+        } catch (error) {
+            Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
+        }
     }
 
     function initializePage() {
