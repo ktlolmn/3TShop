@@ -39,7 +39,7 @@
 
 .cart-item-list thead th{
     text-align: left;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 300;
     line-height: 16px;
 }
@@ -220,4 +220,10 @@ input[type = "checkbox"]{
     border-radius: 12px;
     text-decoration: none;
     cursor: pointer;
+}
+
+.stock{
+    margin: 0;
+    margin-top: 4px;
+    font-size: 10px;
 }

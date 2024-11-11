@@ -5,14 +5,20 @@
 
 .container .detail-container{
     display: grid;
-    grid-template-columns: 3fr 4fr;
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20pxpx;
     font-family: Lexend Exa;
+}
+
+.detail-container .image{
+    margin-top: 40px;
 }
 
 .detail-container .image img{
     width: 80%;
     margin: 0px 40px;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .detail-container .product-detail{
@@ -32,7 +38,7 @@
 .product-detail .name{
     margin: 0;
     margin-top: 40px;
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 400;
     line-height: 40px;
     text-align: left;
@@ -40,7 +46,7 @@
 }
 
 .product-detail .sold{
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 300;
     line-height: 14px;
     text-align: left;
@@ -48,10 +54,10 @@
 }
 
 .product-detail .price{
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 300;
     line-height: 32px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: left;
     color: #825B32;
 }
@@ -60,14 +66,14 @@
     border: none;
     cursor: pointer;
     background-color: #FFF8E8;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    line-height: 14px;
+    line-height: 12px;
     text-align: left;
     display: flex;
     align-items: center;
     color: #A35705;
-    padding: 3px;
+    padding: 2px;
     width: 228px;
     font-family: Lexend Exa;
     justify-content: center;
@@ -88,13 +94,13 @@
 }
 
 .product-detail .action button{
-    width: 329px;
-    padding: 16px;
-    line-height: 16px;
+    width: 210px;
+    padding: 12px 0;
+    line-height: 12px;
     font-weight: 400;
     border-radius: 12px;
     border: none;
-    font-size: 16px;
+    font-size: 12px;
     font-family: Lexend Exa;
     cursor: pointer;
 }
@@ -102,6 +108,11 @@
 .action .buy-now{
     background-color: #825B32;
     color: #ffff;
+}
+
+.action .buy-now a{
+    color: #ffff;
+    text-decoration: none;
 }
 
 .action .add-cart{
@@ -114,7 +125,7 @@
 }
 
 .product-detail .quantity div{
-    margin-top: 16px;
+    margin-top: 12px;
     display: flex;
     gap: 20px;
     align-items: center;
@@ -125,9 +136,9 @@
     color: #ffff;
     border: none;
     border-radius: 8px;
-    width: 24px;
-    height: 24px;
-    font-size: 18px;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -136,9 +147,9 @@
     border: none;
     text-align: center;
     outline: none;
-    font-size: 24px;
+    font-size: 20px;
     font-family: Lexend Exa;
-    width: 30px;
+    width: 22px;
     color: #825B32;
     margin: 0;
 }
@@ -151,6 +162,10 @@
 .color .color-option, .size .size-option{
     display: flex;
     gap: 10px;
+}
+
+.color-option, .size-option{
+    margin: 4px 0;
 }
 
 .color-option li{
@@ -179,7 +194,7 @@
 }
 
 .product-detail label{
-    font-size: 16px;
+    font-size: 12px;
     width: 50px;
     font-weight: 500;
     line-height: 16px;
@@ -219,6 +234,9 @@
 
 .product {
     flex: 0 0 calc(25% - 48px); 
+}
+
+.product{
     border: 1px #D0D0D0 solid;
     border-radius: 20px;
     overflow: hidden;
@@ -246,6 +264,12 @@
     line-height: 20px;
     text-align: left;
     color: #222831;
+    height: 40px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product .price{
@@ -280,8 +304,15 @@
     border-radius: 50%;
 }
 
-.product img{
+.item img{
     width: 100%;
+}
+
+.product img{
+    height: 280px;
+    width: calc(100% - 8px);
+    padding: 4px;
+    border-radius: 20px;
 }
 
 .next-same-product, .prev-same-product {
@@ -358,4 +389,19 @@
     display: block;
     text-align: right;
     cursor: pointer;
+}
+.selected {
+    font-weight: bold;
+    border: 1px rgb(161, 10, 10) solid !important;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.err-mess{
+    color: #FF7878;
+    opacity: 0;
+    font-size: 10px;
 }
