@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../css/admin/home.css">
+    <link rel="stylesheet" href="../../css/admin/navigation.css">
+    <link rel="stylesheet" href="../../css/admin/modal.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,7 +16,7 @@
 </head>
 <body>
     <div class="parent__div">
-
+        <div class="navigation"></div>
         <div class="wrapper">
             <h3 id="title__category">
                 XEM THEO DANH MỤC
@@ -22,42 +24,9 @@
             <div id="category__and__search">
                 <div id="list__category__wrapper">
                     <div id="list__category">
-                        <div class="each__category">
+                        <!-- <div class="each__category">
                             <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Quần jean</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo sơ mi</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
-                        <div class="each__category">
-                            <h5>Áo thun</h5>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
     
@@ -111,30 +80,28 @@
                                  <div id="add__new__product__wrapper">
                                      <span>Thêm sản phẩm mới</span>
                                  </div>
-                                 <div id="attribute__col">
+                                 <!-- <div id="attribute__col">
                                      <span id="col__price">Giá</span>
                                      <span id="col__sold">Lượt bán</span>
                                      <span id="col__stock">Tồn kho</span>
-                                 </div>
+                                 </div> -->
                              </div>
                              <div id="list__prouduct__wrapper">            
-                                 <div class="product__item">
-                                     <div class="info__product__wrapper">
-                                         <img class="product__image" src="/FrontEnd/img/product/product.png">
-                                         <h4 class="item__name">Basic tea</h4>
-                                         <h4 class="item__price">120.000đ</h4>
-                                         <h4 class="item__sold">1.000.000</h4>
-                                         <h4 class="item__stock">1.000.000</h4>
-                                     </div>
-                                     <div id="operation__wrapper">
-                                         <span id="edit__info__product" class="material-symbols-outlined">
-                                             edit
-                                             </span>
-                                         <span id="toggle__product" class="material-symbols-outlined">
-                                             visibility_off
-                                             </span>
-                                     </div>
-                                 </div>
+                                    <!-- <div class="product__item">
+                                        <div class="info__product__wrapper">
+                                            <h4 class="product__id" hidden></h4>
+                                            <img class="product__image" src="../../img/utils/product__img.png">
+                                            <h4 class="item__name">Basic tea</h4>
+                                            <h4 class="item__price">120.000đ</h4>
+                                            <h4 class="item__sold">1.000.000</h4>
+                                            <h4 class="item__stock">1.000.000</h4>
+                                        </div>
+                                        <div id="operation__wrapper">
+                                            <span class="material-symbols-outlined toggle__product">
+                                                visibility_off
+                                                </span>
+                                        </div>
+                                 </div> -->
                              </div>
                          </div>
                      </div>
@@ -150,58 +117,54 @@
                         </div>
     
                         <div class="detail__product__wrapper">
-                            <div class="col__name">
+                            <!-- <div class="col__name">
                                 <div class="left__col__name">
                                     <h5 class="sold__left__col">Lượt bán</h5>
                                     <h5 class="stock__left__col">Tồn kho</h5>
                                 </div>
-                                <div class="right__col__name">
-                                    <h5 class="sold__right__col">Lượt bán</h5>
-                                    <h5 class="stock__right__col">Tồn kho</h5>
-                                </div>
-                            </div>
+                            </div> -->
                             <div id="size__product__detail">
                                 <div class="product__detail__size">
-                                    <div id="each__size__field">
+                                    <div class="each__size__field">
                                         <div class="size__name">
                                             <h2 class="size">M</h2>
                                         </div>
                                         <div class="size__detail__wrapper">
                                             <div class="size__detail">
-                                                <div class="color__preview"></div>
-                                                <div class="color__name__product">Xanh la</div>
-                                                <div class="soled">45</div>
-                                                <div class="stock">68</div>
+                                                <div class="color__infor">
+                                                    <div class="color__preview"></div>
+                                                    <div class="color__name__product">Xanh la</div>
+                                                </div>
+                                                <div class="soled">Lượt bán 45</div>
+                                                <div class="stock">Tồn kho 68</div>
                                                 <div class="edit__info">
                                                     <span class="material-symbols-outlined">
                                                         edit
-                                                        </span>
-                                                </div>
-                                                <div class="toggle__product__detail">
-                                                    <span class="material-symbols-outlined">
+                                                    </span>
+                                                    <span class="material-symbols-outlined toggle__product__detail">
                                                         visibility_off
-                                                        </span>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="each__size__field">
+                                    <div class="each__size__field">
                                         <div class="size__name">
                                             <h2 class="size">L</h2>
                                         </div>
                                         <div class="size__detail__wrapper">
                                             <div class="size__detail">
-                                                <div class="color__preview"></div>
-                                                <div class="color__name__product">Xanh la</div>
-                                                <div class="soled">45</div>
-                                                <div class="stock">68</div>
+                                                <div class="color__infor">
+                                                    <div class="color__preview"></div>
+                                                    <div class="color__name__product">Xanh la</div>
+                                                </div>
+                                                <div class="soled">Lượt bán 45</div>
+                                                <div class="stock">Tồn kho 68</div>
                                                 <div class="edit__info">
                                                     <span class="material-symbols-outlined">
                                                         edit
                                                         </span>
-                                                </div>
-                                                <div class="toggle__product__detail">
-                                                    <span class="material-symbols-outlined">
+                                                    <span class="material-symbols-outlined toggle__product__detail">
                                                         visibility_off
                                                         </span>
                                                 </div>
@@ -209,50 +172,57 @@
                                         </div>
                                     </div>
             
-                                    <div id="each__size__field">
+                                    <div class="each__size__field">
                                         <div class="size__name">
                                             <h2 class="size">XL</h2>
                                         </div>
                                         <div class="size__detail__wrapper">
-                                            <div class="size__detail">
-                                                <div class="color__preview"></div>
-                                                <div class="color__name__product">Xanh la</div>
-                                                <div class="soled">45</div>
-                                                <div class="stock">68</div>
+                                             <div class="size__detail">
+                                                <div class="color__infor">
+                                                    <div class="color__preview"></div>
+                                                    <div class="color__name__product">Xanh la</div>
+                                                </div>
+                                                <div class="soled">Lượt bán 45</div>
+                                                <div class="stock">Tồn kho 68</div>
                                                 <div class="edit__info">
                                                     <span style="font-size: 20px" class="material-symbols-outlined">
                                                         edit
                                                         </span>
-                                                </div>
-                                                <div class="toggle__product__detail">
-                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    <span class="material-symbols-outlined">
                                                         visibility_off
                                                         </span>
                                                 </div>
+                                                <!-- <div class="toggle__product__detail">
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
             
-                                    <div id="each__size__field">
+                                    <div class="each__size__field">
                                         <div class="size__name">
                                             <h2 class="size">XXL</h2>
                                         </div>
                                         <div class="size__detail__wrapper">
                                             <div class="size__detail">
-                                                <div class="color__preview"></div>
-                                                <div class="color__name__product">Xanh la</div>
-                                                <div class="soled">45</div>
-                                                <div class="stock">68</div>
+                                                <div class="color__infor">
+                                                    <div class="color__preview"></div>
+                                                    <div class="color__name__product">Xanh la</div>
+                                                </div>
+                                                <div class="soled">Lượt bán 45</div>
+                                                <div class="stock">Tồn kho 68</div>
                                                 <div class="edit__info">
                                                     <span style="font-size: 20px" class="material-symbols-outlined">
                                                         edit
                                                         </span>
-                                                </div>
-                                                <div class="toggle__product__detail">
-                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                    <span class="material-symbols-outlined">
                                                         visibility_off
                                                         </span>
                                                 </div>
+                                                <!-- <div class="toggle__product__detail">
+                                                    <span style="font-size: 20px" class="material-symbols-outlined">
+                                                        visibility_off
+                                                        </span>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -270,7 +240,7 @@
                                 <div class="management__category">
                                     <div class="category__list">
                                         <div class="each__category__wrapepr">
-                                            <img src="/FrontEnd/img/utils/category_img.png">
+                                            <img src="../../img/utils/category_img.png">
                                             <h4 class="category__name">Áo sơ mi</h4>
                                             <h4 class="category__created">Ngày tạo 10/10/2024 13:00:00</h4>
                                             <div class="edit__info">
@@ -331,7 +301,7 @@
                 
                 <div class="add__new__outside">
                     <div class="icon__and__fields">
-                        <img id="category__icon" src="/FrontEnd/img/utils/categories.png" alt="category icon">
+                        <img id="category__icon" src="../../img/utils/categories.png" alt="category icon">
                         <div class="fields">
                             <h1 style="font-size: 14px">THÊM DANH MỤC MỚI</h1>
                             <div class="input__wrapper">
@@ -341,6 +311,7 @@
                             </div>
                             <div class="input__wrapper">
                                 <label for="" class="label__name">Hình ảnh minh họa</label>
+                                <img src="#" alt="category" id="category__img" hidden>
                                 <label for="input__category__img" class="input__category__label">
                                     <span class="material-symbols-outlined" id="icon__add__new__category">
                                         add_photo_alternate
@@ -349,9 +320,9 @@
                                         task_alt
                                         </span>
                                 </label>
-                                <label id="category__img__validate">Vui lòng nhập tên danh mục</label>
+                                <label id="category__img__validate">Vui lòng tải lên hình ảnh danh mục</label>
                             </div>
-                            <input id="input__category__img" type="file">
+                            <input id="input__category__img" type="file" accept="image/*">
                         </div>
                     </div>
                     <div class="handle__buttons">
@@ -364,7 +335,7 @@
 
         <!-- THEM MAU SAC MOI -->
         <div id="new__color__background">
-            <div class="add__new__category__wrapper">
+            <div class="add__new__color__outside">
                 <div class="icon__close__color__modal">
                     <span class="material-symbols-outlined">
                         close
@@ -403,15 +374,15 @@
         </div>
 
         <!-- MODAL XÁC NHẬN ẨN -->
-        <div id="hide__product__background">
-            <div class="hide__product__wrapper">
+        <div class="confirm__order__background">
+            <!-- <div class="hide__product__wrapper">
                 <div class="icon__close__hidden__modal">
                     <span class="material-symbols-outlined">
                         close
                         </span>
                 </div>
                 <div class="content__wrapper">
-                    <img id="icon__hidden" src="/FrontEnd/img/utils/hide.png" alt="Hidden">
+                    <img id="icon__hidden" src="../../img/utils/hide.png" alt="Hidden">
                     <h2 id="title__hidden">XÁC NHẬN</h2>
                     <h4 id="confirm__hidden">
                         Bạn có chắc chắc muốn ẩn sản phẩm <br> Áo thun không ?
@@ -421,9 +392,10 @@
                         <button type="submit" id="sure__hidden">Ẩn</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
+    <script type="module" src="../../js/admin/home.js"></script>
+    <script type="module" src="../../js/admin/navigation.js"></script>
 </body>
-<script src="/FrontEnd/js/admin/home.js"></script>
 </html> 

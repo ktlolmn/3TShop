@@ -1,3 +1,4 @@
+import Utils from "../../js/admin/Utils.js";
 const orderStatus = document.querySelectorAll('.order__status')
 const buttons = document.querySelectorAll('button')
 const iconButtons = document.querySelectorAll('.material-symbols-outlined')
@@ -8,6 +9,8 @@ const saveShipment = document.getElementById('save__shipment')
 const cancelEditShipmentWrapper = document.querySelector('.cancel__edit__shipment__wrapper')
 
 const filterButton = document.getElementById('filter__button')
+const elementId = document.querySelector('.navigation')
+Utils.includeNavigation(elementId)
 
 orderStatus.forEach(item => {
     item.addEventListener('click', () => {
@@ -245,169 +248,173 @@ eachOrder.forEach(row => {
 })
 
 function showToast(message, type) {
-
-    const iconType = {
-        error : 'material-symbols-outline:error',
-        warning: 'material-symbols-outline:warning',
-        success: 'material-symbols-outline:check_circle'
-    }
-
     const toastContainer = document.getElementById('toast-container');
 
     if (message) {
-      const toastElement = document.createElement('div');
-      toastElement.classList.add('toast-message');
+        const toastElement = document.createElement('div');
+        toastElement.classList.add('toast-message');
 
-    //   const toastIcon = document.createElement('span');
-    //   toastText.textContent = message;
+        const toastIcon = document.createElement('span');
+        toastIcon.style.color = '#ffffff'
+        toastIcon.classList.add('material-symbols-outlined')
+        toastIcon.textContent = type
   
-      const toastText = document.createElement('p');
-      toastText.textContent = message;
+        const toastText = document.createElement('p');
+        toastText.textContent = message;
+    
+        const toastCloseButton = document.createElement('button');
+        toastCloseButton.classList.add('toast-close');
+        toastCloseButton.innerHTML = `
+            <span class="material-symbols-outlined" id="close__toast">
+                close
+            </span>`;
   
-      const toastCloseButton = document.createElement('button');
-      toastCloseButton.classList.add('toast-close');
-      toastCloseButton.innerHTML = `
-        <span class="material-symbols-outlined" id="close__toast">
-            close
-        </span>`;
-  
-      toastCloseButton.addEventListener('click', () => {
-        toastElement.style.animationName = 'fadeOut';
+        toastCloseButton.addEventListener('click', () => {
+            toastElement.style.animationName = 'fadeOut';
+            setTimeout(() => {
+            toastContainer.removeChild(toastElement);
+            }, 200);
+        });
+    
+        toastElement.appendChild(toastIcon);
+        toastElement.appendChild(toastText);
+        toastElement.appendChild(toastCloseButton);
+        toastContainer.appendChild(toastElement);
+    
         setTimeout(() => {
-          toastContainer.removeChild(toastElement);
-        }, 200);
-      });
-  
-      toastElement.appendChild(toastText);
-      toastElement.appendChild(toastCloseButton);
-      toastContainer.appendChild(toastElement);
-  
-      setTimeout(() => {
-        toastElement.style.animationName = 'fadeOut';
-        setTimeout(() => {
-          toastContainer.removeChild(toastElement);
-        }, 300);
-      }, 4000);
+            toastElement.style.animationName = 'fadeOut';
+            setTimeout(() => {
+            toastContainer.removeChild(toastElement);
+            }, 300);
+        }, 4000);
     }
   }
 
 
 const confirmOrderBackground = document.querySelector('.confirm__order__background')
 const cancelOrderBackground = document.querySelector('.cancel__order__background')
-const closeModalConfirm = document.querySelector('.close__modal__confirm')
-const closeModalCancel = document.querySelector('.close__modal__cancel')
+
 
 const clickToConfirmOrder = document.getElementById('confirm__order')
 const clickToCancelOrder = document.getElementById('cancel__order')
 
-const confirmOrderBtn = document.getElementById('confirm__order__btn')
-const hiddenConfirmOrderBtn = document.getElementById('hidden__confirm__order__btn')
+// const confirmOrderBtn = document.getElementById('confirm__order__btn')
+// const hiddenConfirmOrderBtn = document.getElementById('hidden__confirm__order__btn')
 
-const hiddenCancelOrderBtn = document.getElementById('hidden__cancel__order__btn')
-const cancelOrderBtn = document.getElementById('cancel__order__btn')
+// const hiddenCancelOrderBtn = document.getElementById('hidden__cancel__order__btn')
+// const cancelOrderBtn = document.getElementById('cancel__order__btn')
 
-const validateInputReason = document.getElementById('validate__input__reason')
-const inputCancelReason = document.getElementById('input__cancel__reason')
+// const validateInputReason = document.getElementById('validate__input__reason')
+// const inputCancelReason = document.getElementById('input__cancel__reason')
 
-const confirmOrderWrapper = document.querySelector('.confirm__order__animation')
-const cancelOrderWrapper = document.querySelector('.cancel__order__animation')
+// const confirmOrderWrapper = document.querySelector('.confirm__order__animation')
+// const cancelOrderWrapper = document.querySelector('.cancel__order__animation')
+
+// const completeOrder = document.getElementById('complete__order')
 
 
-function showModal(modalName, btn = null, wrapper) {
-    if (btn) {
-        btn.addEventListener('click', () => {
-            modalName.style.display = 'flex'
-            setTimeout(() => {
-                wrapper.classList.add('active')
-            }, 10);
-            return
-        })
-    } else {
-        console.log("Modal was shown without button")
-        modalName.style.display = 'flex'
-        setTimeout(() => {
-            wrapper.classList.add('active')
-        }, 10);
-    }
+// function showModal(modalName, btn = null, wrapper) {
+//     if (btn) {
+//         btn.addEventListener('click', () => {
+//             modalName.style.display = 'flex'
+//             setTimeout(() => {
+//                 wrapper.classList.add('active')
+//             }, 10);
+//             return
+//         })
+//     } else {
+//         console.log("Modal was shown without button")
+//         modalName.style.display = 'flex'
+//         setTimeout(() => {
+//             wrapper.classList.add('active')
+//         }, 10);
+//     }
 
-}  
+// }  
 
-function hiddenModal(modalName, btn = null, wrapper) {
-    if (btn) {
-        btn.addEventListener('click', (e) => {
-            wrapper.classList.add('disabled')
-            console.log(modalName, btn, wrapper)
-            setTimeout(() => {
-                modalName.style.display = 'none'
-                wrapper.classList.remove('active', 'disabled')
-            }, 300);
-            return
-        })
-    } 
-    modalName.addEventListener('click', (e) => {
-        if(e.target === modalName) {
-            wrapper.classList.add('disabled')
-            setTimeout(() => {
-                wrapper.classList.remove('active', 'disabled')
-                modalName.style.display = 'none'
-            }, 300);
-        }
-    })
-}
-
-function flexibleConfirmModalContent(title, content, handleFunc) {
-    const showTitle = document.getElementById('title__confirm__modal')
-    const showContent = document.getElementById('content__confirm__modal')
-    const handle = document.getElementById('confirm__order__btn')
-
-    console.log(showTitle, showContent)
-    showTitle.textContent = title
-    showContent.innerHTML = content
-    handle.addEventListener('click', handleFunc)
-}
+// function hiddenModal(modalName, btn = null, wrapper) {
+//     if (btn) {
+//         btn.addEventListener('click', (e) => {
+//             wrapper.classList.add('disabled')
+//             console.log(modalName, btn, wrapper)
+//             setTimeout(() => {
+//                 modalName.style.display = 'none'
+//                 wrapper.classList.remove('active', 'disabled')
+//             }, 300);
+//             return
+//         })
+//     } 
+//     modalName.addEventListener('click', (e) => {
+//         if(e.target === modalName) {
+//             wrapper.classList.add('disabled')
+//             setTimeout(() => {
+//                 wrapper.classList.remove('active', 'disabled')
+//                 modalName.style.display = 'none'
+//             }, 300);
+//         }
+//     })
+// }
 
 function flexibleCancelModalContent(title, content, handleFunc) {
-    const showTitle = document.getElementById('title__confirm__modal')
+    const showTitle = document.getElementById('title__cancel__modal')
     const showContent = document.getElementById('content__confirm__modal')
     const handle = document.getElementById('confirm__order__btn')
-
-    console.log(showTitle, showContent)
+    
     showTitle.textContent = title
     showContent.innerHTML = content
     handle.addEventListener('click', handleFunc)
 }
 
-cancelOrderBtn.addEventListener('click', () => {
-    if (inputCancelReason.value.trim() === '') {
-        validateInputReason.style.opacity = 1
-    } else {
-        validateInputReason.style.opacity = 0
-    }
+// Utils.flexibleConfirmModalContent(
+//     'XÁC NHẬN ẨN',
+//     `Bạn có chắc chắn muốn xác nhận <br> đơn hàng 123456 không ?`,
+//     console.log("Hide"),
+//     confirmOrderBackground
+// )
+
+// Utils.showModalCancel(cancelOrderBackground, clickToCancelOrder)
+// Utils.hiddenModalConfirm(confirmOrderBackground)
+// Utils.hiddenModalCancel(cancelOrderBackground)
+
+// cancelOrderBtn.addEventListener('click', () => {
+//     if (inputCancelReason.value.trim() === '') {
+//         validateInputReason.style.opacity = 1
+//     } else {
+//         validateInputReason.style.opacity = 0
+//     }
+// })
+
+// hiddenModal(confirmOrderBackground, null, confirmOrderWrapper)
+// hiddenModal(confirmOrderBackground, hiddenConfirmOrderBtn, confirmOrderWrapper)
+// hiddenModal(confirmOrderBackground, closeModalConfirm, confirmOrderWrapper)
+
+// hiddenModal(cancelOrderBackground, null, cancelOrderWrapper)
+// hiddenModal(cancelOrderBackground, hiddenCancelOrderBtn, cancelOrderWrapper)
+// hiddenModal(cancelOrderBackground, closeModalCancel, cancelOrderWrapper)
+
+// // showModal(confirmOrderBackground, clickToConfirmOrder, confirmOrderWrapper)
+// // showModal(cancelOrderBackground, clickToCancelOrder, cancelOrderWrapper)
+
+// const completeOrder = document.getElementById('complete__order')
+
+// // showModal(confirmOrderBackground, completeOrder, confirmOrderWrapper)
+
+clickToConfirmOrder.addEventListener('click', () => {
+    Utils.showModalConfirm(
+        'XÁC NHẬN ẨN',
+        `Bạn có chắc chắn muốn xác nhận <br> đơn hàng 123456 không ?`,
+        confirmOrderBackground
+    )
+    Utils.hiddenModalConfirm(confirmOrderBackground)
 })
 
-hiddenModal(confirmOrderBackground, null, confirmOrderWrapper)
-hiddenModal(confirmOrderBackground, hiddenConfirmOrderBtn, confirmOrderWrapper)
-hiddenModal(confirmOrderBackground, closeModalConfirm, confirmOrderWrapper)
-
-hiddenModal(cancelOrderBackground, null, cancelOrderWrapper)
-hiddenModal(cancelOrderBackground, hiddenCancelOrderBtn, cancelOrderWrapper)
-hiddenModal(cancelOrderBackground, closeModalCancel, cancelOrderWrapper)
-
-// showModal(confirmOrderBackground, clickToConfirmOrder, confirmOrderWrapper)
-// showModal(cancelOrderBackground, clickToCancelOrder, cancelOrderWrapper)
-
-const completeOrder = document.getElementById('complete__order')
-
-// showModal(confirmOrderBackground, completeOrder, confirmOrderWrapper)
-
-completeOrder.addEventListener('click', () => {
-    flexibleConfirmModalContent(
-        'XÁC NHẬN XÓA',
-        `Bạn có chắc chắc muốn xóa <br> đơn hàng 887777 không ?`,
-        console.log("Flexible")
-    ) 
-    showModal(confirmOrderBackground, null, confirmOrderWrapper)
+clickToCancelOrder.addEventListener('click', () => {
+    Utils.showModalCancel(
+        cancelOrderBackground
+    )
+    Utils.hiddenModalCancel(cancelOrderBackground)
 })
+
 
 
 
