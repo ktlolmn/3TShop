@@ -5,7 +5,7 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMDgwMDU0LCJleHAiOjE3MzEyNjY0NTR9.9T6ffPppm5_IsYSHZkhFsTBtqeSVvP3TpP5_SRi93gI`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMzA3MjEwLCJleHAiOjE3MzE0OTM2MTB9.vhdKB1rtTkdjo5B-M3cFmZQQhDD-fa8H95yGmNWolw4`,
             "Content-Type": "application/json"
         }
     }
@@ -61,6 +61,12 @@ export default class Api{
         }
     }
 
+    static createNewOrder = async (data) => {
+        console.log(data)
+        const response = await this.post(`/order/add`,data)
+        return response
+    }
+
     static getInforUser = async () => {
         const response = await this.get(`/user/get-user-info`)
         return response
@@ -72,8 +78,18 @@ export default class Api{
         return response
     }
 
+    static getCartByAccout = async () => {
+        const response = await this.get(`/cart-items/get-by-account`)
+        return response
+    }
+
     static getAllProduct = async () => {
         const response = await this.getNoAuth("/product/get-all")
+        return response
+    }
+
+    static getAvailableProduct = async () => {
+        const response = await this.getNoAuth("/product/get-available-product")
         return response
     }
 

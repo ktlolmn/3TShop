@@ -1,16 +1,13 @@
 
+import Api from "../Api.js";
 import Utils from "../Utils.js";
 document.addEventListener("DOMContentLoaded", () => {
-    const formattedPrice = function(priceValue){
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(priceValue);
-    } 
-
     const closeModalBtn = document.querySelector(".modal-body .close")
     const openModalBtn = document.querySelector(".btn-change-address")
     const modal = document.querySelector("#modal-container")
     const cancelBtn = document.querySelector(".cancel")
     const container = document.querySelector('.pay-container')
-    
+    const payBtn = document.querySelector(".pay-btn")
     
     Utils.getHeader()
     // Utils.protectUser()
@@ -42,10 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
         tbody.innerHTML = "";
         cartData.forEach(product => {
             const row = document.createElement("tr");
-            totalPrice += product.price
+            totalPrice += product.price * product.quantity
             row.innerHTML = `
                 <td class="product-img">
-                    <div><img src="${product.img}" alt=""></div>
+                    <div><img src="${product.image}" alt=""></div>
                 </td>
                 <td class="product-detail">
                     <a href="" class="name">${product.name}</a>
@@ -53,13 +50,39 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="size">Size: ${product.size}</p>
                 </td>
                 <td><p class="quantity-display">x${product.quantity}</p></td>
-                <td class="price">${(product.price).toLocaleString("vi-VN")+ "đ"} </td>
+                <td class="price">${(product.price * product.quantity).toLocaleString("vi-VN")+ "đ"} </td>
             `;
             tbody.appendChild(row);
         });
         provisionalTotal.textContent = totalPrice.toLocaleString("vi-VN") + "đ"
         finalTotal.textContent = (totalPrice + 30000).toLocaleString("vi-VN") + "đ"
-        // localStorage.removeItem("cartData");
+        payBtn.addEventListener("click", async () => {
+            // const selectedAddressId = document.querySelector('.action-address input[type="checkbox"]:checked').value;
+            const orderData = {
+                idAddress: 1,
+                orderRequests: cartData.map(product => ({
+                    productId: product.productId,
+                    colorId: product.colorId,
+                    sizeId: product.sizeId,
+                    quantity: product.quantity
+                }))
+            };
+
+            try {
+                const response = await Api.createNewOrder(orderData);
+                if (response.status === 200) {
+                    sessionStorage.setItem('orderSuccess', 'true');
+                    localStorage.removeItem("cartData");
+                    window.location.href = "/success";
+                } else {
+                    sessionStorage.setItem('orderError', 'true');
+                    localStorage.removeItem("cartData");
+                    window.location.href = "/error";
+                }
+            } catch (error) {
+                Utils.getToast("error", "Có lỗi xảy ra, vui lòng thử lại!");
+            }
+        })
     }else{
         window.location.href = "/cart"
     }

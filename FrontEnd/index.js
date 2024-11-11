@@ -4,9 +4,35 @@ const path = require('path');
 const app = express();
 const PORT = 3003;
 
+const session = require('express-session');
+
+app.use(session({
+    secret: 'my-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
+
+
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
+
+function checkOrderSuccess(req, res, next) {
+  if (req.session.orderSuccess) {
+      next();
+  } else {
+      res.redirect('/');
+  }
+}
+
+app.get('/success', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/status.html'));
+});
+
+app.get('/error', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/status.html'));
+});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/home.html'));

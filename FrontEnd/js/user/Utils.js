@@ -160,6 +160,30 @@ export default class Utils{
         
     }
 
+    static fillProduct(products, container){
+            
+        container.innerHTML = '';
+    
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.classList.add('product');
+            // <img src="${product.image.startsWith('data:image') ? product.image : `data:image/jpeg;base64,${product.image}` || '../../img/product/product.png'}" alt="${product.name}">
+            // <img src="${product.image}">
+            productElement.innerHTML = `
+                <img src="data:image/jpeg;base64,${product.image}" alt="${product.name}">
+                <div class="decription">
+                    <p class="name">${product.name}</p>
+                    <p class="price">${product.price.toLocaleString()} đ</p>
+                    <p class="sold">Đã bán ${product.sold}</p>
+                </div>
+            `;
+            productElement.addEventListener('click', () => {
+                window.location.href = `/product-detail/${product.product_id}`
+            });
+            container.appendChild(productElement);
+        });
+    }
+
     static getFooter(){
         return(
             `<div class="footer">

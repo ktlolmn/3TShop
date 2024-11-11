@@ -1,103 +1,240 @@
 import Utils from "../Utils.js";
 import Api from "../Api.js";
 
-const container = document.querySelector('.cart-container')
+const SHIPPING_FEE = 30000;
 
-container.insertAdjacentHTML("beforeend", Utils.getFooter())
+const container = document.querySelector('.cart-container');
+const checkAll = document.querySelector('.check-all');
+const checkItems = document.querySelectorAll('.check-item');
+const subtotalElement = document.querySelector('.subtotal');
+const totalElement = document.querySelector('.total');
+const cartItemsContainer = document.getElementById('cart-items');
+const checkoutButton = document.getElementById('checkout-button');
 
-Utils.getHeader()
-// Utils.protectUser()
-
-const decreaseButtons = document.querySelectorAll('#decrease');
-const increaseButtons = document.querySelectorAll('#increase');
-
-decreaseButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        let quantityDisplay = this.nextElementSibling;
-        let currentQuantity = parseInt(quantityDisplay.value);
-        if (currentQuantity > 1) {
-            quantityDisplay.value = currentQuantity - 1;
-        }
-    });
-});
-
-increaseButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        let quantityDisplay = this.previousElementSibling; 
-        let currentQuantity = parseInt(quantityDisplay.value); 
-        quantityDisplay.value = currentQuantity + 1; 
-    });
-});
-
-const checkAll = document.querySelector(".check-all");
-const checkItems = document.querySelectorAll(".check-item");
-const subtotalElement = document.querySelector(".subtotal");
-const totalElement = document.querySelector(".total");
-const shippingFee = 30000;
-
-function updateTotalPrice() {
-    let subtotal = 0;
-    checkItems.forEach((check, index) => {
-        if (check.checked) {
-            const quantity = parseInt(check.closest("tr").querySelector(".quantity-display").value, 10);
-            const price = parseInt(check.closest("tr").querySelector(".price").dataset.price, 10);
-            subtotal += price * quantity;
-        }
-    });
-    subtotalElement.textContent = `${subtotal.toLocaleString()}đ`;
-    const total = subtotal + shippingFee;
-    totalElement.textContent = `${total.toLocaleString()}đ`;
+function setupUI() {
+    container.insertAdjacentHTML("beforeend", Utils.getFooter());
+    Utils.getHeader();
 }
 
-checkAll.addEventListener("change", () => {
-    checkItems.forEach((check) => {
-        check.checked = checkAll.checked;
+function handleQuantityChange(event) {
+    const button = event.target;
+    const container = button.closest('.quantity');
+    const input = container.querySelector('.quantity-display');
+    const row = button.closest('tr');
+    const maxQuantity = parseInt(row.dataset.maxQuantity, 10);
+    let quantity = parseInt(input.value, 10);
+
+    if (button.classList.contains('increase')) {
+        if (quantity < maxQuantity) {
+            quantity++;
+        } else {
+            return;
+        }
+    } else if (button.classList.contains('decrease') && quantity > 1) {
+        quantity--;
+    }
+
+    input.value = quantity;
+    updateTotalPrice();
+}
+
+function setupQuantityControls() {
+    document.querySelectorAll('.quantity-button').forEach(button => {
+        button.addEventListener('click', handleQuantityChange);
+    });
+
+    document.querySelectorAll('.quantity-display').forEach(input => {
+        input.addEventListener('change', (event) => {
+            const row = event.target.closest('tr');
+            const maxQuantity = parseInt(row.dataset.maxQuantity, 10);
+            let value = parseInt(event.target.value, 10);
+
+            if (isNaN(value) || value < 1) {
+                value = 1;
+            } else if (value > maxQuantity) {
+                value = maxQuantity;
+            }
+
+            event.target.value = value;
+            updateTotalPrice();
+        });
+    });
+}
+
+function updateAllCheckboxes(checked) {
+    const checkboxes = document.querySelectorAll('.check-item');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = checked;
     });
     updateTotalPrice();
-});
+}
 
-checkItems.forEach((check) => {
-    check.addEventListener("change", () => {
-        checkAll.checked = Array.from(checkItems).every(item => item.checked);
-        updateTotalPrice();
+function updateMainCheckbox() {
+    const checkboxes = document.querySelectorAll('.check-item');
+    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    const mainCheckbox = document.querySelector('.check-all');
+    mainCheckbox.checked = allChecked;
+    updateTotalPrice();
+}
+
+function setupCheckboxControls() {
+    checkAll.addEventListener('change', (event) => {
+        updateAllCheckboxes(event.target.checked);
     });
-});
 
-document.querySelectorAll(".quantity-button").forEach(button => {
-    button.addEventListener("click", function () {
-        const input = this.parentElement.querySelector(".quantity-display");
-        let quantity = parseInt(input.value, 10);
-
-        if (this.id === "increase") {
-            quantity++;
-        } else if (this.id === "decrease" && quantity > 1) {
-            quantity--;
-        }
-        input.value = quantity;
-        updateTotalPrice();
-    });
-});
-
-const checkoutButton = document.getElementById("checkout-button");
-checkoutButton.addEventListener("click", (event) => {
-    const cartData = [];
-    document.querySelectorAll(".check-item").forEach(check => {
-        if (check.checked) {
-            const row = check.closest("tr");
-            const name = row.querySelector(".name").textContent.trim();
-            const image = row.querySelector(".product-img .image").getAttribute("src");
-            const color = row.querySelector(".color").textContent.split(": ")[1];
-            const size = row.querySelector(".size").textContent.split(": ")[1];
-            const quantity = parseInt(row.querySelector(".quantity-display").value, 10);
-            const priceString = row.querySelector(".price").textContent;
-            const price = parsePrice(priceString);
-            cartData.push({ name, color, size, image, quantity, price });
+    document.addEventListener('change', (event) => {
+        if (event.target.classList.contains('check-item')) {
+            updateMainCheckbox();
         }
     });
+}
 
-    localStorage.setItem("cartData", JSON.stringify(cartData));
-});
+function updateTotalPrice() {
+    const subtotal = Array.from(document.querySelectorAll('.check-item'))
+        .reduce((total, check) => {
+            if (check.checked) {
+                const row = check.closest('tr');
+                const quantity = parseInt(row.querySelector('.quantity-display').value, 10);
+                const price = parseInt(row.querySelector('.price').dataset.price, 10);
+                return total + (price * quantity);
+            }
+            return total;
+        }, 0);
+
+    subtotalElement.textContent = `${formatCurrency(subtotal)}đ`;
+    totalElement.textContent = `${formatCurrency(subtotal + SHIPPING_FEE)}đ`;
+}
+
+function handleCheckout() {
+    const cartData = Array.from(document.querySelectorAll('.check-item'))
+        .filter(check => check.checked)
+        .map(check => {
+            const row = check.closest('tr');
+
+            // Lấy các giá trị từ hàng (row)
+            const name = row.querySelector('.name').textContent.trim();
+            const size = row.querySelector('.size').textContent.split(': ')[1];
+            const color = row.querySelector('.color').textContent.split(': ')[1];
+            const image = row.querySelector('.product-img .image').getAttribute('src');
+            const quantity = parseInt(row.querySelector('.quantity-display').value, 10);
+            const price = parsePrice(row.querySelector('.price').textContent);
+
+            // Lấy ID của sản phẩm, màu sắc và kích thước
+            const productId = row.dataset.productId;
+            const colorId = row.dataset.colorId;
+            const sizeId = row.dataset.sizeId;
+
+            return {
+                name,
+                size,
+                color,
+                image,
+                quantity,
+                price,
+                productId,
+                colorId,
+                sizeId
+            };
+        });
+
+    // Lưu dữ liệu giỏ hàng vào localStorage
+    localStorage.setItem('cartData', JSON.stringify(cartData));
+}
+
+
+function createCartItemRow(item) {
+    if (item.quantity > item.specificationsDTO.quantity) {
+        item.quantity = item.specificationsDTO.quantity;
+    }
+
+    const tr = document.createElement('tr');
+    tr.dataset.maxQuantity = item.specificationsDTO.quantity;
+    tr.dataset.productId = item.specificationsDTO.productDTO.product_id;
+    tr.dataset.colorId = item.specificationsDTO.colorDTO.color_id;
+    tr.dataset.sizeId = item.specificationsDTO.sizeDTO.size_id;
+
+    tr.innerHTML = `
+        <td class="product-img">
+            <input type="checkbox" class="check-item rounded-checkbox">
+            <div>
+                <img class="image" src="data:image/jpeg;base64,${item.specificationsDTO.productDTO.image}" 
+                     alt="${item.specificationsDTO.productDTO.name}">
+            </div>
+        </td>
+        <td class="product-detail">
+            <a href="#" class="name">${item.specificationsDTO.productDTO.name}</a>
+            <p class="color">Màu sắc: ${item.specificationsDTO.colorDTO.name}</p>
+            <p class="size">Size: ${item.specificationsDTO.sizeDTO.name}</p>
+            <p class="stock">Còn lại: ${item.specificationsDTO.quantity} sản phẩm</p>
+        </td>
+        <td>
+            <div class="quantity">
+                <button class="quantity-button decrease">-</button>
+                <input class="quantity-display" value="${item.quantity}">
+                <button class="quantity-button increase">+</button>
+            </div>
+        </td>
+        <td class="price" data-price="${item.specificationsDTO.productDTO.price}">
+            ${formatCurrency(item.specificationsDTO.productDTO.price)}đ
+        </td>
+        <td class="action">
+            <span class="material-symbols-outlined delete-item">close</span>
+        </td>
+    `;
+    return tr;
+}
+
+
+async function fetchAndRenderCartItems() {
+    try {
+        const response = await Api.getCartByAccout();
+        const cartItems = response.cart_ItemsDTOList;
+        
+        const fragment = document.createDocumentFragment();
+        cartItems.forEach(item => {
+            if (item.quantity <= item.specificationsDTO.quantity) {
+                const row = createCartItemRow(item);
+                fragment.appendChild(row);
+            }
+        });
+        
+        cartItemsContainer.appendChild(fragment);
+        
+        setupQuantityControls();
+        setupCheckboxControls();
+        updateMainCheckbox();
+    } catch (error) {
+        console.error('Error fetching cart items:', error);
+    }
+}
 
 function parsePrice(priceString) {
-    return parseInt(priceString.replace(/\D/g, ""), 10);
+    return parseInt(priceString.replace(/\D/g, ''), 10);
 }
+
+function formatCurrency(price) {
+    return price.toLocaleString();
+}
+
+function initializeCart() {
+    setupUI();
+    setupQuantityControls();
+    setupCheckboxControls();
+    checkoutButton.addEventListener('click', handleCheckout);
+
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-item')) {
+            const row = event.target.closest('tr');
+            if (row) {
+                row.remove();
+                updateMainCheckbox();
+                updateTotalPrice();
+            }
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCart();
+    fetchAndRenderCartItems();
+});

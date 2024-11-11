@@ -16,15 +16,17 @@
 </head>
 <body>
     <div class="container">
-        <img src="../../img/utils/error.png" alt="">              
-        <h4 class="status">Chúc mừng!</h4>
-        <p class="message">Quý khách đã đặt hàng thành công</p>
+        <img id="success-img" src="../../img/utils/success.png" alt="Success">              
+        <img id="error-img" src="../../img/utils/error.png" alt="Error">              
+        <h4 id="success-status" class="status">Chúc mừng!</h4>
+        <h4 id="error-status" class="status">Opps!</h4>
+        <p id="error-message" class="message">Có lỗi xảy ra, vui lòng thử lại</p>
         <div id="success">
-            <a href="">Quay lại trang chủ</a>
-            <a href="">Theo dõi đơn hàng</a>
+            <a href="/">Quay lại trang chủ</a>
+            <a href="/order">Theo dõi đơn hàng</a>
         </div>
         <div id="error">
-            <a href="">Quay lại trang đặt hàng</a>
+            <a href="/pay-page">Quay lại trang đặt hàng</a>
         </div>
     </div>
     <script type="module" src="../../js/user/page/status.js"></script>

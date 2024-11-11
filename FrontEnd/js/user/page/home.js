@@ -3,35 +3,6 @@ import Api from "../Api.js";
 
 const hotProductListContainer = document.querySelector('.hot-product-list');
 const newProductListContainer = document.querySelector('.new-product-list');
-function fillProduct(products, container){
-            
-    container.innerHTML = '';
-
-    products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.classList.add('product');
-        // <img src="${product.image.startsWith('data:image') ? product.image : `data:image/jpeg;base64,${product.image}` || '../../img/product/product.png'}" alt="${product.name}">
-        // <img src="${product.image}">
-        productElement.innerHTML = `
-            <img src="../../img/items/Category1.png" alt="${product.name}">
-            <div class="decription">
-                <p class="name">${product.name}</p>
-                <p class="price">${product.price.toLocaleString()} đ</p>
-                <span class="material-symbols-outlined btn btn-add-cart">
-                    add_shopping_cart
-                </span>
-                <p class="sold">Đã bán ${product.sold}</p>
-            </div>
-        `;
-        console.log(product)
-        const addToCartButton = productElement.querySelector('.btn-add-cart');
-        addToCartButton.addEventListener('click', () => Utils.addItemToCart(product.product_id));
-        productElement.addEventListener('click', () => {
-            window.location.href = `/product-detail/${product.product_id}`
-        });
-        container.appendChild(productElement);
-    });
-}
 
 document.addEventListener("DOMContentLoaded", async () => {
     const homeContainer = document.querySelector(".home-container");
@@ -52,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await Api.getNewProduct(); 
             if (response.status === 200) {
                 newProducts = response.productDTOList;
-                fillProduct(newProducts, newProductListContainer)
+                Utils.fillProduct(newProducts, newProductListContainer)
             }
         } catch (e) {
             Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
@@ -76,11 +47,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await Api.getHotProduct(); 
             if (response.status === 200) {
                 hotProducts = response.productDTOList;
-                fillProduct(hotProducts, hotProductListContainer)
+                Utils.fillProduct(hotProducts, hotProductListContainer)
             }
         } catch (e) {
             Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
-            alert(e)
         }
     }
     await fetchCategories();
@@ -93,6 +63,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const totalNewProduct = document.querySelectorAll('.new-product-list .product').length;
     const nextNewProductBtn = document.querySelector(".next-new-product")
     const prevNewProductBtn = document.querySelector(".prev-new-product")
+
+    totalNewProduct > 4 ? nextNewProductBtn.style.display = "inline-block" : nextNewProductBtn.style.display = "none"
 
     function updateCarouselNewProduct() {
         const newProductList = document.querySelector('.new-product-list')
@@ -136,6 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const totalHotProduct = document.querySelectorAll('.hot-product-list .product').length;
     const nextHotProductBtn = document.querySelector(".next-hot-product")
     const prevHotProductBtn = document.querySelector(".prev-hot-product")
+    console.log(totalHotProduct)
+    totalHotProduct > 4 ? nextHotProductBtn.style.display = "block" : nextHotProductBtn.style.display = "none"
 
     function updateCarouselHotProduct() {
         const hotProductList = document.querySelector('.hot-product-list')

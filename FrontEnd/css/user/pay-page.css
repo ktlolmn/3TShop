@@ -189,7 +189,8 @@ tbody tr {
 
 .textarea-container textarea{
     font-family: Lexend Exa;
-    height: 70px;
+    height: 50px;
+    resize: none;
     border-radius: 4px;
     border: 1px #D9D9D9 solid;
     padding: 20px;
@@ -219,7 +220,7 @@ tbody tr {
     border: none;
     border-radius: 4px;
     font-family: Lexend Exa;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 300;
     line-height: 21px;
     text-align: left;
@@ -228,7 +229,7 @@ tbody tr {
 }
 
 .address-content .address-detail{
-    font-size: 14px;
+    font-size: 12px;
     margin: 0;
     font-weight: 300;
     line-height: 21px;
@@ -238,7 +239,7 @@ tbody tr {
 .group-content p{
     font-size: 14px;
     font-weight: 300;
-    line-height: 14px;
+    line-height: 12px;
     margin: 0;
     color: #222831;
 }
@@ -279,7 +280,7 @@ tbody tr {
 }
 
 .group-action p{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 16px;
     text-align: right;
@@ -287,7 +288,7 @@ tbody tr {
 }
 
 .message {
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 300;
     line-height: 13px;
     text-align: left;
@@ -298,10 +299,10 @@ tbody tr {
     background-color: #825B32;
     color: #ffff;
     font-family: Lexend Exa;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 400;
-    line-height: 16px;
-    height: 42px;
+    line-height: 12px;
+    height: 32px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
@@ -353,7 +354,7 @@ tbody tr {
     width: 100%;
     margin: 0;
     font-family: Lexend Giga;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 300;
     margin: 10px 0;
     line-height: 14px;
@@ -414,9 +415,9 @@ tbody tr {
     display: block;
     text-align: right;
     font-family: Lexend Exa;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 300;
-    line-height: 13px;
+    line-height: 12px;
     color: #825B32;
 }
 .modal-body>p a{
@@ -432,13 +433,13 @@ tbody tr {
 }
 
 .btn-container button{
-    height: 40px;
-    width: 133px;
+    height: 30px;
+    width: 120px;
     border-radius: 4px;
     border: none;
     outline: none;
     font-family: Lexend Giga;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 21px;
     text-align: center;
