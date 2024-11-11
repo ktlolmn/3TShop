@@ -5,6 +5,9 @@ const iconButtons = document.querySelectorAll('.material-symbols-outlined')
 const inputShipment = document.getElementById('input__shipment')
 const editShipment = document.getElementById('edit__shipment')
 const saveShipment = document.getElementById('save__shipment')
+const cancelEditShipmentWrapper = document.querySelector('.cancel__edit__shipment__wrapper')
+
+const filterButton = document.getElementById('filter__button')
 
 orderStatus.forEach(item => {
     item.addEventListener('click', () => {
@@ -39,31 +42,49 @@ editShipment.addEventListener('click', () => {
 })
 
 saveShipment.addEventListener('click', () => {
+    if (parseFloat(inputShipment.value) < 0) {
+        showToast('Mức phí giao hàng không hợp lệ!');
+        return
+    } else if (inputShipment.value.trim() === '') {
+        showToast('Vui lòng nhập phí giao hàng!');
+        return
+    }
     toggleEditShipment(true)
     toggleSaveShipment(false)
 })
 
-inputShipment.addEventListener('input', () => {
-    if (inputShipment.value.trim() === '') {
-        toggleEditShipment(true)
+cancelEditShipmentWrapper.addEventListener('click', () => {
+    setTimeout(() => {
+        cancelEditShipmentWrapper.classList.remove('active')
+        cancelEditShipmentWrapper.style.display = 'none'
         toggleSaveShipment(false)
-    }
+        toggleEditShipment(true)
+        
+    }, 100);
 })
+
 
 function toggleEditShipment(option) {
     if (option) {
         editShipment.style.display = 'flex'
         inputShipment.disabled = true
-        inputShipment.value = ''  
+        // inputShipment.value = ''  
         return  
     } 
     editShipment.style.display = 'none'
     inputShipment.disabled = false
+    setTimeout(() => {
+        cancelEditShipmentWrapper.classList.add('active')
+    }, 200);
 }
 
 function toggleSaveShipment(option) {
     if (option) {
         saveShipment.style.display = 'flex'
+        cancelEditShipmentWrapper.style.display = 'flex'
+        setTimeout(() => {
+            cancelEditShipmentWrapper.classList.add('active')
+        }, 200);
         inputShipment.disabled = false
         return  
     } 
@@ -71,6 +92,28 @@ function toggleSaveShipment(option) {
     inputShipment.disabled = true
     inputShipment.value = ''
 }
+
+filterButton.addEventListener('click', () => {
+    const startDateInput = document.getElementById('input__start__date')
+    const endDateInput = document.getElementById('input__end__date')
+
+    let startDate = new Date(startDateInput.value)
+    let endDate = new Date(endDateInput.value)
+
+    if (startDateInput.value.trim() === '') {
+        showToast('Vui lòng chọn ngày bắt đầu lọc!')
+        // return
+    } else if (endDateInput.value.trim() === '') {
+        showToast('Vui lòng chọn ngày kết thúc lọc!')
+    } else if (startDate > endDate) {
+        showToast('Ngày bắt đầu phải nhỏ hơn ngày kết thúc!')
+    } else if (endDate > new Date().setHours(0,0,0,0)) {
+        showToast('Ngày kết thúc phải nhỏ hơn ngày hiện tại!')
+    }
+    else {
+        console.log(startDate.value, endDate.value)
+    }
+})
 
 const orderDetailOutside = document.querySelector('.order__detail__outside')
 const footerShowInfor = document.querySelector('.footer__show__information')
@@ -215,21 +258,24 @@ function showToast(message, type) {
       const toastElement = document.createElement('div');
       toastElement.classList.add('toast-message');
 
-      const toastIcon = document.createElement('span');
-      toastText.textContent = message;
+    //   const toastIcon = document.createElement('span');
+    //   toastText.textContent = message;
   
       const toastText = document.createElement('p');
       toastText.textContent = message;
   
       const toastCloseButton = document.createElement('button');
       toastCloseButton.classList.add('toast-close');
-      toastCloseButton.textContent = '×';
+      toastCloseButton.innerHTML = `
+        <span class="material-symbols-outlined" id="close__toast">
+            close
+        </span>`;
   
       toastCloseButton.addEventListener('click', () => {
         toastElement.style.animationName = 'fadeOut';
         setTimeout(() => {
           toastContainer.removeChild(toastElement);
-        }, 300);
+        }, 200);
       });
   
       toastElement.appendChild(toastText);
@@ -241,11 +287,128 @@ function showToast(message, type) {
         setTimeout(() => {
           toastContainer.removeChild(toastElement);
         }, 300);
-      }, 3000);
+      }, 4000);
     }
   }
-  
-  // Example usage:
-eachOrder[0].addEventListener('click', () => {
-    showToast('This is a sample toast message');
+
+
+const confirmOrderBackground = document.querySelector('.confirm__order__background')
+const cancelOrderBackground = document.querySelector('.cancel__order__background')
+const closeModalConfirm = document.querySelector('.close__modal__confirm')
+const closeModalCancel = document.querySelector('.close__modal__cancel')
+
+const clickToConfirmOrder = document.getElementById('confirm__order')
+const clickToCancelOrder = document.getElementById('cancel__order')
+
+const confirmOrderBtn = document.getElementById('confirm__order__btn')
+const hiddenConfirmOrderBtn = document.getElementById('hidden__confirm__order__btn')
+
+const hiddenCancelOrderBtn = document.getElementById('hidden__cancel__order__btn')
+const cancelOrderBtn = document.getElementById('cancel__order__btn')
+
+const validateInputReason = document.getElementById('validate__input__reason')
+const inputCancelReason = document.getElementById('input__cancel__reason')
+
+const confirmOrderWrapper = document.querySelector('.confirm__order__animation')
+const cancelOrderWrapper = document.querySelector('.cancel__order__animation')
+
+
+function showModal(modalName, btn = null, wrapper) {
+    if (btn) {
+        btn.addEventListener('click', () => {
+            modalName.style.display = 'flex'
+            setTimeout(() => {
+                wrapper.classList.add('active')
+            }, 10);
+            return
+        })
+    } else {
+        console.log("Modal was shown without button")
+        modalName.style.display = 'flex'
+        setTimeout(() => {
+            wrapper.classList.add('active')
+        }, 10);
+    }
+
+}  
+
+function hiddenModal(modalName, btn = null, wrapper) {
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            wrapper.classList.add('disabled')
+            console.log(modalName, btn, wrapper)
+            setTimeout(() => {
+                modalName.style.display = 'none'
+                wrapper.classList.remove('active', 'disabled')
+            }, 300);
+            return
+        })
+    } 
+    modalName.addEventListener('click', (e) => {
+        if(e.target === modalName) {
+            wrapper.classList.add('disabled')
+            setTimeout(() => {
+                wrapper.classList.remove('active', 'disabled')
+                modalName.style.display = 'none'
+            }, 300);
+        }
+    })
+}
+
+function flexibleConfirmModalContent(title, content, handleFunc) {
+    const showTitle = document.getElementById('title__confirm__modal')
+    const showContent = document.getElementById('content__confirm__modal')
+    const handle = document.getElementById('confirm__order__btn')
+
+    console.log(showTitle, showContent)
+    showTitle.textContent = title
+    showContent.innerHTML = content
+    handle.addEventListener('click', handleFunc)
+}
+
+function flexibleCancelModalContent(title, content, handleFunc) {
+    const showTitle = document.getElementById('title__confirm__modal')
+    const showContent = document.getElementById('content__confirm__modal')
+    const handle = document.getElementById('confirm__order__btn')
+
+    console.log(showTitle, showContent)
+    showTitle.textContent = title
+    showContent.innerHTML = content
+    handle.addEventListener('click', handleFunc)
+}
+
+cancelOrderBtn.addEventListener('click', () => {
+    if (inputCancelReason.value.trim() === '') {
+        validateInputReason.style.opacity = 1
+    } else {
+        validateInputReason.style.opacity = 0
+    }
 })
+
+hiddenModal(confirmOrderBackground, null, confirmOrderWrapper)
+hiddenModal(confirmOrderBackground, hiddenConfirmOrderBtn, confirmOrderWrapper)
+hiddenModal(confirmOrderBackground, closeModalConfirm, confirmOrderWrapper)
+
+hiddenModal(cancelOrderBackground, null, cancelOrderWrapper)
+hiddenModal(cancelOrderBackground, hiddenCancelOrderBtn, cancelOrderWrapper)
+hiddenModal(cancelOrderBackground, closeModalCancel, cancelOrderWrapper)
+
+// showModal(confirmOrderBackground, clickToConfirmOrder, confirmOrderWrapper)
+// showModal(cancelOrderBackground, clickToCancelOrder, cancelOrderWrapper)
+
+const completeOrder = document.getElementById('complete__order')
+
+// showModal(confirmOrderBackground, completeOrder, confirmOrderWrapper)
+
+completeOrder.addEventListener('click', () => {
+    flexibleConfirmModalContent(
+        'XÁC NHẬN XÓA',
+        `Bạn có chắc chắc muốn xóa <br> đơn hàng 887777 không ?`,
+        console.log("Flexible")
+    ) 
+    showModal(confirmOrderBackground, null, confirmOrderWrapper)
+})
+
+
+
+
