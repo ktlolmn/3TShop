@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const successImage = document.getElementById('success-img');
     const errorImage = document.getElementById('error-img');
     const successStatus = document.getElementById('success-status')
+    const errorMess = document.getElementById('error-message')
     const errorStatus = document.getElementById('error-status')
     const successContainer = document.getElementById('success');
     const errorContainer = document.getElementById('error');
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorImage.style.display = "none";
         successStatus.style.display = "block";
         errorStatus.style.display = "none";
+        errorMess.style.display = "none"
         sessionStorage.removeItem('orderSuccess');
         return;
     }

@@ -1,6 +1,5 @@
+import Utils from "../Utils.js"
 
-import Api from "../Api.js";
-import Utils from "../Utils.js";
 document.addEventListener("DOMContentLoaded", () => {
     const closeModalBtn = document.querySelector(".modal-body .close")
     const openModalBtn = document.querySelector(".btn-change-address")
@@ -10,30 +9,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const payBtn = document.querySelector(".pay-btn")
     
     Utils.getHeader()
-    // Utils.protectUser()
     container.insertAdjacentHTML("beforeend", Utils.getFooter())
     
-    openModalBtn.addEventListener("click",()=>{
+    openModalBtn.addEventListener("click", () => {
         Utils.openModal(modal)
     })
     
-    closeModalBtn.addEventListener("click",()=>{
+    closeModalBtn.addEventListener("click", () => {
         Utils.closeModal(modal)
     })
     
-    cancelBtn.addEventListener("click",()=>{
+    cancelBtn.addEventListener("click", () => {
         Utils.closeModal(modal)
     })
     
-    modal.addEventListener("click",(e)=>{
-        if(e.target === modal){
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
             Utils.closeModal(modal)
         }
     })
+
     const provisionalTotal = document.querySelector(".provisional-total")
     const finalTotal = document.querySelector(".final-total")
     const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
     let totalPrice = 0
+    
+    // Kiểm tra nếu có sản phẩm trong giỏ hàng
     if (cartData.length > 0) {
         const tbody = document.querySelector(".pay-item-list tbody");
         tbody.innerHTML = "";
@@ -56,8 +57,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         provisionalTotal.textContent = totalPrice.toLocaleString("vi-VN") + "đ"
         finalTotal.textContent = (totalPrice + 30000).toLocaleString("vi-VN") + "đ"
-        payBtn.addEventListener("click", async () => {
-            // const selectedAddressId = document.querySelector('.action-address input[type="checkbox"]:checked').value;
+        
+        payBtn.addEventListener("click", async (e) => {
+            if (cartData.length === 0) {
+                Utils.getToast("warning", "Giỏ hàng của bạn không có sản phẩm để thanh toán.");
+                return;
+            }
+
             const orderData = {
                 idAddress: 1,
                 orderRequests: cartData.map(product => ({
@@ -83,21 +89,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 Utils.getToast("error", "Có lỗi xảy ra, vui lòng thử lại!");
             }
         })
-    }else{
+    } else {
         window.location.href = "/cart"
     }
 
     const checkboxes = document.querySelectorAll('.action-address input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', function () {
-        if (this.checked) {
-        checkboxes.forEach(otherCheckbox => {
-            if (otherCheckbox !== this) {
-            otherCheckbox.checked = false;
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                checkboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== this) {
+                        otherCheckbox.checked = false;
+                    }
+                });
             }
         });
-        }
-    });
     });
 
 });

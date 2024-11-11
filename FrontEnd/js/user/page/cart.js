@@ -110,8 +110,6 @@ function handleCheckout() {
         .filter(check => check.checked)
         .map(check => {
             const row = check.closest('tr');
-
-            // Lấy các giá trị từ hàng (row)
             const name = row.querySelector('.name').textContent.trim();
             const size = row.querySelector('.size').textContent.split(': ')[1];
             const color = row.querySelector('.color').textContent.split(': ')[1];
@@ -119,7 +117,6 @@ function handleCheckout() {
             const quantity = parseInt(row.querySelector('.quantity-display').value, 10);
             const price = parsePrice(row.querySelector('.price').textContent);
 
-            // Lấy ID của sản phẩm, màu sắc và kích thước
             const productId = row.dataset.productId;
             const colorId = row.dataset.colorId;
             const sizeId = row.dataset.sizeId;
@@ -136,9 +133,15 @@ function handleCheckout() {
                 sizeId
             };
         });
-
-    // Lưu dữ liệu giỏ hàng vào localStorage
-    localStorage.setItem('cartData', JSON.stringify(cartData));
+    console.log(cartData)
+    if(cartData.length > 0){
+        console.log("heheh")
+        localStorage.setItem('cartData', JSON.stringify(cartData));
+        window.location.href = "/pay-page"
+    }else{
+        Utils.getToast("warning","Đơn hàng bạn đang trống!")
+        return
+    }
 }
 
 
@@ -178,7 +181,7 @@ function createCartItemRow(item) {
             ${formatCurrency(item.specificationsDTO.productDTO.price)}đ
         </td>
         <td class="action">
-            <span class="material-symbols-outlined delete-item">close</span>
+            <span data-id = ${item.specificationsDTO.specifications_id} class="material-symbols-outlined delete-item">close</span>
         </td>
     `;
     return tr;
@@ -204,7 +207,7 @@ async function fetchAndRenderCartItems() {
         setupCheckboxControls();
         updateMainCheckbox();
     } catch (error) {
-        console.error('Error fetching cart items:', error);
+        Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!");
     }
 }
 
@@ -226,6 +229,9 @@ function initializeCart() {
         if (event.target.classList.contains('delete-item')) {
             const row = event.target.closest('tr');
             if (row) {
+                const deleteBtn = row.querySelector(".delete-item")
+                const id = deleteBtn.dataset.id
+                console.log(id)
                 row.remove();
                 updateMainCheckbox();
                 updateTotalPrice();

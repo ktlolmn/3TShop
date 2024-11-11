@@ -5,7 +5,7 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMzA3MjEwLCJleHAiOjE3MzE0OTM2MTB9.vhdKB1rtTkdjo5B-M3cFmZQQhDD-fa8H95yGmNWolw4`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMzE0NTY0LCJleHAiOjE3MzE1MDA5NjR9.9Hu-7LxrK5yy9yd0gvmVfLhysyGUs4WJyykwrKHm3N4`,
             "Content-Type": "application/json"
         }
     }
@@ -61,6 +61,11 @@ export default class Api{
         }
     }
 
+    static getSpecByProduct =  async (productId)=>{
+        const response = await this.get(`/specifications/get-by-product/${productId}`)
+        return response
+    }
+
     static createNewOrder = async (data) => {
         console.log(data)
         const response = await this.post(`/order/add`,data)
@@ -72,9 +77,8 @@ export default class Api{
         return response
     }
 
-    static addCartItem = async (id) => {
-        console.log(id)
-        const response = await this.get(`/cart-items/add/${id}`)
+    static addCartItem = async (data) => {
+        const response = await this.post(`/cart-items/add`, data)
         return response
     }
 
