@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../css/admin/management-order.css">
     <link rel="stylesheet" href="../../css/admin/spinner.css">
+    <link rel="stylesheet" href="../../css/admin/modal.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -15,6 +16,7 @@
 </head>
 <body>
     <div class="background">
+        <div class="navigation"></div>
         <div class="wrapper">
             <div id="toast-container" class="toast-container">
               </div>
@@ -466,11 +468,11 @@
                     </div>
                     <div class="footer__show__information">
                         <!-- ĐƠN HÀNG ĐANG CHỜ XÁC NHẬN -->
-                        <!-- <button type="button" id="cancel__order">Hủy đơn hàng</button>
-                        <button type="button" id="confirm__order">Xác nhận đơn hàng</button> -->
+                        <button type="button" id="cancel__order">Hủy đơn hàng</button>
+                        <button type="button" id="confirm__order">Xác nhận đơn hàng</button>
     
                         <!-- ĐƠN HÀNG ĐANG VẬN CHUYỂN -->
-                        <div class="datetime__about__order">
+                        <!-- <div class="datetime__about__order">
                             <div class="datetime__title">
                                 <h3>Thời gian xác nhận đơn hàng</h3>
                                 <h3>Thời gian giao hàng dự kiến</h3>
@@ -480,7 +482,7 @@
                                 <h3>10/10/2024 12:00:00</h3>
                             </div>
                         </div>
-                        <button type="button" id="complete__order">Hoàn thành đơn hàng</button>
+                        <button type="button" id="complete__order">Hoàn thành đơn hàng</button> -->
     
                         <!-- ĐƠN HÀNG ĐÃ HOÀN THÀNH -->
                         <!-- <div class="datetime__about__order">
@@ -528,57 +530,54 @@
             </div>
         </div>
         <div class="confirm__order__background">
-            <!-- <div class="confirm__order__outside"> -->
-                <div class="confirm__order__wrapper confirm__order__animation">
-                    <div class="icon__close close__modal__confirm">
-                        <span class="material-symbols-outlined">
-                            close
-                            </span>
+            <!-- <div class="confirm__order__wrapper confirm__order__animation">
+                <div class="icon__close close__modal__confirm">
+                    <span class="material-symbols-outlined">
+                        close
+                        </span>
+                </div>
+                <div class="body__modal">
+                    <img src="../../img/utils/confirm__order.png" alt="Confirm order" class="confirm__order">
+                    <div class="title__wrapper">
+                        <h2 id="title__confirm__modal">XÁC NHẬN ĐƠN HÀNG</h2>
                     </div>
-                    <div class="body__modal">
-                        <img src="../../img/utils/confirm__order.png" alt="Confirm order" class="confirm__order">
-                        <div class="title__wrapper">
-                            <h2 id="title__confirm__modal">XÁC NHẬN ĐƠN HÀNG</h2>
-                        </div>
-                        <div class="content__wrapper">
-                            <h3 class="content" id="content__confirm__modal">Bạn có chắc chắn xác nhận <br> đơn hàng 988776 không ?</h3>
-                        </div>
-                        <div class="button__wrapper">
-                            <button type="button" id="hidden__confirm__order__btn">Hủy</button>
-                            <button type="button" id="confirm__order__btn">Xác nhận</button>
-                        </div>
+                    <div class="content__wrapper">
+                        <h3 class="content" id="content__confirm__modal">Bạn có chắc chắn xác nhận <br> đơn hàng 988776 không ?</h3>
+                    </div>
+                    <div class="button__wrapper">
+                        <button type="button" id="hidden__confirm__order__btn">Hủy</button>
+                        <button type="button" id="confirm__order__btn">Xác nhận</button>
                     </div>
                 </div>
-            <!-- </div> -->
+            </div> -->
         </div>
 
         <div class="cancel__order__background">
-            <!-- <div class="confirm__order__outside"> -->
-                <div class="confirm__order__wrapper cancel__order__animation">
-                    <div class="icon__close close__modal__cancel">
-                        <span class="material-symbols-outlined">
-                            close
-                            </span>
+            <!-- <div class="cancel__order__wrapper cancel__order__animation">
+                <div class="icon__close close__modal__cancel">
+                    <span class="material-symbols-outlined">
+                        close
+                        </span>
+                </div>
+                <div class="body__modal">
+                    <img src="../../img/utils/confirm__order.png" alt="Confirm order" class="confirm__order">
+                    <div class="title__wrapper">
+                        <h2 id="title__cancel__modal">XÁC NHẬN HỦY ĐƠN</h2>
                     </div>
-                    <div class="body__modal">
-                        <img src="../../img/utils/confirm__order.png" alt="Confirm order" class="confirm__order">
-                        <div class="title__wrapper">
-                            <h2 id="title__cancel__modal">XÁC NHẬN HỦY ĐƠN</h2>
-                        </div>
-                        <div class="content__wrapper">
-                            <label for="input__cancel__reason">Vui lòng cho biết lý do hủy đơn</label>
-                            <textarea type="text" id="input__cancel__reason"></textarea>
-                            <h3 id="validate__input__reason">Vui lòng nhập lý do hủy đơn</h3>
-                        </div>
-                        <div class="button__wrapper">
-                            <button type="button" id="hidden__cancel__order__btn">Hủy</button>
-                            <button type="button" id="cancel__order__btn">Xác nhận</button>
-                        </div>
+                    <div class="content__wrapper">
+                        <label for="input__cancel__reason">Vui lòng cho biết lý do hủy đơn</label>
+                        <textarea type="text" id="input__cancel__reason"></textarea>
+                        <h3 id="validate__input__reason">Vui lòng nhập lý do hủy đơn</h3>
+                    </div>
+                    <div class="button__wrapper">
+                        <button type="button" id="hidden__cancel__order__btn">Hủy</button>
+                        <button type="button" id="cancel__order__btn">Xác nhận</button>
                     </div>
                 </div>
-            <!-- </div> -->
+            </div> -->
         </div>
     </div>
 </body>
-<script src="../../js/admin/management-order.js"></script>
+<script type="module" src="../../js/admin/management-order.js"></script>
+<script type="module" src="../../js/admin/navigation.js"></script>
 </html>
