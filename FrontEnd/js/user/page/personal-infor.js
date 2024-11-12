@@ -18,6 +18,7 @@ const birthday = document.querySelector('input[name="birthday"]');
 const genderMale = document.querySelector('input[name="gender"][value="male"]');
 const genderFemale = document.querySelector('input[name="gender"][value="female"]');
 const email = document.querySelector('input[name="email"]');
+const editAddressContainer = document.querySelector("#modal-edit-address")
 
 name.addEventListener("input",()=>{
     name.nextElementSibling.style.opacity = 0
@@ -241,7 +242,7 @@ submitNewAddressBtn.addEventListener("click", async ()=>{
                 Utils.getToast("success"," Tạo địa chỉ thành công!")
                 setTimeout(function() {
                     location.reload(); 
-                }, 2000); 
+                }, 1000); 
             }else{
                 Utils.getToast("error","Có lỗi vui lòng thử lại!")
             }
@@ -302,7 +303,6 @@ submitEditAddressBtn.addEventListener("click", async ()=>{
         try {
             const response = await Api.createNewDelevery(newAddress)
             if(response.status === 200){
-                console.log("okkk")
                 const model = document.querySelector("#modal-add-address")
                 Utils.closeModal(model)
                 Utils.getToast("success"," Tạo địa chỉ thành công!")
@@ -410,7 +410,6 @@ confirmPass.addEventListener("input",()=>{
 
 const fillData = (data)=>{
     initialValues = data
-    console.log(initialValues)
     name.value = data.f_name + " " + data.l_name
     phone.value = data.phone
     birthday.value = data.date_of_birth
@@ -419,6 +418,99 @@ const fillData = (data)=>{
         genderMale.checked = true
     }else{
         genderFemale.checked = true
+    }
+}
+
+function handleEdit(addressContainer) {
+    const originalName = addressContainer.querySelector('.default-name, .address-content p:first-child').textContent;
+    const originalPhone = addressContainer.querySelector('.default-phone-number, .address-content p:nth-child(2)').textContent;
+    const originalAddressDetail = addressContainer.querySelector('.address-detail').textContent;
+    const addressParts = originalAddressDetail.split(",")
+    const detail_address = addressParts[0] || '';  
+    const village = addressParts[1] || '';        
+    const ward = addressParts[2] || '';           
+    const district = addressParts[3] || '';      
+    const province = addressParts[4] || '';      
+
+    console.log({ detail_address,village, ward, district, province });
+
+    Utils.openModal(editAddressContainer);
+
+    editAddressContainer.querySelector('.full-name').value = originalName;
+    editAddressContainer.querySelector('.phone').value = (originalPhone);
+    editAddressContainer.querySelector('.province').value = province;
+    editAddressContainer.querySelector('.district').value = district;
+    editAddressContainer.querySelector('.ward').value = ward;
+    editAddressContainer.querySelector('.village').value = village;
+    editAddressContainer.querySelector('.detailed').value = detail_address;
+    editAddressContainer.querySelector('.phone').addEventListener('input', function(event) {
+        let value = event.target.value;
+        value = value.replace(/[^0-9]/g, '');
+        event.target.value = value;
+    });
+}
+
+const confirmModal = document.getElementById('confirm');
+const closeButton = confirmModal.querySelector('.close');
+const cancelButton = confirmModal.querySelector('.cancel');
+const submitButton = confirmModal.querySelector('.submit');
+
+let addressIdToDelete = null;
+
+function showConfirmModal(id) {
+    addressIdToDelete = id;
+    Utils.openModal(confirmModal)
+}
+
+function hideConfirmModal() {
+    Utils.closeModal(confirmModal)
+    addressIdToDelete = null;
+}
+
+confirmModal.addEventListener("click",(e)=>{
+    hideConfirmModal()
+})
+
+async function handleDelete(id) {
+    showConfirmModal(id);
+}
+
+closeButton.addEventListener('click', hideConfirmModal);
+cancelButton.addEventListener('click', hideConfirmModal);
+
+submitButton.addEventListener('click', async () => {
+    if (addressIdToDelete) {
+        try {
+            const response = await Api.deleteAddress(addressIdToDelete);
+            if (response.status === 200) {
+                Utils.getToast("success", "Xóa địa chỉ thành công!");
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                Utils.getToast("error", "Có lỗi, vui lòng thử lại!");
+            }
+        } catch (error) {
+            Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!");
+        }
+        hideConfirmModal();
+    }
+});
+
+async function setDefaultAddress(id) {
+    try {
+        const response = await Api.setDefaultAddress(id)
+        console.log(response.status)
+        if(response.status === 200){
+            Utils.getToast("success","Đặt mặc định thành công!")
+            setTimeout(function() {
+                location.reload(); 
+            }, 1000); 
+        }else{
+            Utils.getToast("error","Có lỗi vui lòng thử lại!")
+        }
+    } catch (error) {
+        Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
     }
 }
 
@@ -449,7 +541,6 @@ async function loadAddress() {
                     </div>
                     <div class="action-address">
                         <div class="default-status">
-                            <span class="material-symbols-outlined close">close</span> 
                             <span class="material-symbols-outlined edit">edit</span>
                         </div>
                         <button disabled>
@@ -471,7 +562,7 @@ async function loadAddress() {
                                     <span class="material-symbols-outlined close">close</span> 
                                     <span class="material-symbols-outlined edit">edit</span>
                                 </div>
-                                <button>
+                                <button id = "set-default">
                                     Đặt mặc định
                                 </button>
                             </div>
@@ -488,6 +579,19 @@ async function loadAddress() {
                         }
                     });
                 });
+                
+                console.log(document.querySelectorAll('.address-container #set-default'))
+
+                document.querySelectorAll('.address-container #set-default').forEach((closeButton) => {
+                    closeButton.addEventListener('click', (e) => {
+                        const addressContainer = e.target.closest('.address-container');
+                        const addressId = addressContainer?.dataset.id;
+                        if (addressId) {
+                            setDefaultAddress(addressId)
+                        }
+                    });
+                });
+
                 document.querySelectorAll('.address-infor .edit').forEach((closeButton) => {
                     closeButton.addEventListener('click', (e) => {
                         const addressContainer = e.target.closest('.address-container');
@@ -498,6 +602,9 @@ async function loadAddress() {
                     });
                 });
             });
+            if(addresses.length <= 1){
+                otherAddressesContainer.innerHTML += '<p style = "text-align:center; witdh: 100%; ">Trống</p>';
+            }
         }else{
             if(response.status === 202){
                 const defaultAddressContainer = document.querySelector('.default-address');
@@ -507,12 +614,11 @@ async function loadAddress() {
                     <label class="address-type">Địa chỉ mặc định</label>
                     <p style = "text-align:center; witdh: 100%; ">Trống</p>
                     <button class="new-address-btn">Thêm địa chỉ giao hàng mới</button>`;
-                otherAddressesContainer.innerHTML = '<p style = "text-align:center; witdh: 100%; ">Trống</p>';
+                otherAddressesContainer.innerHTML += '<p style = "text-align:center; witdh: 100%; ">Trống</p>';
             }
         }
 
         const newAddressContainer = document.querySelector("#modal-add-address")
-        const editAddressContainer = document.querySelector("#modal-edit-address")
         const closeNewAddressBtn = document.querySelector("#modal-add-address .close")
         const cancelNewAddressBtn = document.querySelector("#modal-add-address .cancel")
         const openNewAddFormBtn = document.querySelector(".new-address-btn")
@@ -527,6 +633,13 @@ async function loadAddress() {
             e.preventDefault()
             Utils.closeModal(newAddressContainer)
         })
+        closeEditAddressBtn.addEventListener("click",()=>{
+            Utils.closeModal(editAddressContainer)
+        })
+        cancelEditAddressBtn.addEventListener("click",(e)=>{
+            e.preventDefault()
+            Utils.closeModal(editAddressContainer)
+        })
         openNewAddFormBtn.addEventListener("click",()=>{
             Utils.openModal(newAddressContainer)
         })
@@ -535,41 +648,25 @@ async function loadAddress() {
                 Utils.closeModal(newAddressContainer)
             }
         })
+        editAddressContainer.addEventListener("click",(e)=>{
+            if(e.target === editAddressContainer){
+                Utils.closeModal(editAddressContainer)
+            }
+        })
 
-        function handleEdit(addressContainer) {
-            const originalName = addressContainer.querySelector('.default-name, .address-content p:first-child').textContent;
-            const originalPhone = addressContainer.querySelector('.default-phone-number, .address-content p:nth-child(2)').textContent;
-            const originalAddressDetail = addressContainer.querySelector('.address-detail').textContent;
-            const addressParts = originalAddressDetail.split(",")
-            const detail_address = addressParts[0] || '';  
-            const village = addressParts[1] || '';        
-            const ward = addressParts[2] || '';           
-            const district = addressParts[3] || '';      
-            const province = addressParts[4] || '';      
-
-            console.log({ detail_address,village, ward, district, province });
-
-            Utils.openModal(editAddressContainer);
-
-            editAddressContainer.querySelector('.full-name').value = originalName;
-            editAddressContainer.querySelector('.phone').value = (originalPhone);
-            editAddressContainer.querySelector('.province').value = province;
-            editAddressContainer.querySelector('.district').value = district;
-            editAddressContainer.querySelector('.ward').value = ward;
-            editAddressContainer.querySelector('.village').value = village;
-            editAddressContainer.querySelector('.detailed').value = detail_address;
-            editAddressContainer.querySelector('.phone').addEventListener('input', function(event) {
-                let value = event.target.value;
-                value = value.replace(/[^0-9]/g, '');
-                event.target.value = value;
-            });
-        }
-
-        function handleDelete(id) {
-            console.log(id)
-        }
+        
     } catch (error) {
-        console.error('Lỗi khi tải địa chỉ:', error);
+        if(error.status === 400){
+            Utils.getToast("warning", "Vui lòng nhập thông tin cá nhân!")
+            const defaultAddressContainer = document.querySelector('.default-address');
+            const otherAddressesContainer = document.querySelector('.other-address');
+
+            defaultAddressContainer.innerHTML = `
+                <label class="address-type">Địa chỉ mặc định</label>
+                <p style = "text-align:center; witdh: 100%; ">Trống</p>
+                <button disabled class="new-address-btn">Thêm địa chỉ giao hàng mới</button>`;
+            otherAddressesContainer.innerHTML += '<p style = "text-align:center; witdh: 100%; ">Trống</p>';
+        }
     }
 }
 
@@ -580,11 +677,16 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await Api.getInforUser()
             if(response.status === 200){
+                console.log(response)
                 data = response.userDTO
                 fillData(data)
+            }else{
+                if(response.status === 202){
+                    email.value = response.accountDTO.email
+                }
             }
         } catch (error) {
-            alert(error)
+            Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
         }
     }
     fetchData()
