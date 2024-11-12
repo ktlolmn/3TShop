@@ -66,6 +66,23 @@ export default class Api{
         return response
     }
 
+    static getDeleveryByUser =  async ()=>{
+        const response = await this.get(`/delevery-information/get-by-user`)
+        return response
+    }
+
+    static createNewDelevery =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/delevery-information/add`,data)
+        return response
+    }
+
+    static editDelevery =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/delevery-information/add`,data)
+        return response
+    }
+
     static createNewOrder = async (data) => {
         console.log(data)
         const response = await this.post(`/order/add`,data)
