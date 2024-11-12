@@ -1,6 +1,62 @@
 import Utils from "../Utils.js"
+import Api from "../Api.js"
+
+async function loadAddress() {
+    try {
+        const response = await Api.getDeleveryByUser();
+        if(response.status === 200){
+            const addresses = response.delevery_InformationDTOList;
+            const defaultAddressContainer = document.querySelector('.infor-container .address-content');
+            const otherAddressesContainer = document.querySelector('#modal-container .content');
+    
+            defaultAddressContainer.innerHTML = '';
+            otherAddressesContainer.innerHTML = '';
+    
+            addresses.forEach((address) => {    
+                if (address.is_default === '1') {
+                    defaultAddressContainer.setAttribute("data-id",`${address.de_infor_id}`)
+                    defaultAddressContainer.innerHTML = `
+                        <div>
+                            <p id="name" class="default-name">${address.name}</p>
+                            <p id="phone" class="default-phone-number">${address.phone}</p>
+                        </div>
+                        <p id="address" class="address-detail">${address.address_line_2}, ${address.address_line_1}</p>
+                    `;
+                } else {
+                    const addressHTML = `
+                        <div class="address-container" data-id = "${address.de_infor_id}">
+                            <div class="action-address">
+                                <input type="checkbox" name="" id="">
+                            </div>
+                            <div class="address-content">
+                                <div>
+                                    <p class="name">${address.name}</p>
+                                    <p class="phone">${address.phone}</p>
+                                </div>
+                                <p class="address-detail">${address.address_line_2}, ${address.address_line_1}</p>
+                            </div>
+                        </div>
+                    `;
+                    otherAddressesContainer.innerHTML += addressHTML;
+                }
+                
+            });
+        }else{
+            if(response.status === 202){       
+                const payBtn = document.querySelector(".pay-btn")  
+                payBtn.disabled = true 
+                const defaultAddressContainer = document.querySelector('.infor-container .address-container');
+                defaultAddressContainer.innerHTML = `
+                    <button class="new-address-btn"><a href = "/personal-infor">Thêm địa chỉ giao hàng mới</a></button>`;
+            }
+        }
+    } catch (error) {
+        console.error('Lỗi khi tải địa chỉ:', error);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadAddress()
     const closeModalBtn = document.querySelector(".modal-body .close")
     const openModalBtn = document.querySelector(".btn-change-address")
     const modal = document.querySelector("#modal-container")
