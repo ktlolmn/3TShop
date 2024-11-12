@@ -5,15 +5,18 @@ async function loadAddress() {
     try {
         const response = await Api.getDeleveryByUser();
         if(response.status === 200){
-            const addresses = response.delevery_InformationDTOList;
             const defaultAddressContainer = document.querySelector('.infor-container .address-content');
             const otherAddressesContainer = document.querySelector('#modal-container .content');
+            const openModalBtn = document.querySelector(".btn-change-address button")
+            const addresses = response.delevery_InformationDTOList;
     
             defaultAddressContainer.innerHTML = '';
             otherAddressesContainer.innerHTML = '';
+            console.log(addresses.length, openModalBtn)
+            addresses.length > 1 ?openModalBtn.disabled = false : openModalBtn.disabled = true
     
             addresses.forEach((address) => {    
-                if (address.is_default === '1') {
+                if (address._default) {
                     defaultAddressContainer.setAttribute("data-id",`${address.de_infor_id}`)
                     defaultAddressContainer.innerHTML = `
                         <div>
@@ -119,9 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 Utils.getToast("warning", "Giỏ hàng của bạn không có sản phẩm để thanh toán.");
                 return;
             }
-
+            const defaultAddressContainer = document.querySelector('.infor-container .address-content');
+            const idAddress = defaultAddressContainer.dataset.id
+            console.log(idAddress)
             const orderData = {
-                idAddress: 1,
+                idAddress: idAddress,
                 orderRequests: cartData.map(product => ({
                     productId: product.productId,
                     colorId: product.colorId,

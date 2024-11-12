@@ -126,6 +126,11 @@ button:disabled{
     cursor: not-allowed !important;
 }
 
+.disabled{ 
+    opacity: .8;
+    cursor: not-allowed !important;
+}
+
 .group-button .edit{
     background-color: #D0D0D0;
     color: #222831;

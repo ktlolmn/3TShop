@@ -10,22 +10,44 @@ export default class Api{
         }
     }
 
+    // static async get(endpoint) {
+    //     try {
+    //         const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
+    //             method: 'GET',
+    //             headers: Api.getHeader(),
+    //         });
+            
+    //         if (!response.ok) {
+    //             throw new Error(`HTTP error! status: ${response.status}`);
+    //         }
+
+    //         return await response.json(); 
+    //     } catch (error) {
+    //         console.error('Fetch GET error:', error);
+    //     }
+    // }
+
     static async get(endpoint) {
         try {
             const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: Api.getHeader(),
             });
-            
+    
+            // Nếu response không OK, tạo lỗi kèm status
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
-
-            return await response.json(); 
+    
+            return await response.json();
         } catch (error) {
             console.error('Fetch GET error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
+    
 
     static async getNoAuth(endpoint) {
         try {
@@ -77,6 +99,16 @@ export default class Api{
         return response
     }
 
+    static setDefaultAddress =  async (id)=>{
+        const response = await this.get(`/delevery-information/set-default/${id}`)
+        return response
+    }
+
+    static deleteAddress =  async (id)=>{
+        const response = await this.get(`/delevery-information/delete/${id}`)
+        return response
+    }
+
     static editDelevery =  async (data)=>{
         console.log(data)
         const response = await this.post(`/delevery-information/add`,data)
@@ -90,7 +122,7 @@ export default class Api{
     }
 
     static getInforUser = async () => {
-        const response = await this.get(`/user/get-user-info`)
+        const response = await this.get(`/user/get-user-information`)
         return response
     }
 

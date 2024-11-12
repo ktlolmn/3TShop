@@ -210,7 +210,8 @@
 }
 
 
-#logout{
+#logout,
+#confirm{
     background-color: #2e2d2d3d;
     position: fixed;
     top: 0;
@@ -223,13 +224,15 @@
     justify-content: center;
 }
 
-#logout .modal-logout{
+#logout .modal-logout,
+#confirm .modal-confirm{
     width: 405px;
     margin: auto;
     background-color: #ffff;
     border-radius: 8px;
 }
 
+.modal-confirm>span,
 .modal-logout>span{
     display: block;
     text-align: right;
@@ -237,6 +240,8 @@
     color: #825B32;
     padding: 10px;
 }
+
+.modal-confirm .content,
 .modal-logout .content{
     padding: 40px;
     display: flex;
@@ -261,6 +266,8 @@
     text-align: center;
     color: #825B32;
 }
+
+.modal-confirm .content div,
 .modal-logout .content div{
     display: flex;
     justify-content: center;
