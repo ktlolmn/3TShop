@@ -637,6 +637,7 @@ async function loadAddress() {
                         if (addressId) {
                             setDefaultAddress(addressId)
                         }
+                        closeButton.disabled = true
                     });
                 });
 

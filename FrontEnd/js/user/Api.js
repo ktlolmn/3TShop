@@ -5,7 +5,7 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMzE0NTY0LCJleHAiOjE3MzE1MDA5NjR9.9Hu-7LxrK5yy9yd0gvmVfLhysyGUs4WJyykwrKHm3N4`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTAxNTk0LCJleHAiOjE3MzE2ODc5OTR9.VcSimoSwmp9TOh8y1-C3zy15B8JBoSdiqLPSlNKSDIk`,
             "Content-Type": "application/json"
         }
     }
@@ -124,6 +124,16 @@ export default class Api{
     static createNewOrder = async (data) => {
         console.log(data)
         const response = await this.post(`/order/add`,data)
+        return response
+    }
+
+    static changeStatusOrder = async (data) => {
+        const response = await this.post(`/order/change-status`,data)
+        return response
+    }
+
+    static getOrderByUserAndStatus = async (status) => {
+        const response = await this.get(`/order/get-by-user/${status}`)
         return response
     }
 

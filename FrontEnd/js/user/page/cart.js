@@ -196,10 +196,12 @@ async function fetchAndRenderCartItems() {
         
         const fragment = document.createDocumentFragment();
         cartItems.forEach(item => {
-            if (item.quantity <= item.specificationsDTO.quantity) {
-                const row = createCartItemRow(item);
-                fragment.appendChild(row);
-            }
+            // if (item.quantity <= item.specificationsDTO.quantity) {
+            //     const row = createCartItemRow(item);
+            //     fragment.appendChild(row);
+            // }
+            const row = createCartItemRow(item);
+            fragment.appendChild(row);
         });
         
         cartItemsContainer.appendChild(fragment);

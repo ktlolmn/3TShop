@@ -16,14 +16,14 @@ export default class Utils{
                 <div class="logo">
                     <a href="/"><img src="../../img/utils/logoShop.png" alt=""></a>
                 </div>
-    
+
                 <div class="menu-action">
                     <div class="search-container">
                         <i id="search-btn" class="material-icons">search</i>
-                        <input type="text" id="search-input" placeholder="Tìm kiếm...">
-                        <i class="border-left material-symbols-outlined">image_search</i>
+                        <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                        <i class="border-left material-symbols-outlined image-search-btn">image_search</i>
                     </div>
-    
+
                     <div class="menu-icons">
                         <a href="/cart">
                             <i class="material-symbols-outlined">shopping_cart</i>
@@ -70,31 +70,57 @@ export default class Utils{
                         </div>
                     </div>
                 </div>
+
+                <div class="modal-upload">
+                    <div class="modal-upload-content">
+                        <div class="upload-area">
+                            <div class="upload-placeholder">
+                                <img src="../../img/utils/icon-upload.png" alt="Upload icon" class="upload-icon">
+                                <input type="file" id="file-upload" accept="image/*" multiple hidden>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="upload-file-btn">
+                                    Tải hình ảnh lên
+                                    <span class="material-symbols-outlined">
+                                        upload
+                                    </span>                 
+                            </button>
+                            <button class="search-product-btn">
+                                Tìm kiếm sản phẩm 
+                                <span class="material-symbols-outlined">
+                                    action_key
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </header>
         `;
         document.body.insertAdjacentHTML('afterbegin', html);
-    
+
         const openMenu = () => {
             const nav = document.querySelector('.nav');
             nav.classList.toggle("active-menu");
         };
-    
+
         const menuBtn = document.querySelector('.menu-btn');
         if (menuBtn) {
             menuBtn.addEventListener('click', openMenu);
         }
-    
+
         const logoutContainer = document.querySelector("#logout");
-        const close = document.querySelector("#logout .close");
-        const cancel = document.querySelector("#logout .cancel");
+        const closeLogout = document.querySelector("#logout .close");
+        const cancelLogout = document.querySelector("#logout .cancel");
         const btnLogout = document.querySelector(".btn-logout");
+        
         btnLogout.addEventListener("click", () => {
             this.openModal(logoutContainer);
         });
-        close.addEventListener("click", () => {
+        closeLogout.addEventListener("click", () => {
             this.closeModal(logoutContainer);
         });
-        cancel.addEventListener("click", () => {
+        cancelLogout.addEventListener("click", () => {
             this.closeModal(logoutContainer);
         });
         logoutContainer.addEventListener("click", (e) => {
@@ -102,26 +128,101 @@ export default class Utils{
                 this.closeModal(logoutContainer);
             }
         });
-    
+
         const searchInput = document.querySelector("#search-input");
         const searchBtn = document.querySelector("#search-btn");
-    
+
         const handleSearch = () => {
             let query = searchInput.value.trim();
             if (query) {
                 query = query.replace(/\s+/g, '-').toLowerCase();
-        
                 window.location.href = `/product/search?name=${encodeURIComponent(query)}`;
             }
         };
-    
+
         searchInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 handleSearch();
             }
         });
-    
+
         searchBtn.addEventListener("click", handleSearch);
+
+        const imageSearchModal = document.querySelector(".modal-upload");
+        const imageSearchBtn = document.querySelector(".image-search-btn");
+        const uploadArea = imageSearchModal.querySelector(".upload-area");
+        const fileInput = document.getElementById("file-upload");
+        const searchProductBtn = imageSearchModal.querySelector(".search-product-btn");
+        const uploadFileBtn = imageSearchModal.querySelector(".upload-file-btn");
+
+        imageSearchBtn.addEventListener("click", () => {
+            this.openModal(imageSearchModal);
+        });
+
+        imageSearchModal.addEventListener("click", (e) => {
+            if (e.target === imageSearchModal) {
+                this.closeModal(imageSearchModal);
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        uploadFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    console.log('Selected image:', file);
+                    
+                    // Clear any previous image
+                    const existingImage = uploadArea.querySelector('img');
+                    if (existingImage) {
+                        existingImage.remove();
+                    }
+        
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewImg = document.createElement('img');
+                        previewImg.src = e.target.result;
+                        previewImg.style.maxWidth = '100%';
+                        previewImg.style.maxHeight = '200px';
+        
+                        // Hide the placeholder and add the new image
+                        uploadArea.querySelector('.upload-placeholder').style.display = 'none';
+                        uploadArea.appendChild(previewImg);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    Utils.getToast("error", "Vui lòng chọn file hình ảnh!");
+                }
+            }
+        }
+        
+
+        searchProductBtn.addEventListener('click', () => {
+            console.log('Searching products by image...');
+        });
     }
     
 

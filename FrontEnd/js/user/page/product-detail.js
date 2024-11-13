@@ -496,6 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await Api.addCartItem(data);
             if (response.status === 200) {
+                console.log(response)
                 Utils.getToast("success", "Thêm vào giỏ hàng thành công!");
                 errMess.style.opacity = 0;
             }
