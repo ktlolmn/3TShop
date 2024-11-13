@@ -397,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await Api.getProductByCategory(id);
             if (response.status === 200) {
-                state.data = response.productDTOList;
+                state.data = response.productSpecDTOList;
                 console.log(state.data)
                 const containerSamePro = document.querySelector(".same-product-list")
                 Utils.fillProduct(state.data, containerSamePro);

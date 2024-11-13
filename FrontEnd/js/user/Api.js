@@ -99,9 +99,9 @@ export default class Api{
         return response
     }
 
-    static createNewDelevery =  async (data)=>{
+    static editDelevery =  async (data)=>{
         console.log(data)
-        const response = await this.post(`/delevery-information/add`,data)
+        const response = await this.post(`/delevery-information/edit`,data)
         return response
     }
 
@@ -115,7 +115,7 @@ export default class Api{
         return response
     }
 
-    static editDelevery =  async (data)=>{
+    static createNewDelevery =  async (data)=>{
         console.log(data)
         const response = await this.post(`/delevery-information/add`,data)
         return response
@@ -171,6 +171,11 @@ export default class Api{
     static getProductByCategory = async (id) => {
         const response = await this.getNoAuth(`/product/get-by-category-id/${id}`)
         console.log(response)
+        return response
+    }
+
+    static getProductByName = async (name) => {
+        const response = await this.getNoAuth(`/product/get-by-name/${name}`)
         return response
     }
 

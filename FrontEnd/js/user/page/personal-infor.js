@@ -283,9 +283,14 @@ submitNewAddressBtn.addEventListener("click", async ()=>{
                     location.reload(); 
                 }, 1000); 
             }else{
+                const model = document.querySelector("#modal-add-address")
+                Utils.closeModal(model)
                 Utils.getToast("error","Có lỗi vui lòng thử lại!")
             }
         } catch (error) {
+            console.log(error)
+            const model = document.querySelector("#modal-add-address")
+            Utils.closeModal(model)
             Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
         }
     }
@@ -333,18 +338,20 @@ submitEditAddressBtn.addEventListener("click", async ()=>{
         isValid = false
     }
     if(isValid){
+        const addressId = editAddressContainer.dataset.id
         const newAddress = {
+            de_infor_id: addressId,
             name: fullNameEdit.value,
             phone: phoneNumberEdit.value,
             address_line_1: provinceEdit.value,
             address_line_2: detailedEdit.value + ", " + villageEdit.value + ", " + wardEdit.value + ", " + districtEdit.value,
         };
         try {
-            const response = await Api.createNewDelevery(newAddress)
+            const response = await Api.editDelevery(newAddress)
             if(response.status === 200){
-                const model = document.querySelector("#modal-add-address")
+                const model = document.querySelector("#modal-edit-address")
                 Utils.closeModal(model)
-                Utils.getToast("success"," Tạo địa chỉ thành công!")
+                Utils.getToast("success","Chỉnh sửa thông tin thành công!")
                 setTimeout(function() {
                     location.reload(); 
                 }, 2000); 
@@ -461,6 +468,8 @@ const fillData = (data)=>{
 }
 
 function handleEdit(addressContainer) {
+    const addressId = addressContainer?.dataset.id;
+    editAddressContainer.setAttribute("data-id",addressId)
     const originalName = addressContainer.querySelector('.default-name, .address-content p:first-child').textContent;
     const originalPhone = addressContainer.querySelector('.default-phone-number, .address-content p:nth-child(2)').textContent;
     const originalAddressDetail = addressContainer.querySelector('.address-detail').textContent;
@@ -729,5 +738,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     fetchData()
-    
 });

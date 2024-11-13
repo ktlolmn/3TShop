@@ -152,6 +152,7 @@
     right: 0;
     transition: opacity 0s linear;
     animation: slideLeft 0.5s ease forwards;
+    z-index: 1000;
 }
 
 #toast.hide {
