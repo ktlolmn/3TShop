@@ -14,69 +14,55 @@ export default class Utils{
         const html = `
             <header class="header">
                 <div class="logo">
-                    <a href = "/"><img src="../../img/utils/logoShop.png" alt=""></a>
+                    <a href="/"><img src="../../img/utils/logoShop.png" alt=""></a>
                 </div>
-
+    
                 <div class="menu-action">
                     <div class="search-container">
-                        <i class="material-icons">search</i>
-                        <input type="text" placeholder="Tìm kiếm...">
+                        <i id="search-btn" class="material-icons">search</i>
+                        <input type="text" id="search-input" placeholder="Tìm kiếm...">
                         <i class="border-left material-symbols-outlined">image_search</i>
                     </div>
-
+    
                     <div class="menu-icons">
-                        <a href = "/cart">
-                            <i class="material-symbols-outlined">
-                                shopping_cart
-                            </i>
+                        <a href="/cart">
+                            <i class="material-symbols-outlined">shopping_cart</i>
                         </a>
                         <div>
-                            <i class="material-symbols-outlined menu-btn">
-                                account_circle
-                            </i>
+                            <i class="material-symbols-outlined menu-btn">account_circle</i>
                             <ul class="nav">
                                 <li>
                                     <a href="/personal-infor">
                                         Tài khoản của bạn
-                                        <span class="material-symbols-outlined">
-                                            shield_person
-                                        </span>
+                                        <span class="material-symbols-outlined">shield_person</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="/order">
                                         Đơn hàng
-                                        <span class="material-symbols-outlined">
-                                            package_2
-                                        </span>
+                                        <span class="material-symbols-outlined">package_2</span>
                                     </a>
                                 </li>
                                 <li class="btn-logout">
                                     <a href="#">
                                         Đăng xuất
-                                        <span class="material-symbols-outlined">
-                                            move_item
-                                        </span>
+                                        <span class="material-symbols-outlined">move_item</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div id="toast-container">
-                    
-                </div>
+                <div id="toast-container"></div>
                 <div id="logout">
                     <div class="modal-logout">
-                        <span class="close material-symbols-outlined">
-                            close
-                        </span>
+                        <span class="close material-symbols-outlined">close</span>
                         <div class="content">
                             <div>
                                 <img src="../../img/utils/quit.png" />
                             </div>
                             <h4>ĐĂNG XUẤT</h4>
-                            <p>Bạn có chắc chẵn đăng xuất tài khoản không</p>
+                            <p>Bạn có chắc chắn muốn đăng xuất không?</p>
                             <div class="btn-container">
                                 <a class="cancel">Thoát</a>
                                 <a href="/login" class="submit">Đăng xuất</a>
@@ -85,36 +71,59 @@ export default class Utils{
                     </div>
                 </div>
             </header>
-        `
-        document.body.insertAdjacentHTML('afterbegin', html) 
+        `;
+        document.body.insertAdjacentHTML('afterbegin', html);
+    
         const openMenu = () => {
             const nav = document.querySelector('.nav');
             nav.classList.toggle("active-menu");
-        }
-
+        };
+    
         const menuBtn = document.querySelector('.menu-btn');
         if (menuBtn) {
             menuBtn.addEventListener('click', openMenu);
         }
-        const logoutContainer = document.querySelector("#logout")
-        const close = document.querySelector("#logout .close")
-        const cancel = document.querySelector("#logout .cancel")
-        const btnLogout = document.querySelector(".btn-logout")
-        btnLogout.addEventListener("click",()=>{
-            this.openModal(logoutContainer)
-        })
-        close.addEventListener("click",()=>{
-            this.closeModal(logoutContainer)
-        })
-        cancel.addEventListener("click",()=>{
-            this.closeModal(logoutContainer)
-        })
-        logoutContainer.addEventListener("click",(e)=>{
-            if(e.target === logoutContainer){
-                this.closeModal(logoutContainer)
+    
+        const logoutContainer = document.querySelector("#logout");
+        const close = document.querySelector("#logout .close");
+        const cancel = document.querySelector("#logout .cancel");
+        const btnLogout = document.querySelector(".btn-logout");
+        btnLogout.addEventListener("click", () => {
+            this.openModal(logoutContainer);
+        });
+        close.addEventListener("click", () => {
+            this.closeModal(logoutContainer);
+        });
+        cancel.addEventListener("click", () => {
+            this.closeModal(logoutContainer);
+        });
+        logoutContainer.addEventListener("click", (e) => {
+            if (e.target === logoutContainer) {
+                this.closeModal(logoutContainer);
             }
-        })
+        });
+    
+        const searchInput = document.querySelector("#search-input");
+        const searchBtn = document.querySelector("#search-btn");
+    
+        const handleSearch = () => {
+            let query = searchInput.value.trim();
+            if (query) {
+                query = query.replace(/\s+/g, '-').toLowerCase();
+        
+                window.location.href = `/product/search?name=${encodeURIComponent(query)}`;
+            }
+        };
+    
+        searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleSearch();
+            }
+        });
+    
+        searchBtn.addEventListener("click", handleSearch);
     }
+    
 
     static getToast(type, mess){
         const html = `
@@ -392,7 +401,7 @@ export default class Utils{
         // <img src="${category.image || '../../img/items/Category4.png'}" alt="${category.name || ''}">
         const categoryItems = categories.map(category => `
             <div class="item">
-                <a href="${category.url || '#'}">
+                <a href="/category/${category.category_id}">
                     <img src="../../img/items/Category4.png" alt="${category.name || ''}">
                     <p class="category-name">${category.name || ''}</p>
                 </a>

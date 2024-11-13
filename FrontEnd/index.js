@@ -42,6 +42,14 @@ app.get('/tee', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
 });
 
+app.get('/category/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/products.html'));
+});
+
+app.get('/product/search*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'user/products.html'));
+});
+
 app.get('/paint', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/category.html'));
 });

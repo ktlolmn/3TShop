@@ -137,17 +137,56 @@ cancelBtnInforForm.addEventListener("click", (e) => {
     submitBtnInforForm.disabled = true
 });
 
+async function editInformationUser(data) {
+    try {
+        const response = await Api.editInforUser(data)
+        if(response.status === 200){
+            Utils.getToast("success","Cập nhật thông tin thành công!")
+            inputsInforForm.forEach((i) => {
+                i.readOnly = true;
+            });
+            cancelBtnInforForm.style.display = "none";
+            editBtnInforForm.style.display = "block";
+            submitBtnInforForm.disabled = true
+        }
+    } catch (error) {
+        if(error.status === 408){
+            console.log(errorPhone)
+            phone.nextElementSibling.style.opacity = 1
+            phone.nextElementSibling.textContent = "Số điện thoại đã tồn tại!"
+        }else{
+            if(error.status === 409){
+                email.nextElementSibling.style.opacity = 1
+                email.nextElementSibling.textContent = "Email đã tồn tại!"
+            }else{
+                Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại sau!")
+            }
+        }
+    }
+}
+
 submitBtnInforForm.addEventListener("click", (e) => {
     e.preventDefault();
     if (validateForm()) {
-        alert("Thông tin đã được lưu thành công!");
-        inputsInforForm.forEach((i) => {
-            i.readOnly = true;
-        });
-        cancelBtnInforForm.style.display = "none";
-        editBtnInforForm.style.display = "block";
+        const fName = name.value.trim().split(" ")[0];
+        const lName = name.value.trim().split(" ").slice(1).join(" ");
+        const phoneValue = phone.value.trim();
+        const birthdayValue = birthday.value;
+        const genderValue = genderMale.checked ? true : (genderFemale.checked ? false : null);
+        const emailValue = email.value.trim();
+
+        const data = {
+            f_name: fName,
+            l_name: lName,
+            gender: genderValue,
+            phone: phoneValue,
+            email: emailValue,
+            date_of_birth: birthdayValue,
+        };
+
+        console.log("Dữ liệu gửi đi:", data);
+        editInformationUser(data)
     } 
-    submitBtnInforForm.disabled = true
 });
 
 const submitNewAddressBtn = document.querySelector("#modal-add-address .submit")
@@ -244,9 +283,14 @@ submitNewAddressBtn.addEventListener("click", async ()=>{
                     location.reload(); 
                 }, 1000); 
             }else{
+                const model = document.querySelector("#modal-add-address")
+                Utils.closeModal(model)
                 Utils.getToast("error","Có lỗi vui lòng thử lại!")
             }
         } catch (error) {
+            console.log(error)
+            const model = document.querySelector("#modal-add-address")
+            Utils.closeModal(model)
             Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
         }
     }
@@ -294,18 +338,20 @@ submitEditAddressBtn.addEventListener("click", async ()=>{
         isValid = false
     }
     if(isValid){
+        const addressId = editAddressContainer.dataset.id
         const newAddress = {
+            de_infor_id: addressId,
             name: fullNameEdit.value,
             phone: phoneNumberEdit.value,
             address_line_1: provinceEdit.value,
             address_line_2: detailedEdit.value + ", " + villageEdit.value + ", " + wardEdit.value + ", " + districtEdit.value,
         };
         try {
-            const response = await Api.createNewDelevery(newAddress)
+            const response = await Api.editDelevery(newAddress)
             if(response.status === 200){
-                const model = document.querySelector("#modal-add-address")
+                const model = document.querySelector("#modal-edit-address")
                 Utils.closeModal(model)
-                Utils.getToast("success"," Tạo địa chỉ thành công!")
+                Utils.getToast("success","Chỉnh sửa thông tin thành công!")
                 setTimeout(function() {
                     location.reload(); 
                 }, 2000); 
@@ -422,6 +468,8 @@ const fillData = (data)=>{
 }
 
 function handleEdit(addressContainer) {
+    const addressId = addressContainer?.dataset.id;
+    editAddressContainer.setAttribute("data-id",addressId)
     const originalName = addressContainer.querySelector('.default-name, .address-content p:first-child').textContent;
     const originalPhone = addressContainer.querySelector('.default-phone-number, .address-content p:nth-child(2)').textContent;
     const originalAddressDetail = addressContainer.querySelector('.address-detail').textContent;
@@ -690,5 +738,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     fetchData()
-    
 });

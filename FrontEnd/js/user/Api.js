@@ -56,12 +56,15 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json(); 
         } catch (error) {
             console.error('Fetch GET error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
     
@@ -74,12 +77,15 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json();
         } catch (error) {
             console.error('Fetch POST error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
 
@@ -93,9 +99,9 @@ export default class Api{
         return response
     }
 
-    static createNewDelevery =  async (data)=>{
+    static editDelevery =  async (data)=>{
         console.log(data)
-        const response = await this.post(`/delevery-information/add`,data)
+        const response = await this.post(`/delevery-information/edit`,data)
         return response
     }
 
@@ -109,7 +115,7 @@ export default class Api{
         return response
     }
 
-    static editDelevery =  async (data)=>{
+    static createNewDelevery =  async (data)=>{
         console.log(data)
         const response = await this.post(`/delevery-information/add`,data)
         return response
@@ -126,8 +132,18 @@ export default class Api{
         return response
     }
 
+    static editInforUser = async (data) => {
+        const response = await this.post(`/user/edit-user-information`, data)
+        return response
+    }
+
     static addCartItem = async (data) => {
         const response = await this.post(`/cart-items/add`, data)
+        return response
+    }
+
+    static deleteItemInCart = async (id) => {
+        const response = await this.get(`/cart-items/delete/${id}`)
         return response
     }
 
@@ -155,6 +171,11 @@ export default class Api{
     static getProductByCategory = async (id) => {
         const response = await this.getNoAuth(`/product/get-by-category-id/${id}`)
         console.log(response)
+        return response
+    }
+
+    static getProductByName = async (name) => {
+        const response = await this.getNoAuth(`/product/get-by-name/${name}`)
         return response
     }
 
