@@ -56,12 +56,15 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json(); 
         } catch (error) {
             console.error('Fetch GET error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
     
@@ -74,12 +77,15 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json();
         } catch (error) {
             console.error('Fetch POST error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
 
@@ -126,8 +132,18 @@ export default class Api{
         return response
     }
 
+    static editInforUser = async (data) => {
+        const response = await this.post(`/user/edit-user-information`, data)
+        return response
+    }
+
     static addCartItem = async (data) => {
         const response = await this.post(`/cart-items/add`, data)
+        return response
+    }
+
+    static deleteItemInCart = async (id) => {
+        const response = await this.get(`/cart-items/delete/${id}`)
         return response
     }
 

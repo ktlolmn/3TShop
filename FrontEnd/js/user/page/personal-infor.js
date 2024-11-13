@@ -137,17 +137,56 @@ cancelBtnInforForm.addEventListener("click", (e) => {
     submitBtnInforForm.disabled = true
 });
 
+async function editInformationUser(data) {
+    try {
+        const response = await Api.editInforUser(data)
+        if(response.status === 200){
+            Utils.getToast("success","Cập nhật thông tin thành công!")
+            inputsInforForm.forEach((i) => {
+                i.readOnly = true;
+            });
+            cancelBtnInforForm.style.display = "none";
+            editBtnInforForm.style.display = "block";
+            submitBtnInforForm.disabled = true
+        }
+    } catch (error) {
+        if(error.status === 408){
+            console.log(errorPhone)
+            phone.nextElementSibling.style.opacity = 1
+            phone.nextElementSibling.textContent = "Số điện thoại đã tồn tại!"
+        }else{
+            if(error.status === 409){
+                email.nextElementSibling.style.opacity = 1
+                email.nextElementSibling.textContent = "Email đã tồn tại!"
+            }else{
+                Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại sau!")
+            }
+        }
+    }
+}
+
 submitBtnInforForm.addEventListener("click", (e) => {
     e.preventDefault();
     if (validateForm()) {
-        alert("Thông tin đã được lưu thành công!");
-        inputsInforForm.forEach((i) => {
-            i.readOnly = true;
-        });
-        cancelBtnInforForm.style.display = "none";
-        editBtnInforForm.style.display = "block";
+        const fName = name.value.trim().split(" ")[0];
+        const lName = name.value.trim().split(" ").slice(1).join(" ");
+        const phoneValue = phone.value.trim();
+        const birthdayValue = birthday.value;
+        const genderValue = genderMale.checked ? true : (genderFemale.checked ? false : null);
+        const emailValue = email.value.trim();
+
+        const data = {
+            f_name: fName,
+            l_name: lName,
+            gender: genderValue,
+            phone: phoneValue,
+            email: emailValue,
+            date_of_birth: birthdayValue,
+        };
+
+        console.log("Dữ liệu gửi đi:", data);
+        editInformationUser(data)
     } 
-    submitBtnInforForm.disabled = true
 });
 
 const submitNewAddressBtn = document.querySelector("#modal-add-address .submit")

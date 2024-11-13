@@ -95,10 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function onColorSelected(color) {
         if (state.selectedColor && state.selectedColor.color_id === color.color_id) {
             state.selectedColor = null;
-            renderOptions(); // Render lại cả color và size để reset view
+            renderOptions();
         } else {
             state.selectedColor = color;
-            renderSizes(); // Chỉ cần render lại sizes để lọc theo color đã chọn
+            renderSizes();
         }
         updateColorSelection();
     }
@@ -106,10 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function onSizeSelected(size) {
         if (state.selectedSize && state.selectedSize.size_id === size.size_id) {
             state.selectedSize = null;
-            renderOptions(); // Render lại cả color và size để reset view
+            renderOptions(); 
         } else {
             state.selectedSize = size;
-            renderColors(); // Chỉ cần render lại colors để lọc theo size đã chọn
+            renderColors(); 
         }
         updateSizeSelection();
     }
@@ -300,25 +300,98 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function setupQuantityHandlers() {
-        document.querySelectorAll('#decrease').forEach(button => {
-            button.addEventListener('click', function() {
-                const quantityDisplay = this.nextElementSibling;
-                const currentQuantity = parseInt(quantityDisplay.value);
-                if (currentQuantity > 1) {
-                    quantityDisplay.value = currentQuantity - 1;
-                }
-            });
-        });
+    function getAvailableQuantity() {
+        const selectedColorId = state.selectedColor ? state.selectedColor.color_id : null;
+        const selectedSizeId = state.selectedSize ? state.selectedSize.size_id : null;
+    
+        if (!selectedColorId || !selectedSizeId) return -1;
+    
+        const spec = state.specifications.find(
+            s => s.colorDTO.color_id === selectedColorId && s.sizeDTO.size_id === selectedSizeId
+        );
 
-        document.querySelectorAll('#increase').forEach(button => {
-            button.addEventListener('click', function() {
-                const quantityDisplay = this.previousElementSibling;
-                const currentQuantity = parseInt(quantityDisplay.value);
-                quantityDisplay.value = currentQuantity + 1;
-            });
+        return spec ? spec.quantity : 0;
+    } 
+    
+    function getIdSpec() {
+        const selectedColorId = state.selectedColor ? state.selectedColor.color_id : null;
+        const selectedSizeId = state.selectedSize ? state.selectedSize.size_id : null;
+    
+        if (!selectedColorId || !selectedSizeId) return -1;
+    
+        const spec = state.specifications.find(
+            s => s.colorDTO.color_id === selectedColorId && s.sizeDTO.size_id === selectedSizeId
+        );
+
+        return spec ? spec.specifications_id : 0;
+    } 
+
+    // function setupQuantityHandlers() {
+    //     document.querySelectorAll('#decrease').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const quantityDisplay = this.nextElementSibling;
+    //             const currentQuantity = parseInt(quantityDisplay.value);
+    //             if (currentQuantity > 1) {
+    //                 quantityDisplay.value = currentQuantity - 1;
+    //             }
+    //         });
+    //     });
+
+    //     document.querySelectorAll('#increase').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const quantityDisplay = this.previousElementSibling;
+    //             const currentQuantity = parseInt(quantityDisplay.value);
+    //             quantityDisplay.value = currentQuantity + 1;
+    //         });
+    //     });
+    // }
+
+    function setupQuantityHandlers() {
+        const quantityInput = document.querySelector(".product-detail #quantity");
+        const decreaseButton = document.querySelector("#decrease");
+        const increaseButton = document.querySelector("#increase");
+        const errMess = document.querySelector(".err-mess");
+    
+        decreaseButton.addEventListener('click', function () {
+            const currentQuantity = parseInt(quantityInput.value);
+            if (currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                errMess.style.opacity = 0;
+            }
+        });
+    
+        increaseButton.addEventListener('click', function () {
+            const currentQuantity = parseInt(quantityInput.value);
+            const availableQuantity = getAvailableQuantity();
+            if(availableQuantity == -1){
+                errMess.textContent = `Vui lòng chọn size và màu sắc!`;
+                errMess.style.opacity = 1;
+                quantityInput.value = 1
+                return
+            }
+            if (currentQuantity < availableQuantity) {
+                quantityInput.value = currentQuantity + 1;
+                errMess.style.opacity = 0;
+            } else {
+                errMess.textContent = `Chỉ còn ${availableQuantity} sản phẩm có sẵn!`;
+                errMess.style.opacity = 1;
+            }
+        });
+    
+        quantityInput.addEventListener('input', function () {
+            const currentQuantity = parseInt(quantityInput.value);
+            const availableQuantity = getAvailableQuantity();
+    
+            if (currentQuantity > availableQuantity) {
+                quantityInput.value = availableQuantity;
+                errMess.textContent = `Chỉ còn ${availableQuantity} sản phẩm có sẵn!`;
+                errMess.style.opacity = 1;
+            } else {
+                errMess.style.opacity = 0;
+            }
         });
     }
+    
 
     async function fetchProductByCategory(id) {
         try {
@@ -349,39 +422,88 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // async function addItemToCart() {
+    //     const errMess = document.querySelector(".err-mess")
+    //     const colorOptionChosse = document.querySelector(".color-option .selected")
+    //     const sizeOptionChosse = document.querySelector(".size-option .selected")
+    //     if(!colorOptionChosse ){
+    //         errMess.textContent = "Vui lòng chọn màu!"
+    //         errMess.style.opacity = 1
+    //         return
+    //     }
+    //     if(!sizeOptionChosse){
+    //         errMess.textContent = "Vui lòng chọn kích thước!"
+    //         errMess.style.opacity = 1
+    //         return
+    //     }
+    //     const colorId = colorOptionChosse.getAttribute("data-color-id");
+    //     const sizeId = sizeOptionChosse.getAttribute("data-size-id");
+    //     const quantity = document.querySelector(".product-detail #quantity").value;
+    //     const data = {
+    //         productId, 
+    //         sizeId, 
+    //         colorId,
+    //         quantity
+    //     }
+    //     try {
+    //         const response = await Api.addCartItem(data)
+    //         if(response.status === 200){
+    //             Utils.getToast("success", "Thêm vào giỏ hàng thành công!")
+    //             errMess.style.opacity = 0
+    //         }
+    //     } catch (error) {
+    //         Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
+    //     }
+    // }
+
     async function addItemToCart() {
-        const errMess = document.querySelector(".err-mess")
-        const colorOptionChosse = document.querySelector(".color-option .selected")
-        const sizeOptionChosse = document.querySelector(".size-option .selected")
-        if(!colorOptionChosse ){
-            errMess.textContent = "Vui lòng chọn màu!"
-            errMess.style.opacity = 1
-            return
+        const errMess = document.querySelector(".err-mess");
+        const colorOptionChosse = document.querySelector(".color-option .selected");
+        const sizeOptionChosse = document.querySelector(".size-option .selected");
+
+        
+        if (!colorOptionChosse) {
+            errMess.textContent = "Vui lòng chọn màu!";
+            errMess.style.opacity = 1;
+            return;
         }
-        if(!sizeOptionChosse){
-            errMess.textContent = "Vui lòng chọn kích thước!"
-            errMess.style.opacity = 1
-            return
+        if (!sizeOptionChosse) {
+            errMess.textContent = "Vui lòng chọn kích thước!";
+            errMess.style.opacity = 1;
+            return;
         }
-        const colorId = colorOptionChosse.getAttribute("data-color-id");
-        const sizeId = sizeOptionChosse.getAttribute("data-size-id");
-        const quantity = document.querySelector(".product-detail #quantity").value;
+        
+        // const colorId = colorOptionChosse.getAttribute("data-color-id");
+        // const sizeId = sizeOptionChosse.getAttribute("data-size-id");
+        const quantity = parseInt(document.querySelector(".product-detail #quantity").value);
+        const availableQuantity = getAvailableQuantity();
+        
+        if (quantity > availableQuantity) {
+            errMess.textContent = `Chỉ còn ${availableQuantity} sản phẩm có sẵn!`;
+            errMess.style.opacity = 1;
+            return;
+        }
+
+        const spec_id = getIdSpec();
+        
         const data = {
-            productId, 
-            sizeId, 
-            colorId,
+            productId,
+            spec_id,
             quantity
-        }
+        };
+
+    
         try {
-            const response = await Api.addCartItem(data)
-            if(response.status === 200){
-                Utils.getToast("success", "Thêm vào giỏ hàng thành công!")
-                errMess.style.opacity = 0
+            const response = await Api.addCartItem(data);
+            if (response.status === 200) {
+                Utils.getToast("success", "Thêm vào giỏ hàng thành công!");
+                errMess.style.opacity = 0;
             }
         } catch (error) {
-            Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
+            Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!");
         }
     }
+    
 
     function initializePage() {
         Utils.getHeader();
