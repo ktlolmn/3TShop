@@ -124,9 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const defaultAddressContainer = document.querySelector('.infor-container .address-content');
             const idAddress = defaultAddressContainer.dataset.id
-            console.log(idAddress)
+            const note = document.querySelector("#orderNote").value
             const orderData = {
                 idAddress: idAddress,
+                note: note,
                 orderRequests: cartData.map(product => ({
                     productId: product.productId,
                     colorId: product.colorId,
@@ -170,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = document.querySelector(".modal-body .submit");
     
     submitBtn.addEventListener("click", () => {
-        // Find the checked address
         const checkedAddress = document.querySelector('.action-address input[type="checkbox"]:checked');
         
         if (!checkedAddress) {
@@ -178,16 +178,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Get the parent address container
         const selectedAddressContainer = checkedAddress.closest('.address-container');
         const selectedAddressId = selectedAddressContainer.dataset.id;
         
-        // Get the address details from the selected container
         const name = selectedAddressContainer.querySelector('.name').textContent;
         const phone = selectedAddressContainer.querySelector('.phone').textContent;
         const addressDetail = selectedAddressContainer.querySelector('.address-detail').textContent;
 
-        // Update the main address container
         const defaultAddressContainer = document.querySelector('.infor-container .address-content');
         defaultAddressContainer.setAttribute("data-id", selectedAddressId);
         defaultAddressContainer.innerHTML = `
@@ -198,11 +195,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <p id="address" class="address-detail">${addressDetail}</p>
         `;
 
-        // Close the modal
         const modal = document.querySelector("#modal-container");
         Utils.closeModal(modal);
         
-        // Optional: Show success message
         Utils.getToast("success", "Đã cập nhật địa chỉ giao hàng");
     });
 });
