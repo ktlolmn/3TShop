@@ -1,3 +1,5 @@
+import Utils from "./Utils.js";
+
 export default class Api{    
     
     static BASE_URL = "http://localhost:8080"
@@ -5,7 +7,7 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTAxNTk0LCJleHAiOjE3MzE2ODc5OTR9.VcSimoSwmp9TOh8y1-C3zy15B8JBoSdiqLPSlNKSDIk`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTU2MTc5LCJleHAiOjE3MzE3NDI1Nzl9.JNpPpqd9gdXt3U0O8IrwbGi5sIY1S-M6Th-PX-esfKY`,
             "Content-Type": "application/json"
         }
     }
@@ -28,6 +30,7 @@ export default class Api{
     // }
 
     static async get(endpoint) {
+        Utils.protectUser()
         try {
             const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
                 method: 'GET',
@@ -69,6 +72,7 @@ export default class Api{
     }
     
     static async post(endpoint, data) {
+        Utils.protectUser()
         try {
             const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
                 method: 'POST',
@@ -102,6 +106,12 @@ export default class Api{
     static editDelevery =  async (data)=>{
         console.log(data)
         const response = await this.post(`/delevery-information/edit`,data)
+        return response
+    }
+
+    static changePassword =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/user/change-password`,data)
         return response
     }
 

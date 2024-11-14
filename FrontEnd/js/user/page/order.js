@@ -779,11 +779,13 @@ const renderOrder = (order) => {
                             }
                         </span>
                     </div>
+                    ${
+                        order.note !== null && order.orderStatusDTO.status !== 4? `<div class="info-row">
+                            <span class="label">Ghi chú đơn hàng</span>
+                            <span class="value">${order.note}</span>
+                        </div>` : ""
+                    }
 
-                    <div class="info-row">
-                        <span class="label">Ghi chú đơn hàng</span>
-                        <span class="value">${order.note}</span>
-                    </div>
                     <div class="info-row">
                         <span class="label">Tổng giá trị đơn hàng</span>
                         <span class="value total-price">${order.total_price.toLocaleString("vi-VN") + " đ"}</span>
@@ -809,6 +811,7 @@ const renderOrders = (orders) => {
     const closeModalBtn = modal.querySelector(".close");
     const cancelBtn = modal.querySelector(".cancel");
     const submitBtn = modal.querySelector(".submit");
+    const errMess = document.querySelector(".err-mess")
 
     let selectedOrderId = null; 
 
@@ -816,6 +819,7 @@ const renderOrders = (orders) => {
         btn.addEventListener("click", (e) => {
             selectedOrderId = btn.getAttribute("data-id");
             Utils.openModal(modal);
+            errMess.style.opacity = 0
         });
     });
 
@@ -837,6 +841,7 @@ const renderOrders = (orders) => {
         const status = 4;
 
         if (reason.trim()) {
+            errMess.style.opacity = 0
             const changeStatusRequest = {
                 order_id: selectedOrderId,
                 note: reason,
@@ -861,7 +866,7 @@ const renderOrders = (orders) => {
                 Utils.getToast("success","Hủy đơn hàng thất bại.");
             }
         } else {
-            alert("Vui lòng nhập lý do hủy.");
+            errMess.style.opacity = 1
         }
     });
 };

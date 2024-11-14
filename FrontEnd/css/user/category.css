@@ -55,6 +55,7 @@ body{
     display: flex;
     flex-wrap: wrap;
     gap: 60px;
+    font-family: Lexend Deca;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -173,6 +174,7 @@ body{
 .prev, .next {
     position: absolute;
     top: 50%;
+    font-size: 24px !important;
     transform: translateY(-50%);
     background: none;
     color: #ffff;

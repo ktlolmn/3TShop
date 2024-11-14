@@ -125,9 +125,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const defaultAddressContainer = document.querySelector('.infor-container .address-content');
             const idAddress = defaultAddressContainer.dataset.id
             const note = document.querySelector("#orderNote").value
+            console.log(note)
             const orderData = {
                 idAddress: idAddress,
                 note: note,
+                fee: 30000,
                 orderRequests: cartData.map(product => ({
                     productId: product.productId,
                     colorId: product.colorId,
