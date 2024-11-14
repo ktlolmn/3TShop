@@ -768,6 +768,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }else{
                 if(response.status === 202){
                     email.value = response.accountDTO.email
+                    console.log(response)
+                    document.querySelector(".username").textContent = response.accountDTO.username
+                    document.querySelector(".create-at").textContent = response.accountDTO.createAt.toLocalString("vi-VN")
                 }
             }
         } catch (error) {

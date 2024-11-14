@@ -7,7 +7,7 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTU2MTc5LCJleHAiOjE3MzE3NDI1Nzl9.JNpPpqd9gdXt3U0O8IrwbGi5sIY1S-M6Th-PX-esfKY`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
         }
     }
