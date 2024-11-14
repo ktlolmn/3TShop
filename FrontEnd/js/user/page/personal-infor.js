@@ -53,24 +53,12 @@ function validateForm() {
         isValid = false;
     } else {
         const phoneValue = phone.value.trim();
-        if (phoneValue.length !== 10 && phoneValue.length !== 12) {
+        if (phoneValue.length !== 10 || !phoneValue.startsWith("0")) {
             phone.nextElementSibling.textContent = "Số điện thoại không hợp lệ!";
             phone.nextElementSibling.style.opacity = 1;  
             isValid = false;
-        } else {
-            if (!phoneValue.startsWith("0") && !phoneValue.startsWith("+")) {
-                phone.nextElementSibling.textContent = "Số điện thoại không hợp lệ!";
-                phone.nextElementSibling.style.opacity = 1;  
-                isValid = false;
-            } 
         }
-    }   
-
-
-    if (!phone.value.trim() || phone.value.length < 10) {
-        phone.nextElementSibling.style.opacity = 1;  
-        isValid = false;
-    }
+    }    
 
     if (!birthday.value.trim()) {
         birthday.nextElementSibling.textContent = "Vui lòng nhập ngày sinh!"
@@ -112,6 +100,8 @@ editBtnInforForm.addEventListener('click', (e) => {
     inputsInforForm.forEach((i) => {
         i.readOnly = false;
     });
+    genderFemale.disabled = false
+    genderMale.disabled = false
     submitBtnInforForm.disabled = false;
 });
 
@@ -124,6 +114,8 @@ cancelBtnInforForm.addEventListener("click", (e) => {
     inputsInforForm.forEach((i) => {
         i.readOnly = true;
     });
+    genderFemale.disabled = true
+    genderMale.disabled = true
 
     name.value = initialValues.f_name + " " + initialValues.l_name; 
     phone.value = initialValues.phone;  
@@ -186,6 +178,8 @@ submitBtnInforForm.addEventListener("click", (e) => {
 
         console.log("Dữ liệu gửi đi:", data);
         editInformationUser(data)
+        genderFemale.disabled = true
+        genderMale.disabled = true
     } 
 });
 
@@ -235,16 +229,19 @@ submitNewAddressBtn.addEventListener("click", async ()=>{
         errorPhone.style.opacity = 1
         isValid = false
     }
-    if(phoneNumber.value.length !== 10 && phoneNumber.value.length !== 12){
-        errorPhone.textContent = "Số điện thoại không hợp lệ!"
+    if (!phoneNumber.value.trim()) {
+        errorPhone.textContent = "Vui lòng nhập số điện thoại!"
         errorPhone.style.opacity = 1
         isValid = false
+    } else {
+        const phoneValue = phoneNumber.value.trim();
+        if (phoneValue.length !== 10 || !phoneValue.startsWith("0")) {
+            errorPhone.textContent = "Vui lòng nhập số điện thoại!"
+            errorPhone.style.opacity = 1
+            isValid = false
+        }
     }
-    if((phoneNumber.value)[0] !== "0" && (phoneNumber.value)[0] !== "+"){
-        errorPhone.textContent = "Số điện thoại không hợp lệ!"
-        errorPhone.style.opacity = 1
-        isValid = false
-    }
+    
     if(province.value === ""){
         errorProvince.style.opacity = 1
         isValid = false
@@ -302,21 +299,18 @@ submitEditAddressBtn.addEventListener("click", async ()=>{
         errorFullnameEdit.style.opacity = 1
         isValid = false
     }
-    if(phoneNumberEdit.value === ""){
-        errorPhone.textContent = "Vui lòng nhập số điện thoại!"
-        errorPhoneEdit.style.opacity = 1
-        isValid = false
-    }
-    if(phoneNumberEdit.value.length !== 10 && phoneNumberEdit.value.length !== 12){
-        errorPhone.textContent = "Số điện thoại không hợp lệ!"
-        errorPhoneEdit.style.opacity = 1
-        isValid = false
-    }
-    if((phoneNumberEdit.value)[0] !== "0" && (phoneNumberEdit.value)[0] !== "+"){
-        errorPhone.textContent = "Số điện thoại không hợp lệ!"
-        errorPhoneEdit.style.opacity = 1
-        isValid = false
-    }
+    if (!phoneNumberEdit.value.trim()) {
+        phoneNumberEdit.nextElementSibling.textContent = "Vui lòng nhập số điện thoại!";
+        phoneNumberEdit.nextElementSibling.style.opacity = 1;  
+        isValid = false;
+    } else {
+        const phoneValue = phoneNumberEdit.value.trim();
+        if (phoneValue.length !== 10 || !phoneValue.startsWith("0")) {
+            phoneNumberEdit.nextElementSibling.textContent = "Số điện thoại không hợp lệ!";
+            phoneNumberEdit.nextElementSibling.style.opacity = 1;  
+            isValid = false;
+        }
+    }    
     if(provinceEdit.value === ""){
         errorProvinceEdit.style.opacity = 1
         isValid = false
@@ -346,19 +340,21 @@ submitEditAddressBtn.addEventListener("click", async ()=>{
             address_line_1: provinceEdit.value,
             address_line_2: detailedEdit.value + ", " + villageEdit.value + ", " + wardEdit.value + ", " + districtEdit.value,
         };
+        const model = document.querySelector("#modal-edit-address")
         try {
             const response = await Api.editDelevery(newAddress)
             if(response.status === 200){
-                const model = document.querySelector("#modal-edit-address")
                 Utils.closeModal(model)
                 Utils.getToast("success","Chỉnh sửa thông tin thành công!")
                 setTimeout(function() {
                     location.reload(); 
                 }, 2000); 
             }else{
+                Utils.closeModal(model)
                 Utils.getToast("error","Có lỗi vui lòng thử lại!")
             }
         } catch (error) {
+            Utils.closeModal(model)
             Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
         }
     }
@@ -420,28 +416,68 @@ const errorCurrentPass = document.querySelector(".error-current-pass")
 const errorNewPass = document.querySelector(".error-new-pass")
 const errorConfirmPass = document.querySelector(".error-confirm-pass")
 
-submitChangePass.addEventListener("click",()=>{
-    if(currentPass.value === ""){
-        errorCurrentPass.textContent = "Vui lòng nhập trường này!"
-        errorCurrentPass.style.opacity = 1
+submitChangePass.addEventListener("click", async () => {
+    let isValid = true;
+
+    // Kiểm tra mật khẩu hiện tại
+    if (currentPass.value === "") {
+        errorCurrentPass.textContent = "Vui lòng nhập trường này!";
+        errorCurrentPass.style.opacity = 1;
+        isValid = false;
+    } else {
+        errorCurrentPass.style.opacity = 0;
     }
-    if(newPass.value === ""){
-        errorNewPass.textContent = "Vui lòng nhập trường này!"
-        errorNewPass.style.opacity = 1
+
+    // Kiểm tra mật khẩu mới
+    if (newPass.value === "") {
+        errorNewPass.textContent = "Vui lòng nhập trường này!";
+        errorNewPass.style.opacity = 1;
+        isValid = false;
+    } else if (newPass.value.length < 8) {
+        errorNewPass.textContent = "Mật khẩu phải từ 8 kí tự!";
+        errorNewPass.style.opacity = 1;
+        isValid = false;
+    } else {
+        errorNewPass.style.opacity = 0;
     }
-    if(newPass.value.length < 8){
-        errorNewPass.textContent = "Mật khẩu phải từ 8 kí tự!"
-        errorNewPass.style.opacity = 1
+
+    // Kiểm tra xác nhận mật khẩu
+    if (confirmPass.value === "") {
+        errorConfirmPass.textContent = "Vui lòng nhập trường này!";
+        errorConfirmPass.style.opacity = 1;
+        isValid = false;
+    } else if (newPass.value !== confirmPass.value) {
+        errorConfirmPass.textContent = "Xác nhận mật khẩu không đúng!";
+        errorConfirmPass.style.opacity = 1;
+        isValid = false;
+    } else {
+        errorConfirmPass.style.opacity = 0;
     }
-    if(confirmPass.value === ""){
-        errorConfirmPass.textContent = "Vui lòng nhập trường này!"
-        errorConfirmPass.style.opacity = 1
+
+    // Gửi yêu cầu đổi mật khẩu nếu hợp lệ
+    if (isValid) {
+        const data = {
+            currentPassword: currentPass.value,
+            newPassword: newPass.value
+        };
+
+        try {
+            const response = await Api.changePassword(data);
+            if (response.status === 200) {
+                Utils.closeModal(changePassModelContainer)
+                Utils.getToast("success","Đổi mật khẩu thành công!")
+            } else if (response.status === 202) {
+                errorCurrentPass.textContent = "Mật khẩu cũ không đúng!";
+                errorCurrentPass.style.opacity = 1;
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
+            Utils.closeModal(changePassModelContainer)
+            Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
+        }
     }
-    if(newPass.value !== confirmPass.value){
-        errorConfirmPass.textContent = "Xác nhận mật khẩu không đúng!"
-        errorConfirmPass.style.opacity = 1
-    }
-})
+});
+
 
 currentPass.addEventListener("input",()=>{
     errorCurrentPass.style.opacity = 0

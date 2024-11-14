@@ -192,23 +192,30 @@ function createCartItemRow(item) {
 async function fetchAndRenderCartItems() {
     try {
         const response = await Api.getCartByAccout();
-        const cartItems = response.cart_ItemsDTOList;
-        
-        const fragment = document.createDocumentFragment();
-        cartItems.forEach(item => {
-            // if (item.quantity <= item.specificationsDTO.quantity) {
-            //     const row = createCartItemRow(item);
-            //     fragment.appendChild(row);
-            // }
-            const row = createCartItemRow(item);
-            fragment.appendChild(row);
-        });
-        
-        cartItemsContainer.appendChild(fragment);
-        
-        setupQuantityControls();
-        setupCheckboxControls();
-        updateMainCheckbox();
+        if(response.status === 200){
+
+            const cartItems = response.cart_ItemsDTOList;
+
+            if(cartItems.length > 0){
+                const fragment = document.createDocumentFragment();
+                cartItems.forEach(item => {
+                    // if (item.quantity <= item.specificationsDTO.quantity) {
+                    //     const row = createCartItemRow(item);
+                    //     fragment.appendChild(row);
+                    // }
+                    const row = createCartItemRow(item);
+                    fragment.appendChild(row);
+                });
+                
+                cartItemsContainer.appendChild(fragment);
+                
+                setupQuantityControls();
+                setupCheckboxControls();
+                updateMainCheckbox();
+            }else{
+                document.querySelector(".cart-item-list").innerHTML = '<p style= "text-align: center;">Giỏ hàng trống!</p>'
+            }
+        }
     } catch (error) {
         Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!");
     }

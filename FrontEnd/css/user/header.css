@@ -248,7 +248,7 @@
 .modal-confirm .content,
 .modal-cancel .content,
 .modal-logout .content{
-    padding: 40px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     padding-top: 0;
@@ -280,7 +280,7 @@
 }
 
 .content .btn-container{
-    margin-top: 20px;
+    margin-top: 16px;
     justify-content: space-between !important;
 }
 .content img{
@@ -407,7 +407,7 @@
 }
 
 button span{
-    font-size: 10px !important;
+    font-size: 16px !important;
     margin-left: 4px;
 }
 

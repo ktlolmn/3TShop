@@ -280,7 +280,7 @@ export default class Utils{
             // <img src="${product.image.startsWith('data:image') ? product.image : `data:image/jpeg;base64,${product.image}` || '../../img/product/product.png'}" alt="${product.name}">
             // <img src="${product.image}">
             productElement.innerHTML = `
-                <img src="data:image/jpeg;base64,${product.image}" alt="${product.name}">
+                <img src="${product.image? `data:image/jpeg;base64,${product.image}` : '../../img/utils/default.png'}" alt="${product.name}">
                 <div class="decription">
                     <p class="name">${product.name}</p>
                     <p class="price">${product.price.toLocaleString()} đ</p>
@@ -587,10 +587,37 @@ export default class Utils{
     static openModal = (e)=>{
         e.style.display = "flex"
     }
-    static protectUser = ()=>{
-        const role = localStorage.getItem("role")
-        if(role !== "user"){
-            window.location.href = "/login"
+    static protectUser = () => {
+        // Lấy token từ localStorage
+        const token = localStorage.getItem("token");
+        // const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTAxNTk0LCJleHAiOjE3MzE2ODc5OTR9.VcSimoSwmp9TOh8y1-C3zy15B8JBoSdiqLPSlNKSDIk";
+
+        // Nếu không có token, điều hướng đến trang login
+        if (!token) {
+            window.location.href = "/login";
+            return;
+        }
+
+        const payloadBase64 = token.split(".")[1];
+        try {
+            const payload = JSON.parse(atob(payloadBase64));
+
+            const role = payload.role;
+            const exp = payload.exp;
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (role !== "[USER]") {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (exp < currentTime) {
+                window.location.href = "/login";
+                return;
+            }
+        } catch (error) {
+            console.error("Lỗi giải mã token:", error);
+            window.location.href = "/login";
         }
     }
 
