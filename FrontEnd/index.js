@@ -25,7 +25,7 @@ function checkOrderSuccess(req, res, next) {
       res.redirect('/');
   }
 }
-
+// USER CONTROLLER
 app.get('/success', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/status.html'));
 });
@@ -84,6 +84,23 @@ app.get('/personal-infor', (req, res) => {
 
 app.get('/product-detail/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'user/product-detail.html'));
+});
+
+// ADMIN CONTROLLER
+app.get('/admin/manage-product', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'admin/home_admin.html'));
+});
+
+app.get('/admin/manage-order', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'admin/management-order.html'));
+});
+
+app.get('/admin/add-new-product', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'admin/add-new-product.html'));
+});
+
+app.get('/admin/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'admin/dashboard.html'));
 });
 
 app.listen(PORT, () => {

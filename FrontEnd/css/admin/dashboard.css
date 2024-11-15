@@ -258,7 +258,6 @@ h2 {
 .top__product__detail__wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
     background-color: white;
     border-radius: 50px;
@@ -271,7 +270,8 @@ h2 {
 .content__wrapper {
     display: flex;
     flex-direction: row;
-    width: fit-content;
+    justify-content: space-between;
+    width: -webkit-fill-available;
     flex-wrap: nowrap;
     align-items: center;
     gap: 20px;

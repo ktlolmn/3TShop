@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../css/admin/management-order.css">
+    <link rel="stylesheet" href="../../css/admin/navigation.css">
     <link rel="stylesheet" href="../../css/admin/spinner.css">
     <link rel="stylesheet" href="../../css/admin/modal.css">
+    <link rel="stylesheet" href="../../css/admin/toast.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -25,19 +27,19 @@
             </div>
             <div class="order__status__wrapper">
                 <div class="order__status__outside">
-                    <div class="order__status all__order">
+                    <div class="order__status" id="all__order">
                         <h3>Tất cả</h3>
                     </div>
-                    <div class="order__status approving__order">
+                    <div class="order__status" id="approving__order">
                         <h3>Chờ xác nhận</h3>
                     </div>
-                    <div class="order__status delivering__order">
+                    <div class="order__status" id="delivering__order">
                         <h3>Đang vận chuyển</h3>
                     </div>
-                    <div class="order__status completed__order">
+                    <div class="order__status" id="completed__order">
                         <h3>Đã hoàn thành</h3>
                     </div>
-                    <div class="order__status cancelled__order">
+                    <div class="order__status" id="cancelled__order">
                         <h3>Bị hủy</h3>
                     </div>
                 </div>
@@ -68,11 +70,11 @@
                         <div class="order__total__wrapper">
                             <h3>Tổng số đơn hàng</h3>
                             <div class="number__of__order__wrapper">
-                                <h3 id="number__of__order">1.000.000.000</h3>
+                                <h3 id="number__of__order">0</h3>
                             </div>
                         </div>
                         <div class="search__wrapper">
-                            <span class="material-symbols-outlined">
+                            <span class="material-symbols-outlined search__icon">
                                 search
                                 </span>
                             <input type="text" id="order__searching" placeholder="Tìm kiếm...">
@@ -84,9 +86,12 @@
                             <span class="material-symbols-outlined" id="sort__icon">
                                 swap_vert
                                 </span>
-                            <select>
-                                <option value="price__asc">Giá tăng dần</option>
-                                <option value="price__desc">Giá giảm dần</option>
+                            <select id="select__order__price">
+                                <option value="none">---------</option>
+                                <option value="newest">Mới nhất</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="price_esc">Giá tăng dần</option>
+                                <option value="price_desc">Giá giảm dần</option>
                             </select>
                         </div>
                         <div class="filter__wrapper">
@@ -98,8 +103,14 @@
                         </div>
                     </div>
     
-                    <div class="order__list__table">
-                        <table>
+                    <div class="order__list__table__wrapper">
+                        <!-- <div id="spinner__icon" class="loadingio-spinner-dual-ring-2by998twmg8">
+                            <div class="ldio-yzaezf3dcmj">
+                                <div></div>
+                                <div><div></div></div>
+                            </div>
+                        </div> -->
+                        <table id="table__list__order">
                             <thead>
                                 <tr>
                                     <th>Mã đơn hàng</th>
@@ -109,41 +120,8 @@
                                     <th id="status__th__col">Trạng thái</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="delivering">Đang vận chuyển</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="aprroving">Chờ xác nhận</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="completed">Đã hoàn thành</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
+                            <tbody class="tbody__order__list">
+                                <!-- <tr class="each__order">
                                     <td class="id__col">122789</td>
                                     <td>Thanh Trường</td>
                                     <td>10/11/2024 12:45:00</td>
@@ -153,62 +131,7 @@
                                             <h3 class="order__status__col" id="canceled">Bị hủy</h3>
                                         </div>
                                     </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="canceled">Bị hủy</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="canceled">Bị hủy</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="canceled">Bị hủy</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="canceled">Bị hủy</h3>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="each__order">
-                                    <td class="id__col">122789</td>
-                                    <td>Thanh Trường</td>
-                                    <td>10/11/2024 12:45:00</td>
-                                    <td>12.000.000</td>
-                                    <td>
-                                        <div class="order__status__wrapper">
-                                            <h3 class="order__status__col" id="canceled">Bị hủy</h3>
-                                        </div>
-                                    </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -220,12 +143,6 @@
                     </div>
                     <div class="order__detail__outside">
                         <img src="../../img/utils/info-sign.png" alt="no information" id="placeholder__image">
-                        <div id="spinner__icon" class="loadingio-spinner-dual-ring-2by998twmg8">
-                            <div class="ldio-yzaezf3dcmj">
-                                <div></div>
-                                <div><div></div></div>
-                            </div>
-                        </div>
                         
                         <!-- <div class="title__order__detail__wrapper">
                             <h3 id="order__id__title">MÃ ĐƠN HÀNG</h3>
@@ -468,8 +385,8 @@
                     </div>
                     <div class="footer__show__information">
                         <!-- ĐƠN HÀNG ĐANG CHỜ XÁC NHẬN -->
-                        <button type="button" id="cancel__order">Hủy đơn hàng</button>
-                        <button type="button" id="confirm__order">Xác nhận đơn hàng</button>
+                        <!-- <button type="button" id="cancel__order">Hủy đơn hàng</button>
+                        <button type="button" id="confirm__order">Xác nhận đơn hàng</button> -->
     
                         <!-- ĐƠN HÀNG ĐANG VẬN CHUYỂN -->
                         <!-- <div class="datetime__about__order">
@@ -487,7 +404,7 @@
                         <!-- ĐƠN HÀNG ĐÃ HOÀN THÀNH -->
                         <!-- <div class="datetime__about__order">
                             <div class="datetime__title">
-                                <h3>Thời gian xác nhận đơn hàng</h3>
+                                <h3>Thời gian xác nhận</h3>
                                 <h3>Thời gian giao hàng dự kiến</h3>
                             </div>
                             <div class="datetime__detail">
@@ -496,23 +413,13 @@
                             </div>
                         </div>
                         <div class="complete__time__wrapper">
-                            <h3>Thời gian hoàn thành đơn hàng</h3>
+                            <h3>Thời gian hoàn thành</h3>
                             <h3 class="complete__time">15/10/2024 12:00:00</h3>
                         </div> -->
     
                         <!-- ĐƠN HÀNG BỊ HỦY -->
                         <!-- <div class="ordered__cancel__wrapper">
                             <div class="datetime__related">
-                                <div class="datetime__about__order">
-                                    <div class="datetime__title">
-                                        <h3>Thời gian xác nhận đơn hàng</h3>
-                                        <h3>Thời gian giao hàng dự kiến</h3>
-                                    </div>
-                                    <div class="datetime__detail">
-                                        <h3>10/10/2024 12:00:00</h3>
-                                        <h3>15/10/2024 12:00:00</h3>
-                                    </div>
-                                </div>
                                 <div class="time__wrapper">
                                     <h3>Thời gian hủy đơn hàng</h3>
                                     <h3 class="cancel__time">15/10/2024 12:00:00</h3>
@@ -577,7 +484,7 @@
             </div> -->
         </div>
     </div>
+    <script type="module" src="../../js/admin/management-order.js"></script>
+    <script type="module" src="../../js/admin/navigation.js"></script>
 </body>
-<script type="module" src="../../js/admin/management-order.js"></script>
-<script type="module" src="../../js/admin/navigation.js"></script>
 </html>

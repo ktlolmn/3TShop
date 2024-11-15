@@ -20,6 +20,7 @@
     justify-content: space-between;
     animation: fadeIn 0.4s ease-in-out;
     gap: 12px;
+    max-width: 390px;
 }
 
 .toast-close {
@@ -32,7 +33,7 @@
     border-radius: 4px;
 }
 
-#close__toast {
+.close__toast {
     font-size: 16px;
     color: white;
     border-radius: 4px;
@@ -58,4 +59,6 @@
 
 p {
     color: white;
+    font-size: 12px;
+    line-height: 20px;
 }
