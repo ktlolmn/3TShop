@@ -1,6 +1,7 @@
 export default class Utils {
+
     static async includeNavigation(elementId) {
-        fetch('../../view/admin/navigation.html')
+        fetch('/navigation')
             .then(response => response.text())
             .then(data => {
                 elementId.innerHTML = data;
@@ -24,6 +25,61 @@ export default class Utils {
             .catch(error => console.error('Lỗi khi tải file:', error));
     }
 
+    static getHeader() {
+        const html = `
+            <div class="navigation__bar">
+                <div id="logo__wrapper">
+                    <img id="logo__shop" src="../../img/utils/LOGO_3TSHOP_ADMIN.png" alt="logo" />
+                </div>
+                <div id="function__bar">
+                    <a href="/admin/dashboard" class="manage__items path__name">
+                        <div class="wrapper__item">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">
+                                chart_data
+                            </span>
+                            <h5>Thống kê</h5>
+                        </div>
+                    </a>
+
+                    <a href="/admin/manage-product" class="manage__items path__name">
+                        <div class="wrapper__item">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">
+                                category
+                            </span>
+                            <h5>Sản phẩm</h5>
+                        </div>
+                    </a>
+
+                    <a href="/admin/manage-order" class="manage__items path__name">
+                        <div class="wrapper__item">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">
+                                    inventory_2
+                                </span>
+                            <h5>Đơn hàng</h5>
+                        </div>
+                    </a>
+                    
+                </div>
+                <a href="admin/logout" class="logout__wrapper">
+                    <div class="wrapper__item">
+                        <span class="material-symbols-outlined">
+                            logout
+                        </span>
+                        <h5>Đăng xuất</h5>
+                    </div>
+                </a>
+            </div>
+        `
+        document.body.insertAdjacentHTML('afterbegin', html) 
+        const currentPage = window.location.pathname
+        const aTag = document.querySelectorAll('.path__name')
+        aTag.forEach(item => {
+            if (currentPage.includes(item.getAttribute('href'))) {
+                item.classList.add('active');
+            }
+        })
+    }
+
     static showToast(message, type) {
         const toastContainer = document.getElementById('toast-container');
 
@@ -33,7 +89,7 @@ export default class Utils {
 
             const toastIcon = document.createElement('span');
             toastIcon.style.color = '#ffffff'
-            toastIcon.classList.add('material-symbols-outlined')
+            toastIcon.classList.add('material-symbols-outlined', 'toast__icon')
             toastIcon.textContent = type
         
             const toastText = document.createElement('p');
@@ -42,7 +98,7 @@ export default class Utils {
             const toastCloseButton = document.createElement('button');
             toastCloseButton.classList.add('toast-close');
             toastCloseButton.innerHTML = `
-            <span class="material-symbols-outlined" id="close__toast">
+            <span class="material-symbols-outlined close__toast">
                 close
             </span>`;
         
@@ -67,7 +123,7 @@ export default class Utils {
         }
     }
 
-    static showModalConfirm(title, content, imagePath, modalName) {
+    static showModalConfirm(title, content, imagePath, modalName, func) {
         modalName.innerHTML = `
             <div class="confirm__order__wrapper confirm__order__animation">
                 <div class="icon__close close__modal__confirm">
@@ -80,17 +136,21 @@ export default class Utils {
                     <div class="title__wrapper">
                         <h2 id="title__confirm__modal">${title}</h2>
                     </div>
-                    <div class="content__wrapper">
-                        <h3 class="content" id="content__confirm__modal">${content}</h3>
-                    </div>
+                    <h3 class="content" id="content__confirm__modal">${content}</h3>
                     <div class="button__wrapper">
                         <button type="button" id="hidden__confirm__order__btn">Hủy</button>
                         <button type="button" id="confirm__order__btn">Xác nhận</button>
                     </div>
                 </div>
             </div>
-        `
-        const wrapper = document.querySelector('.confirm__order__wrapper')
+            `
+            const wrapper = document.querySelector('.confirm__order__wrapper')
+            const confirmModalBtn = document.getElementById('confirm__order__btn')
+            
+            confirmModalBtn.addEventListener('click', () => {
+                    return true
+                }
+            )
         // if (btn) {
             // btn.addEventListener('click', () => {
                 modalName.style.display = 'flex'
@@ -152,11 +212,12 @@ export default class Utils {
         // }
     }  
 
-    static hiddenModalConfirm(modalName) {
+    static hiddenModalConfirm(background, option = null) {
+        const modalName = document.querySelector('.confirm__order__background')
         const wrapper = document.querySelector('.confirm__order__wrapper')
         const btn = document.querySelector('#hidden__confirm__order__btn')
         const closeModalConfirm = document.querySelector('.close__modal__confirm')
-        // if (btn) {
+        if (btn) {
             btn.addEventListener('click', (e) => {
                 wrapper.classList.add('disabled')
                 console.log(modalName, btn, wrapper)
@@ -176,7 +237,7 @@ export default class Utils {
                 }, 100);
                 return
             })
-        // } 
+        } 
         modalName.addEventListener('click', (e) => {
             if(e.target === modalName) {
                 wrapper.classList.add('disabled')
@@ -185,10 +246,19 @@ export default class Utils {
                     modalName.style.display = 'none'
                 }, 100);
             }
+            return
         })
+
+        if (option) {
+            wrapper.classList.add('disabled')
+            setTimeout(() => {
+                wrapper.classList.remove('active', 'disabled')
+                modalName.style.display = 'none'
+            }, 100);
+        }
     }
 
-    static hiddenModalCancel(modalName) {
+    static hiddenModalCancel(modalName, option = null) {
         const wrapper = document.querySelector('.cancel__order__wrapper')
         const btn = document.querySelector('#hidden__cancel__order__btn')
         const closeModalCancel = document.querySelector('.close__modal__cancel')
@@ -223,6 +293,13 @@ export default class Utils {
                 }, 300);
             }
         })
+        if (option) {
+            wrapper.classList.add('disabled')
+            setTimeout(() => {
+                wrapper.classList.remove('active', 'disabled')
+                modalName.style.display = 'none'
+            }, 100);
+        }
     }
 
     static flexibleConfirmModalContent(title, content, handleFunc, modalName, btn) {
@@ -236,8 +313,57 @@ export default class Utils {
         handle.addEventListener('click', handleFunc)
     }
 
-    static formatDateTime() {
-        const now = new Date();
+    static formatDateTime(dateInput, option = null) {
+        const converted = new Date(dateInput);
+        let options
+        if (option) {
+            options = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            };
+        } else {
+            options = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+        }
+        return converted.toLocaleString('vi-VN', options);
+    }
+
+    static formatDateTimeToFilter(dateInput, option) {
+        const converted = new Date(dateInput);
+        if(option) {
+            converted.setHours(23,59,59,999)
+        } else {
+            converted.setHours(0,0,0,0)
+        }
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }
+        return converted
+    }
+
+    static predictDeliveryDate(dateInput, option = null) {
+        const converted = new Date(dateInput);
+        if(option) {
+            converted.setDate(converted.getDate() + 1)
+            converted.setHours(0,0,0,0)
+            return converted
+        } else {
+            converted.setDate(converted.getDate() + 5)
+        }
         const options = {
             day: '2-digit',
             month: '2-digit',
@@ -248,6 +374,26 @@ export default class Utils {
             hour12: false
         };
         
-        return now.toLocaleString('vi-VN', options);
+        return converted.toLocaleString('vi-VN', options);
+    }
+
+    static formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+    }
+
+    static formatNumber(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    static hasSpecialCharacters(text) {
+        const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?~]/;
+        return specialChars.test(text);
+    }
+
+    static renderImage(base64String) {
+        const mimeType = "image/png";
+        return `
+            data:${mimeType};base64,${base64String}
+        `
     }
 }

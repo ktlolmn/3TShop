@@ -71,7 +71,6 @@ h2 {
 .shipment__wrapper {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-between; */
     align-items: center;
     gap: 12px;
     background-color: #6F809B;
@@ -159,7 +158,7 @@ input[type='number']:disabled {
     display: flex;
     flex-direction: row;
     /* justify-content: space-between; */
-    gap: 20px;
+    gap: 12px;
     height: 82vh;
 }
 
@@ -274,7 +273,7 @@ button {
     scale: 0.95;
 }
 
-.order__list__table {
+.order__list__table__wrapper {
     border: 2px solid #D0D0D0;
     /* padding: 4px; */
     border-radius: 8px;
@@ -295,14 +294,14 @@ table:not(.ordered__product__list) {
 }
 
 td:not(.table__row td) {
-    padding: 16px 12px;
+    padding: 12px 4px;
     text-align: left;
     border-bottom: 1px solid #d0d0d0;
     cursor: pointer;
 }
 
 th {
-    padding: 8px 12px;
+    padding: 8px;
     background-color: #6F809B;
     color: white;
     font-weight: 400;
@@ -433,7 +432,7 @@ thead {
 }
 
 .product__name {
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 400;
     color: #825B32;
 }
@@ -486,6 +485,8 @@ thead {
     display: flex;
     flex-direction: row;
     gap: 12px;
+    flex-wrap: nowrap;
+    text-wrap: nowrap;
 }
 
 .datetime__title, .datetime__detail {
@@ -508,10 +509,22 @@ thead {
 
 .time__wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+    justify-content: space-between;
     align-items: flex-end;
     gap: 4px;
+}   
+
+.complete__time__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.complete__time__wrapper > h3 {
+    text-align: end;
 }
 
 .complete__time, .cancel__time {
@@ -546,7 +559,7 @@ thead {
 }
 
 
-.toast-container {
+/* .toast-container {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -558,7 +571,6 @@ thead {
 }
 
 .toast-message {
-    /* border: 2px solid #6F809B; */
     background-color: #6F809B;
     color: #ffffff;
     padding: 16px 4px 16px 12px;
@@ -607,7 +619,7 @@ thead {
 
 p {
     color: white;
-}
+} */
 
 .confirm__order__background, .cancel__order__background {
     position: fixed;
@@ -646,15 +658,15 @@ p {
 }
 
 .confirm__order__animation.active, .cancel__order__animation.active {
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     scale: 1;
     opacity: 1
 }
 
 .confirm__order__animation.disabled, .cancel__order__animation.disabled {
-    transition: all 0.5s ease-out;
+    transition: all 0.2s ease-out;
     scale: 0.1;
-    opacity: 0.7;
+    opacity: 0.1;
 }
 
 .icon__close {
@@ -728,4 +740,10 @@ p {
     font-size: 10px;
     color: #FF7878;
     opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+#placeholder__image {
+    width: 100px;
+    height: auto;
 }

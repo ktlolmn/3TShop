@@ -66,8 +66,12 @@
 
 .content {
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 20px;
+}
+
+#title__confirm__modal {
+    font-size: 14px;
 }
 
 .confirm__order {
@@ -88,7 +92,8 @@
     border: none;
     padding: 10px 16px;
     border-radius: 4px;
-    font-weight: 400
+    font-weight: 400;
+    cursor: pointer;
 }
 
 #confirm__order__btn, #cancel__order__btn {
@@ -97,10 +102,13 @@
 }
 
 .content__wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 4px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center;
+    align-items: center; */
+    text-align: center;
+    height: fit-content;
+    
 }
 
 #input__cancel__reason {
