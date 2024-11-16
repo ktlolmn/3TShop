@@ -1,3 +1,5 @@
+import Utils from "./Utils.js";
+
 export default class Api{    
     
     static BASE_URL = "http://localhost:8080"
@@ -5,27 +7,50 @@ export default class Api{
     static getHeader(){
         const token = localStorage.getItem("token")
         return{
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxMzE0NTY0LCJleHAiOjE3MzE1MDA5NjR9.9Hu-7LxrK5yy9yd0gvmVfLhysyGUs4WJyykwrKHm3N4`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
         }
     }
 
+    // static async get(endpoint) {
+    //     try {
+    //         const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
+    //             method: 'GET',
+    //             headers: Api.getHeader(),
+    //         });
+            
+    //         if (!response.ok) {
+    //             throw new Error(`HTTP error! status: ${response.status}`);
+    //         }
+
+    //         return await response.json(); 
+    //     } catch (error) {
+    //         console.error('Fetch GET error:', error);
+    //     }
+    // }
+
     static async get(endpoint) {
+        Utils.protectUser()
         try {
             const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: Api.getHeader(),
             });
-            
+    
+            // Nếu response không OK, tạo lỗi kèm status
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
-
-            return await response.json(); 
+    
+            return await response.json();
         } catch (error) {
             console.error('Fetch GET error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
+    
 
     static async getNoAuth(endpoint) {
         try {
@@ -34,16 +59,20 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json(); 
         } catch (error) {
             console.error('Fetch GET error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
     
     static async post(endpoint, data) {
+        Utils.protectUser()
         try {
             const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
                 method: 'POST',
@@ -52,17 +81,53 @@ export default class Api{
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
             }
 
             return await response.json();
         } catch (error) {
             console.error('Fetch POST error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
         }
     }
 
     static getSpecByProduct =  async (productId)=>{
         const response = await this.get(`/specifications/get-by-product/${productId}`)
+        return response
+    }
+
+    static getDeleveryByUser =  async ()=>{
+        const response = await this.get(`/delevery-information/get-by-user`)
+        return response
+    }
+
+    static editDelevery =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/delevery-information/edit`,data)
+        return response
+    }
+
+    static changePassword =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/user/change-password`,data)
+        return response
+    }
+
+    static setDefaultAddress =  async (id)=>{
+        const response = await this.get(`/delevery-information/set-default/${id}`)
+        return response
+    }
+
+    static deleteAddress =  async (id)=>{
+        const response = await this.get(`/delevery-information/delete/${id}`)
+        return response
+    }
+
+    static createNewDelevery =  async (data)=>{
+        console.log(data)
+        const response = await this.post(`/delevery-information/add`,data)
         return response
     }
 
@@ -72,13 +137,33 @@ export default class Api{
         return response
     }
 
+    static changeStatusOrder = async (data) => {
+        const response = await this.post(`/order/change-status`,data)
+        return response
+    }
+
+    static getOrderByUserAndStatus = async (status) => {
+        const response = await this.get(`/order/get-by-user/${status}`)
+        return response
+    }
+
     static getInforUser = async () => {
-        const response = await this.get(`/user/get-user-info`)
+        const response = await this.get(`/user/get-user-information`)
+        return response
+    }
+
+    static editInforUser = async (data) => {
+        const response = await this.post(`/user/edit-user-information`, data)
         return response
     }
 
     static addCartItem = async (data) => {
         const response = await this.post(`/cart-items/add`, data)
+        return response
+    }
+
+    static deleteItemInCart = async (id) => {
+        const response = await this.get(`/cart-items/delete/${id}`)
         return response
     }
 
@@ -106,6 +191,11 @@ export default class Api{
     static getProductByCategory = async (id) => {
         const response = await this.getNoAuth(`/product/get-by-category-id/${id}`)
         console.log(response)
+        return response
+    }
+
+    static getProductByName = async (name) => {
+        const response = await this.getNoAuth(`/product/get-by-name/${name}`)
         return response
     }
 

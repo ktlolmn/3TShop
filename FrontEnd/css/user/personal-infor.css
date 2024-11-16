@@ -126,6 +126,11 @@ button:disabled{
     cursor: not-allowed !important;
 }
 
+.disabled{ 
+    opacity: .8;
+    cursor: not-allowed !important;
+}
+
 .group-button .edit{
     background-color: #D0D0D0;
     color: #222831;
@@ -296,6 +301,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 
 #modal-add-address,
+#modal-edit-address,
 #modal-change-pass{
     background-color: #2e2d2d3d;
     position: fixed;
@@ -308,7 +314,7 @@ input[type="number"]::-webkit-inner-spin-button {
     flex-direction: row;
     justify-content: center;
 }
-
+#modal-edit-address .modal-body,
 #modal-add-address .modal-body,
 #modal-change-pass .modal-body-pass{
     margin: auto;
@@ -419,7 +425,8 @@ input[type="number"]::-webkit-inner-spin-button {
     color: #ffff;
 }
 
-#modal-add-address .content h5{
+#modal-add-address .content h5,
+#modal-edit-address .content h5{
     font-family: Lexend Giga;
     font-size: 12px;
     font-weight: 300;
@@ -429,32 +436,37 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 20px 0 10px 0
 }
 
-#modal-add-address .div-group-1{
+#modal-add-address .div-group-1,
+#modal-edit-address .div-group-1{
     border: 1px #D9D9D9 solid;
     border-radius: 4px;
     padding: 10px 20px;
     gap: 30px;
 }
 
-#modal-add-address .div-group-2{
+#modal-add-address .div-group-2,
+#modal-edit-address .div-group-2{
     display: grid;
     grid-template-columns: repeat(2,1fr);
     gap: 30px;
     margin-bottom: 20px;
 }
 
-#modal-add-address .infor-group{
+#modal-add-address .infor-group,
+#modal-edit-address .infor-group{
     display: grid !important;
     grid-template-columns: 3fr 2fr !important;
 }
 
 #modal-add-address .group-infor,
+#modal-edit-address .group-infor,
 #modal-change-pass .group-infor{
     display: flex;
     flex-direction: column;
 }
 
 #modal-add-address .div-group-1 label,
+#modal-edit-address .div-group-1 label,
 #modal-change-pass label{
     font-family: Lexend Exa;
     font-size: 12px;
@@ -470,6 +482,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 #modal-add-address input,
+#modal-edit-address input,
 #modal-change-pass input{
     border: none;
     border-bottom: 1px #D9D9D9 solid;

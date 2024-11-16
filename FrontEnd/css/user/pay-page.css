@@ -274,13 +274,13 @@ tbody tr {
 }
 
 .group-action label{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 300;
     line-height: 16px;
 }
 
 .group-action p{
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 16px;
     text-align: right;
@@ -452,4 +452,14 @@ tbody tr {
 .btn-container .submit{
     background-color: #825B32;
     color: #ffff;
+}
+
+button:disabled{
+    opacity: .8;
+    cursor: not-allowed;
+}
+
+button a{
+    color: #ffff;
+    text-decoration: none;
 }

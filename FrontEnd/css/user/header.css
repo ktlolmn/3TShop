@@ -131,7 +131,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    z-index: 1000;
+    z-index: 99999;
 }
 
 #toast{
@@ -152,6 +152,7 @@
     right: 0;
     transition: opacity 0s linear;
     animation: slideLeft 0.5s ease forwards;
+    z-index: 1000;
 }
 
 #toast.hide {
@@ -210,7 +211,9 @@
 }
 
 
-#logout{
+#logout,
+#confirm,
+#cancel-order{
     background-color: #2e2d2d3d;
     position: fixed;
     top: 0;
@@ -223,13 +226,17 @@
     justify-content: center;
 }
 
-#logout .modal-logout{
+#logout .modal-logout,
+#cancel-order .modal-cancel,
+#confirm .modal-confirm{
     width: 405px;
     margin: auto;
     background-color: #ffff;
     border-radius: 8px;
 }
 
+.modal-confirm>span,
+.modal-cancel>span,
 .modal-logout>span{
     display: block;
     text-align: right;
@@ -237,8 +244,11 @@
     color: #825B32;
     padding: 10px;
 }
+
+.modal-confirm .content,
+.modal-cancel .content,
 .modal-logout .content{
-    padding: 40px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     padding-top: 0;
@@ -247,7 +257,7 @@
 .content h4{
     text-align: center;
     font-family: Lexend Zetta;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 350;
     line-height: 20px;
     color: #825B32;
@@ -255,19 +265,22 @@
 }
 .content p{
     font-family: Lexend Zetta;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 300;
     line-height: 21px;
     text-align: center;
     color: #825B32;
 }
+
+.modal-confirm .content div,
+.modal-cancel .content div,
 .modal-logout .content div{
     display: flex;
     justify-content: center;
 }
 
 .content .btn-container{
-    margin-top: 10px;
+    margin-top: 16px;
     justify-content: space-between !important;
 }
 .content img{
@@ -279,7 +292,7 @@
     border-radius: 4px;
     text-decoration: none;
     font-family: Lexend Zetta;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     text-align: center;
     padding: 10px 0;
@@ -294,4 +307,131 @@
 .btn-container .submit{
     color: #ffff;
     background-color: #825B32;
+}
+
+.modal-upload {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-upload-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: none;
+    padding: 20px;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 600px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.close {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px 40px;
+    text-align: center;
+    margin-bottom: 20px;
+    height: 320px;
+    width: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-icon {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.upload-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.search-product-btn, 
+.upload-file-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.search-product-btn {
+    background-color: #C18347;
+    color: white;
+    display: flex;
+    align-items: center;
+    font-size: 9px;
+    font-family: Lexend Zetta;
+}
+
+button span{
+    font-size: 16px !important;
+    margin-left: 4px;
+}
+
+.upload-file-btn {    
+    color: white;
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    font-size: 9px;
+    color: #333;
+    font-family: Lexend Zetta;
+}
+
+.drag-over {
+    border-color: #C18347;
+    background-color: rgba(193, 131, 71, 0.1);
+}
+
+.image-search-btn {
+    cursor: pointer;
+}
+
+.upload-area img:not(.upload-icon) {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
 }

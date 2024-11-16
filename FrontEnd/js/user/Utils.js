@@ -14,69 +14,55 @@ export default class Utils{
         const html = `
             <header class="header">
                 <div class="logo">
-                    <a href = "/"><img src="../../img/utils/logoShop.png" alt=""></a>
+                    <a href="/"><img src="../../img/utils/logoShop.png" alt=""></a>
                 </div>
 
                 <div class="menu-action">
                     <div class="search-container">
-                        <i class="material-icons">search</i>
-                        <input type="text" placeholder="Tìm kiếm...">
-                        <i class="border-left material-symbols-outlined">image_search</i>
+                        <i id="search-btn" class="material-icons">search</i>
+                        <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                        <i class="border-left material-symbols-outlined image-search-btn">image_search</i>
                     </div>
 
                     <div class="menu-icons">
-                        <a href = "/cart">
-                            <i class="material-symbols-outlined">
-                                shopping_cart
-                            </i>
+                        <a href="/cart">
+                            <i class="material-symbols-outlined">shopping_cart</i>
                         </a>
                         <div>
-                            <i class="material-symbols-outlined menu-btn">
-                                account_circle
-                            </i>
+                            <i class="material-symbols-outlined menu-btn">account_circle</i>
                             <ul class="nav">
                                 <li>
                                     <a href="/personal-infor">
                                         Tài khoản của bạn
-                                        <span class="material-symbols-outlined">
-                                            shield_person
-                                        </span>
+                                        <span class="material-symbols-outlined">shield_person</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="/order">
                                         Đơn hàng
-                                        <span class="material-symbols-outlined">
-                                            package_2
-                                        </span>
+                                        <span class="material-symbols-outlined">package_2</span>
                                     </a>
                                 </li>
                                 <li class="btn-logout">
                                     <a href="#">
                                         Đăng xuất
-                                        <span class="material-symbols-outlined">
-                                            move_item
-                                        </span>
+                                        <span class="material-symbols-outlined">move_item</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div id="toast-container">
-                    
-                </div>
+                <div id="toast-container"></div>
                 <div id="logout">
                     <div class="modal-logout">
-                        <span class="close material-symbols-outlined">
-                            close
-                        </span>
+                        <span class="close material-symbols-outlined">close</span>
                         <div class="content">
                             <div>
                                 <img src="../../img/utils/quit.png" />
                             </div>
                             <h4>ĐĂNG XUẤT</h4>
-                            <p>Bạn có chắc chẵn đăng xuất tài khoản không</p>
+                            <p>Bạn có chắc chắn muốn đăng xuất không?</p>
                             <div class="btn-container">
                                 <a class="cancel">Thoát</a>
                                 <a href="/login" class="submit">Đăng xuất</a>
@@ -84,37 +70,161 @@ export default class Utils{
                         </div>
                     </div>
                 </div>
+
+                <div class="modal-upload">
+                    <div class="modal-upload-content">
+                        <div class="upload-area">
+                            <div class="upload-placeholder">
+                                <img src="../../img/utils/icon-upload.png" alt="Upload icon" class="upload-icon">
+                                <input type="file" id="file-upload" accept="image/*" multiple hidden>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="upload-file-btn">
+                                    Tải hình ảnh lên
+                                    <span class="material-symbols-outlined">
+                                        upload
+                                    </span>                 
+                            </button>
+                            <button class="search-product-btn">
+                                Tìm kiếm sản phẩm 
+                                <span class="material-symbols-outlined">
+                                    action_key
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </header>
-        `
-        document.body.insertAdjacentHTML('afterbegin', html) 
+        `;
+        document.body.insertAdjacentHTML('afterbegin', html);
+
         const openMenu = () => {
             const nav = document.querySelector('.nav');
             nav.classList.toggle("active-menu");
-        }
+        };
 
         const menuBtn = document.querySelector('.menu-btn');
         if (menuBtn) {
             menuBtn.addEventListener('click', openMenu);
         }
-        const logoutContainer = document.querySelector("#logout")
-        const close = document.querySelector("#logout .close")
-        const cancel = document.querySelector("#logout .cancel")
-        const btnLogout = document.querySelector(".btn-logout")
-        btnLogout.addEventListener("click",()=>{
-            this.openModal(logoutContainer)
-        })
-        close.addEventListener("click",()=>{
-            this.closeModal(logoutContainer)
-        })
-        cancel.addEventListener("click",()=>{
-            this.closeModal(logoutContainer)
-        })
-        logoutContainer.addEventListener("click",(e)=>{
-            if(e.target === logoutContainer){
-                this.closeModal(logoutContainer)
+
+        const logoutContainer = document.querySelector("#logout");
+        const closeLogout = document.querySelector("#logout .close");
+        const cancelLogout = document.querySelector("#logout .cancel");
+        const btnLogout = document.querySelector(".btn-logout");
+        
+        btnLogout.addEventListener("click", () => {
+            this.openModal(logoutContainer);
+        });
+        closeLogout.addEventListener("click", () => {
+            this.closeModal(logoutContainer);
+        });
+        cancelLogout.addEventListener("click", () => {
+            this.closeModal(logoutContainer);
+        });
+        logoutContainer.addEventListener("click", (e) => {
+            if (e.target === logoutContainer) {
+                this.closeModal(logoutContainer);
             }
-        })
+        });
+
+        const searchInput = document.querySelector("#search-input");
+        const searchBtn = document.querySelector("#search-btn");
+
+        const handleSearch = () => {
+            let query = searchInput.value.trim();
+            if (query) {
+                query = query.replace(/\s+/g, '-').toLowerCase();
+                window.location.href = `/product/search?name=${encodeURIComponent(query)}`;
+            }
+        };
+
+        searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleSearch();
+            }
+        });
+
+        searchBtn.addEventListener("click", handleSearch);
+
+        const imageSearchModal = document.querySelector(".modal-upload");
+        const imageSearchBtn = document.querySelector(".image-search-btn");
+        const uploadArea = imageSearchModal.querySelector(".upload-area");
+        const fileInput = document.getElementById("file-upload");
+        const searchProductBtn = imageSearchModal.querySelector(".search-product-btn");
+        const uploadFileBtn = imageSearchModal.querySelector(".upload-file-btn");
+
+        imageSearchBtn.addEventListener("click", () => {
+            this.openModal(imageSearchModal);
+        });
+
+        imageSearchModal.addEventListener("click", (e) => {
+            if (e.target === imageSearchModal) {
+                this.closeModal(imageSearchModal);
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        uploadFileBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    console.log('Selected image:', file);
+                    
+                    // Clear any previous image
+                    const existingImage = uploadArea.querySelector('img');
+                    if (existingImage) {
+                        existingImage.remove();
+                    }
+        
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewImg = document.createElement('img');
+                        previewImg.src = e.target.result;
+                        previewImg.style.maxWidth = '100%';
+                        previewImg.style.maxHeight = '200px';
+        
+                        // Hide the placeholder and add the new image
+                        uploadArea.querySelector('.upload-placeholder').style.display = 'none';
+                        uploadArea.appendChild(previewImg);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    Utils.getToast("error", "Vui lòng chọn file hình ảnh!");
+                }
+            }
+        }
+        
+
+        searchProductBtn.addEventListener('click', () => {
+            console.log('Searching products by image...');
+        });
     }
+    
 
     static getToast(type, mess){
         const html = `
@@ -170,7 +280,7 @@ export default class Utils{
             // <img src="${product.image.startsWith('data:image') ? product.image : `data:image/jpeg;base64,${product.image}` || '../../img/product/product.png'}" alt="${product.name}">
             // <img src="${product.image}">
             productElement.innerHTML = `
-                <img src="data:image/jpeg;base64,${product.image}" alt="${product.name}">
+                <img src="${product.image? `data:image/jpeg;base64,${product.image}` : '../../img/utils/default.png'}" alt="${product.name}">
                 <div class="decription">
                     <p class="name">${product.name}</p>
                     <p class="price">${product.price.toLocaleString()} đ</p>
@@ -392,7 +502,7 @@ export default class Utils{
         // <img src="${category.image || '../../img/items/Category4.png'}" alt="${category.name || ''}">
         const categoryItems = categories.map(category => `
             <div class="item">
-                <a href="${category.url || '#'}">
+                <a href="/category/${category.category_id}">
                     <img src="../../img/items/Category4.png" alt="${category.name || ''}">
                     <p class="category-name">${category.name || ''}</p>
                 </a>
@@ -477,10 +587,37 @@ export default class Utils{
     static openModal = (e)=>{
         e.style.display = "flex"
     }
-    static protectUser = ()=>{
-        const role = localStorage.getItem("role")
-        if(role !== "user"){
-            window.location.href = "/login"
+    static protectUser = () => {
+        // Lấy token từ localStorage
+        const token = localStorage.getItem("token");
+        // const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTAxNTk0LCJleHAiOjE3MzE2ODc5OTR9.VcSimoSwmp9TOh8y1-C3zy15B8JBoSdiqLPSlNKSDIk";
+
+        // Nếu không có token, điều hướng đến trang login
+        if (!token) {
+            window.location.href = "/login";
+            return;
+        }
+
+        const payloadBase64 = token.split(".")[1];
+        try {
+            const payload = JSON.parse(atob(payloadBase64));
+
+            const role = payload.role;
+            const exp = payload.exp;
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (role !== "[USER]") {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (exp < currentTime) {
+                window.location.href = "/login";
+                return;
+            }
+        } catch (error) {
+            console.error("Lỗi giải mã token:", error);
+            window.location.href = "/login";
         }
     }
 

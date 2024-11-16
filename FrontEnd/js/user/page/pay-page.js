@@ -1,6 +1,65 @@
 import Utils from "../Utils.js"
+import Api from "../Api.js"
+
+async function loadAddress() {
+    try {
+        const response = await Api.getDeleveryByUser();
+        if(response.status === 200){
+            const defaultAddressContainer = document.querySelector('.infor-container .address-content');
+            const otherAddressesContainer = document.querySelector('#modal-container .content');
+            const openModalBtn = document.querySelector(".btn-change-address button")
+            const addresses = response.delevery_InformationDTOList;
+    
+            defaultAddressContainer.innerHTML = '';
+            otherAddressesContainer.innerHTML = '';
+            console.log(addresses.length, openModalBtn)
+            addresses.length > 1 ?openModalBtn.disabled = false : openModalBtn.disabled = true
+    
+            addresses.forEach((address) => {    
+                if (address._default) {
+                    defaultAddressContainer.setAttribute("data-id",`${address.de_infor_id}`)
+                    defaultAddressContainer.innerHTML = `
+                        <div>
+                            <p id="name" class="default-name">${address.name}</p>
+                            <p id="phone" class="default-phone-number">${address.phone}</p>
+                        </div>
+                        <p id="address" class="address-detail">${address.address_line_2}, ${address.address_line_1}</p>
+                    `;
+                } else {
+                    const addressHTML = `
+                        <div class="address-container" data-id = "${address.de_infor_id}">
+                            <div class="action-address">
+                                <input type="checkbox" name="" id="">
+                            </div>
+                            <div class="address-content">
+                                <div>
+                                    <p class="name">${address.name}</p>
+                                    <p class="phone">${address.phone}</p>
+                                </div>
+                                <p class="address-detail">${address.address_line_2}, ${address.address_line_1}</p>
+                            </div>
+                        </div>
+                    `;
+                    otherAddressesContainer.innerHTML += addressHTML;
+                }
+                
+            });
+        }else{
+            if(response.status === 202){       
+                const payBtn = document.querySelector(".pay-btn")  
+                payBtn.disabled = true 
+                const defaultAddressContainer = document.querySelector('.infor-container .address-container');
+                defaultAddressContainer.innerHTML = `
+                    <button class="new-address-btn"><a href = "/personal-infor">Thêm địa chỉ giao hàng mới</a></button>`;
+            }
+        }
+    } catch (error) {
+        console.error('Lỗi khi tải địa chỉ:', error);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadAddress()
     const closeModalBtn = document.querySelector(".modal-body .close")
     const openModalBtn = document.querySelector(".btn-change-address")
     const modal = document.querySelector("#modal-container")
@@ -63,9 +122,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 Utils.getToast("warning", "Giỏ hàng của bạn không có sản phẩm để thanh toán.");
                 return;
             }
-
+            const defaultAddressContainer = document.querySelector('.infor-container .address-content');
+            const idAddress = defaultAddressContainer.dataset.id
+            const note = document.querySelector("#orderNote").value
+            console.log(note)
             const orderData = {
-                idAddress: 1,
+                idAddress: idAddress,
+                note: note,
+                fee: 30000,
                 orderRequests: cartData.map(product => ({
                     productId: product.productId,
                     colorId: product.colorId,
@@ -106,4 +170,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    const submitBtn = document.querySelector(".modal-body .submit");
+    
+    submitBtn.addEventListener("click", () => {
+        const checkedAddress = document.querySelector('.action-address input[type="checkbox"]:checked');
+        
+        if (!checkedAddress) {
+            Utils.getToast("warning", "Vui lòng chọn địa chỉ giao hàng");
+            return;
+        }
+
+        const selectedAddressContainer = checkedAddress.closest('.address-container');
+        const selectedAddressId = selectedAddressContainer.dataset.id;
+        
+        const name = selectedAddressContainer.querySelector('.name').textContent;
+        const phone = selectedAddressContainer.querySelector('.phone').textContent;
+        const addressDetail = selectedAddressContainer.querySelector('.address-detail').textContent;
+
+        const defaultAddressContainer = document.querySelector('.infor-container .address-content');
+        defaultAddressContainer.setAttribute("data-id", selectedAddressId);
+        defaultAddressContainer.innerHTML = `
+            <div>
+                <p id="name" class="default-name">${name}</p>
+                <p id="phone" class="default-phone-number">${phone}</p>
+            </div>
+            <p id="address" class="address-detail">${addressDetail}</p>
+        `;
+
+        const modal = document.querySelector("#modal-container");
+        Utils.closeModal(modal);
+        
+        Utils.getToast("success", "Đã cập nhật địa chỉ giao hàng");
+    });
 });

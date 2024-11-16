@@ -151,6 +151,7 @@ function createCartItemRow(item) {
     }
 
     const tr = document.createElement('tr');
+    tr.dataset.id = item.card_item_id;
     tr.dataset.maxQuantity = item.specificationsDTO.quantity;
     tr.dataset.productId = item.specificationsDTO.productDTO.product_id;
     tr.dataset.colorId = item.specificationsDTO.colorDTO.color_id;
@@ -191,21 +192,30 @@ function createCartItemRow(item) {
 async function fetchAndRenderCartItems() {
     try {
         const response = await Api.getCartByAccout();
-        const cartItems = response.cart_ItemsDTOList;
-        
-        const fragment = document.createDocumentFragment();
-        cartItems.forEach(item => {
-            if (item.quantity <= item.specificationsDTO.quantity) {
-                const row = createCartItemRow(item);
-                fragment.appendChild(row);
+        if(response.status === 200){
+
+            const cartItems = response.cart_ItemsDTOList;
+
+            if(cartItems.length > 0){
+                const fragment = document.createDocumentFragment();
+                cartItems.forEach(item => {
+                    // if (item.quantity <= item.specificationsDTO.quantity) {
+                    //     const row = createCartItemRow(item);
+                    //     fragment.appendChild(row);
+                    // }
+                    const row = createCartItemRow(item);
+                    fragment.appendChild(row);
+                });
+                
+                cartItemsContainer.appendChild(fragment);
+                
+                setupQuantityControls();
+                setupCheckboxControls();
+                updateMainCheckbox();
+            }else{
+                document.querySelector(".cart-item-list").innerHTML = '<p style= "text-align: center;">Giỏ hàng trống!</p>'
             }
-        });
-        
-        cartItemsContainer.appendChild(fragment);
-        
-        setupQuantityControls();
-        setupCheckboxControls();
-        updateMainCheckbox();
+        }
     } catch (error) {
         Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!");
     }
@@ -219,6 +229,29 @@ function formatCurrency(price) {
     return price.toLocaleString();
 }
 
+async function deleteItemInCart(id) {
+    try {
+        const response = await Api.deleteItemInCart(id)
+        console.log(response)
+        if(response.status === 200){
+            Utils.getToast("success","Xóa sản phẩm thành công!")
+            updateMainCheckbox();
+            updateTotalPrice();
+            setTimeout(()=>{
+                location.reload()
+            },500)
+        }
+    } catch (error) {
+        if(error.status === 400){
+            Utils.getToast("warning", "Có lỗi, vui lòng thử lại!")
+        }else{
+            if(error.status === 500){
+                Utils.getToast("error", "Máy chủ lỗi, vui lòng thử lại!")
+            }
+        }
+    }
+}
+
 function initializeCart() {
     setupUI();
     setupQuantityControls();
@@ -228,13 +261,11 @@ function initializeCart() {
     document.addEventListener('click', (event) => {
         if (event.target.classList.contains('delete-item')) {
             const row = event.target.closest('tr');
+            console.log(row)
             if (row) {
-                const deleteBtn = row.querySelector(".delete-item")
-                const id = deleteBtn.dataset.id
+                const id = row.dataset.id
                 console.log(id)
-                row.remove();
-                updateMainCheckbox();
-                updateTotalPrice();
+                deleteItemInCart(id)
             }
         }
     });
