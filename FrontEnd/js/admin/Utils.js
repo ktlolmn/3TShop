@@ -60,7 +60,7 @@ export default class Utils {
                     </a>
                     
                 </div>
-                <a href="admin/logout" class="logout__wrapper">
+                <a href="#" class="logout__wrapper">
                     <div class="wrapper__item">
                         <span class="material-symbols-outlined">
                             logout
@@ -68,6 +68,7 @@ export default class Utils {
                         <h5>Đăng xuất</h5>
                     </div>
                 </a>
+                <div class="confirm__order__background"></div>
             </div>
         `
         document.body.insertAdjacentHTML('afterbegin', html) 
@@ -391,9 +392,43 @@ export default class Utils {
     }
 
     static renderImage(base64String) {
-        const mimeType = "image/png";
+        const mimeType = "image/jpeg";
         return `
             data:${mimeType};base64,${base64String}
         `
+    }
+
+    static protectAdmin = () => {
+        // Lấy token từ localStorage
+        const token = localStorage.getItem("token");
+        // const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJsdXV0aGFuaCIsInN1YiI6Imx1dXRoYW5oIiwiaWF0IjoxNzMxNTAxNTk0LCJleHAiOjE3MzE2ODc5OTR9.VcSimoSwmp9TOh8y1-C3zy15B8JBoSdiqLPSlNKSDIk";
+
+        // Nếu không có token, điều hướng đến trang login
+        if (!token) {
+            window.location.href = "/login";
+            return;
+        }
+
+        const payloadBase64 = token.split(".")[1];
+        try {
+            const payload = JSON.parse(atob(payloadBase64));
+
+            const role = payload.role;
+            const exp = payload.exp;
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (role !== "[ADMIN]") {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (exp < currentTime) {
+                window.location.href = "/login";
+                return;
+            }
+        } catch (error) {
+            console.error("Lỗi giải mã token:", error);
+            window.location.href = "/login";
+        }
     }
 }

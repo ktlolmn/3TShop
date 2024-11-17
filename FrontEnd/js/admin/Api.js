@@ -1,9 +1,13 @@
+import Utils from "./Utils.js";
+
 export default class Api {
 
     static BASE_URL = 'http://localhost:8080/'
-    static authenticate = "Bearer " + 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW0FETUlOXSIsInVzZXJuYW1lIjoibHV1dGhhbmgxMyIsInN1YiI6Imx1dXRoYW5oMTMiLCJpYXQiOjE3MzE4MzA4ODYsImV4cCI6MTczMjAxNzI4Nn0.id6Cp3L0M9b1U8m-COjZ8ymmOtD65E_s4cCkdhRcaSY'
+
+    static authenticate = "Bearer " + window.localStorage.getItem('token')
 
     static async getData(URL) {
+        Utils.protectAdmin()
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "GET",
@@ -24,6 +28,7 @@ export default class Api {
     }
 
     static async postData(URL, data) {
+        Utils.protectAdmin()
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "POST",
@@ -45,12 +50,13 @@ export default class Api {
     }
 
     static async putData(URL, data) {
+        Utils.protectAdmin()
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
-                    // "Authorization": "Bearer " + sessionStorage.getItem("token")
+                    "Authorization": this.authenticate
                 },
                 body: JSON.stringify(data)
             });
