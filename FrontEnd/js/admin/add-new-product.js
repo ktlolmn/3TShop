@@ -65,7 +65,7 @@ button.forEach(btn => {
 
 deteleAllImage.addEventListener('click', () => {
     try {
-        images.length = 0
+        Array.from(images).length = 0
         inputImage.value = ''
         count = false
         placeHolder() 
@@ -276,7 +276,8 @@ addProductSizeXXL.addEventListener('click', () => {
     return true
 })
 
-var categoryArr, colorArr
+var categoryArr = []
+var colorArr = []
 async function getCategoryList() {
     const categoryList = await Api.getCategoryList()
     categoryArr = categoryList.categoryDTOList
@@ -287,6 +288,14 @@ async function getCategoryList() {
 const categoryCombobox = document.getElementById('category__combobox')
 
 function renderCategory() {
+    if (categoryArr.length === 0) {
+        categoryCombobox.disabled = true
+        saveProduct.disabled = true
+        Utils.showToast("Danh sách danh mục trống", 'error')
+        return
+    }
+    categoryCombobox.disabled = false
+        saveProduct.disabled = false
     let htmls = []
     categoryArr.forEach(item => {
         htmls.push(`
@@ -303,15 +312,22 @@ async function getAllColors() {
     console.log(colorArr)
     renderColor()
 }
-
+const productColorCombobox = document.querySelectorAll('.product__color__combobox')
 function renderColor() {
+    if (colorArr.length === 0) {
+        productColorCombobox.disabled = true
+        saveProduct.disabled = true
+        Utils.showToast("Danh sách màu sắc trống", 'error')
+        return
+    }
+    productColorCombobox.disabled = false
+    saveProduct.disabled = false
     let htmls = []
     colorArr.forEach(item => {
         htmls.push(`
             <option value="${item.color_id}">${item.name}</option>
         `)
     })
-    const productColorCombobox = document.querySelectorAll('.product__color__combobox')
     productColorCombobox.value = colorArr[0]
     productColorCombobox.forEach(item => {
         item.innerHTML = htmls.join('')
@@ -459,121 +475,165 @@ function getInputData() {
 let htmlsSizeM = []
 function addSpecificationSizeM() {
     const colorSizeM = document.querySelector('.color__size__m')
-    htmlsSizeM.push(`
-        <div class="added__product__by__size">
-            <h3>Số lượng ${inputQuantitySizeM.value.trim()}</h3>
-            <h3>Màu sắc ${returnColorName(colorSizeM.value)}</h3>
-            <div class="detele__wrapper">
-                <span class="material-symbols-outlined remove__size__m" style="font-size: 16px">
-                    close
-                    </span>
-            </div>
-        </div>
-    `)
-    dataSizeM.push(
-        {
-            quantity : inputQuantitySizeM.value.trim(),
-            colorDTO : {
-                color_id : colorSizeM.value
-            },
-            sizeDTO : {
-                size_id : 1
-            }
+    let check = true
+    dataSizeM.forEach(item => {
+        if (item.colorDTO.color_id === colorSizeM.value) {
+            Utils.showToast("Màu đã được thêm. Vui lòng chọn màu khác!", 'warning')
+            check = false
         }
-    )
-    productListSizeM.innerHTML = htmlsSizeM.join('')
-    inputQuantitySizeM.value = ''
-    console.log("M: ", dataSizeM, htmlsSizeM)
+    })
+    if (check) {
+
+        htmlsSizeM.push(`
+            <div class="added__product__by__size">
+                <h3>Số lượng ${inputQuantitySizeM.value.trim()}</h3>
+                <h3>Màu sắc ${returnColorName(colorSizeM.value)}</h3>
+                <div class="detele__wrapper">
+                    <span class="material-symbols-outlined remove__size__m" style="font-size: 16px">
+                        close
+                        </span>
+                </div>
+            </div>
+        `)
+        dataSizeM.push(
+            {
+                quantity : inputQuantitySizeM.value.trim(),
+                colorDTO : {
+                    color_id : colorSizeM.value
+                },
+                sizeDTO : {
+                    size_id : 1
+                }
+            }
+        )
+        productListSizeM.innerHTML = htmlsSizeM.join('')
+        inputQuantitySizeM.value = ''
+        colorSizeM.value = colorArr[0].color_id
+        console.log("M: ", dataSizeM, htmlsSizeM)
+    }
 }
 
 
 let htmlsSizeL = []
 function addSpecificationSizeL() {
     const colorSizeL = document.querySelector('.color__size__l')
-    htmlsSizeL.push(`
-        <div class="added__product__by__size">
-            <h3>Số lượng ${inputQuantitySizeL.value.trim()}</h3>
-            <h3>Màu sắc ${returnColorName(colorSizeL.value)}</h3>
-            <div class="detele__wrapper">
-                <span class="material-symbols-outlined remove__size__l" style="font-size: 16px">
-                    close
-                    </span>
-            </div>
-        </div>
-    `)
-    dataSizeL.push(
-        {
-            quantity : inputQuantitySizeL.value.trim(),
-            colorDTO : {
-                color_id : colorSizeL.value
-            },
-            sizeDTO : {
-                size_id : 2
-            }
+    let check = true
+    dataSizeL.forEach(item => {
+        if (item.colorDTO.color_id === colorSizeL.value) {
+            Utils.showToast("Màu đã được thêm. Vui lòng chọn màu khác!", 'warning')
+            check = false
         }
-    )
-    productListSizeL.innerHTML = htmlsSizeL.join('')
-    console.log("L: ", dataSizeL)
+    })
+    if (check) {
+        htmlsSizeL.push(`
+            <div class="added__product__by__size">
+                <h3>Số lượng ${inputQuantitySizeL.value.trim()}</h3>
+                <h3>Màu sắc ${returnColorName(colorSizeL.value)}</h3>
+                <div class="detele__wrapper">
+                    <span class="material-symbols-outlined remove__size__l" style="font-size: 16px">
+                        close
+                        </span>
+                </div>
+            </div>
+        `)
+        dataSizeL.push(
+            {
+                quantity : inputQuantitySizeL.value.trim(),
+                colorDTO : {
+                    color_id : colorSizeL.value
+                },
+                sizeDTO : {
+                    size_id : 2
+                }
+            }
+        )
+        productListSizeL.innerHTML = htmlsSizeL.join('')
+        inputQuantitySizeL.value = ''
+        colorSizeL.value = colorArr[0].color_id
+        console.log("L: ", dataSizeL)
+    }
 }
 
 
 let htmlsSizeXL = []
 function addSpecificationSizeXL() {
     const colorSizeXL = document.querySelector('.color__size__xl')
-    htmlsSizeXL.push(`
-        <div class="added__product__by__size">
-            <h3>Số lượng ${inputQuantitySizeXL.value.trim()}</h3>
-            <h3>Màu sắc ${returnColorName(colorSizeXL.value)}</h3>
-            <div class="detele__wrapper">
-                <span class="material-symbols-outlined remove__size__xl" style="font-size: 16px">
-                    close
-                    </span>
-            </div>
-        </div>
-    `)
-    dataSizeXL.push(
-        {
-            quantity : inputQuantitySizeXL.value.trim(),
-            colorDTO : {
-                color_id : colorSizeXL.value
-            },
-            sizeDTO : {
-                size_id : 3
-            }
+    let check = true
+    dataSizeXL.forEach(item => {
+        if (item.colorDTO.color_id === colorSizeXL.value) {
+            Utils.showToast("Màu đã được thêm. Vui lòng chọn màu khác!", 'warning')
+            check = false
         }
-    )
-    productListSizeXL.innerHTML = htmlsSizeXL.join('')
-    console.log("XL: ", dataSizeXL)
+    })
+    if (check) {
+        htmlsSizeXL.push(`
+            <div class="added__product__by__size">
+                <h3>Số lượng ${inputQuantitySizeXL.value.trim()}</h3>
+                <h3>Màu sắc ${returnColorName(colorSizeXL.value)}</h3>
+                <div class="detele__wrapper">
+                    <span class="material-symbols-outlined remove__size__xl" style="font-size: 16px">
+                        close
+                        </span>
+                </div>
+            </div>
+        `)
+        dataSizeXL.push(
+            {
+                quantity : inputQuantitySizeXL.value.trim(),
+                colorDTO : {
+                    color_id : colorSizeXL.value
+                },
+                sizeDTO : {
+                    size_id : 3
+                }
+            }
+        )
+        productListSizeXL.innerHTML = htmlsSizeXL.join('')
+        inputQuantitySizeXL.value = ''
+        colorSizeXL.value = colorArr[0].color_id
+        console.log("XL: ", dataSizeXL)
+    }
 }
 
 
 let htmlsSizeXXL = []
 function addSpecificationSizeXXL() {
     const colorSizeXXL = document.querySelector('.color__size__xxl')
-    htmlsSizeXXL.push(`
-        <div class="added__product__by__size">
-            <h3>Số lượng ${inputQuantitySizeXXL.value.trim()}</h3>
-            <h3>Màu sắc ${returnColorName(colorSizeXXL.value)}</h3>
-            <div class="detele__wrapper">
-                <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
-                    close
-                    </span>
-            </div>
-        </div>
-    `)
-    dataSizeXXL.push(
-        {
-            quantity : inputQuantitySizeXXL.value.trim(),
-            colorDTO : {
-                color_id : colorSizeXXL.value
-            },
-            sizeDTO : {
-                size_id : 4
-            }
+    let check = true
+    dataSizeXXL.forEach(item => {
+        if (item.colorDTO.color_id === colorSizeXXL.value) {
+            Utils.showToast("Màu đã được thêm. Vui lòng chọn màu khác!", 'warning')
+            check = false
         }
-    )
-    productListSizeXXL.innerHTML = htmlsSizeXXL.join('')
-    console.log("XXL: ", dataSizeXXL)
+    })
+    if (check) {
+        htmlsSizeXXL.push(`
+            <div class="added__product__by__size">
+                <h3>Số lượng ${inputQuantitySizeXXL.value.trim()}</h3>
+                <h3>Màu sắc ${returnColorName(colorSizeXXL.value)}</h3>
+                <div class="detele__wrapper">
+                    <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
+                        close
+                        </span>
+                </div>
+            </div>
+        `)
+        dataSizeXXL.push(
+            {
+                quantity : inputQuantitySizeXXL.value.trim(),
+                colorDTO : {
+                    color_id : colorSizeXXL.value
+                },
+                sizeDTO : {
+                    size_id : 4
+                }
+            }
+        )
+        productListSizeXXL.innerHTML = htmlsSizeXXL.join('')
+        inputQuantitySizeXXL.value = ''
+        colorSizeXXL.value = colorArr[0].color_id
+        console.log("XXL: ", dataSizeXXL)
+    }
 }
 
 function renderSpecSize(data) {

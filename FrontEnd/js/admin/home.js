@@ -41,6 +41,7 @@ const specQuantity = document.querySelector('#edit__quantity')
 
 var categoryId = null
 var productId = null
+var color_id = null
 var updatedSpecification = {
     specifications_id : '',
     colorDTO:{
@@ -451,7 +452,7 @@ function renderColorList(data) {
                     <div class="color__preview__wrapper" style="background-color: #${item.hex};"></div>
                 </td>
                 <td class="color__name">${item.name}</td>
-                <td class="color__code">Mã màu ${item.hex}</td>
+                <td class="color__code">${item.hex}</td>
                 <td class="color__created">${Utils.formatDateTime(item.createAt)}</td>
                 <td>
                     <div class="edit__info edit__color">
@@ -483,17 +484,16 @@ function editColor() {
                 'CHỈNH SỬA MÀU SẮC',
                 'edit'
             )
-            inputColorName.value = colorInfor.name
-            inputColorCode.value = colorInfor.hex       
-            colorPreview.style.backgroundColor = '#' + colorInfor.hex
-            colorPreviewIcon.hidden = true
+            inputColorName.value = colorInfor.name.toString()
+            inputColorCode.value = colorInfor.hex.toString()
+            pickr.setColor('#' + colorInfor.hex.toString());
         })
     })
 }
 
 const titleColor = document.querySelector('.title__color')
-const colorPreview = document.querySelector('#color__code__preview')
-const colorPreviewIcon = document.querySelector('#color__preview__icon')
+// const colorPreview = document.querySelector('#color__code__preview')
+// const colorPreviewIcon = document.querySelector('#color__preview__icon')
 function setupColorModal(title, action) {
     titleColor.textContent = title
     buttonSaveColor.setAttribute('data-action', action.toLowerCase())
@@ -624,7 +624,7 @@ async function editSpecificationModal(data) {
     const fetchColorList = await getAllColors()
     const htmls = []
     fetchColorList.colorDTOList.forEach(item => {
-        if (item.color_id === parseInt(data[1])) {
+        if (item.color_id === parseInt(data.colorDTO.color_id)) {
             console.log("Equal")
             htmls.push(`
                 <option value=${item.color_id} selected>${item.name}</option>
@@ -821,11 +821,11 @@ filterProduct.addEventListener('click', (e) => {
     if (filterProduct.classList.contains('active')) {
         arrToHandle = productList.filter(item => item.status === 0)
         renderProductList(arrToHandle)
-    } else {
-        if (searchArr) {
-            renderProductList(searchArr)
-        }
+    } else if (searchArr) {
+        renderProductList(searchArr)
         arrToHandle = searchArr.slice()
+    } else {
+        renderProductList(productList)
     }
 })
 
@@ -879,6 +879,7 @@ buttonList.forEach(i => {
 })
 
 input.addEventListener('change', () => {
+    categoryImage.hidden = true
     if (input.files.length > 0) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -886,8 +887,9 @@ input.addEventListener('change', () => {
             categoryImage.src = e.target.result
         }        
         reader.readAsDataURL(input.files[0]);
-        iconAddNewCategory.style.display = 'none'
-        iconUploaded.style.display = 'inline'
+        categoryImageValidate.style.opacity = 0
+        // iconAddNewCategory.style.display = 'none'
+        // iconUploaded.style.display = 'inline'
     }
 })
 
@@ -975,8 +977,8 @@ function clearCategoryValidate() {
 function clearColorContent() {
     inputColorName.value = ''
     inputColorCode.value = ''
-    colorPreview.style.backgroundColor = 'Transparent'
-    colorPreviewIcon.hidden = false
+    // colorPreview.style.backgroundColor = 'Transparent'
+    // colorPreviewIcon.hidden = false
 }
 
 function clearColorValidate() {
@@ -985,18 +987,18 @@ function clearColorValidate() {
 }
 
 
-inputColorCode.addEventListener('input',() => {
-    let value = inputColorCode.value.replaceAll("#","")
-    const colorPreview = document.getElementById('color__code__preview')
-    const iconPreviewColor = document.getElementById('color__preview__icon')
-    if(value.length >= 6) {
-        iconPreviewColor.hidden = true
-        colorPreview.style.backgroundColor = "#" + value
-    } else {
-        iconPreviewColor.hidden = false
-        colorPreview.style.backgroundColor = "Transparent"
-    }
-})
+// inputColorCode.addEventListener('input',() => {
+//     let value = inputColorCode.value.replaceAll("#","")
+//     // const colorPreview = document.getElementById('color__code__preview')
+//     const iconPreviewColor = document.getElementById('color__preview__icon')
+//     if(value.length >= 6) {
+//         iconPreviewColor.hidden = true
+//         colorPreview.style.backgroundColor = "#" + value
+//     } else {
+//         iconPreviewColor.hidden = false
+//         colorPreview.style.backgroundColor = "Transparent"
+//     }
+// })
 
 const categoryNameValidate = document.getElementById('category__name__validate')
 const categoryImageValidate = document.getElementById('category__img__validate')
@@ -1040,8 +1042,6 @@ buttonSaveCategory.addEventListener('click', async () => {
             }
             addNewCategory(category)
             console.log(category)
-            if (check) {
-            }
         } else if (buttonAction === 'edit') {
             categoryInfor.name = inputCategoryName.value.trim()
             if (check && inputCategoryImg.value != '') {
@@ -1095,16 +1095,19 @@ buttonSaveColor.addEventListener('click', () => {
     }
     if (check) {
         clearColorValidate()
+        const color = {
+            name : inputColorName.value.trim(),
+            hex : inputColorCode.value.trim()
+        }
         if (buttonAction === 'add') {
-            var color = {
-                name : inputColorName.value.trim(),
-                hex : inputColorCode.value.trim()
-            }
             addNewColor(color)
+            console.log(inputColorName.value.trim(), inputColorCode.value.trim())
         } else if (buttonAction === 'edit'){
             colorInfor.name = inputColorName.value.trim()
             colorInfor.hex = inputColorCode.value.trim()
             updateColor(colorInfor)
+            console.log(colorInfor)
+            console.log(inputColorName.value.trim(), inputColorCode.value.trim())
         }
     }
 })
@@ -1113,6 +1116,78 @@ const addNewProductBtn = document.getElementById('add__new__product__wrapper')
 addNewProductBtn.addEventListener('click', () => {
     window.location.href = '/admin/add-new-product'
 })
+
+const DEFAULT_COLOR = '#42445a';
+
+// Cấu hình và khởi tạo Pickr
+const pickr = Pickr.create({
+    // Phần tử sẽ kích hoạt color picker khi click
+    el: '.color-picker',
+    
+    // Chọn theme (classic, monolith, nano)
+    theme: 'classic',
+
+    // Các tùy chọn mặc định
+    default: DEFAULT_COLOR,
+
+    // Danh sách màu được đề xuất
+    swatches: [
+        '#ff0000',
+        '#00ff00',
+        '#0000ff',
+        '#ffff00',
+        '#ff00ff',
+        '#00ffff'
+    ],
+
+    // Cấu hình các thành phần hiển thị
+    components: {
+        // Xem trước màu
+        preview: true,
+        
+        // Điều chỉnh độ trong suốt
+        opacity: true,
+        
+        // Điều chỉnh sắc độ
+        hue: true,
+
+        // Hiển thị đầu vào tương tác
+        interaction: {
+            hex: true,  // Định dạng hex
+            rgba: true, // Định dạng rgba
+            hsla: true, // Định dạng hsla
+            hsva: true, // Định dạng hsva
+            cmyk: true, // Định dạng cmyk
+            input: true,// Ô input
+            clear: true,// Nút xóa
+            save: true  // Nút lưu
+        }
+    }
+});
+
+pickr.on('init', instance => {
+    console.log('Pickr đã được khởi tạo');
+});
+
+pickr.on('change', (color) => {
+    // Khi người dùng chọn màu mới
+    inputColorCode.value = color.toHEXA().toString().replace('#', '')
+    console.log('Màu mới:', color.toHEXA().toString());
+    
+    // Bạn có thể lấy màu theo nhiều định dạng khác nhau
+    console.log('HEX:', color.toHEXA().toString());
+    console.log('RGBA:', color.toRGBA().toString());
+    console.log('HSLA:', color.toHSLA().toString());
+});
+
+pickr.on('save', (color) => {
+    pickr.hide();
+});
+
+pickr.on('clear', instance => {
+    // Khi người dùng xóa màu
+    console.log('Màu đã được xóa');
+});
 
 
 
