@@ -93,13 +93,36 @@ export default class Api{
         }
     }
 
+    static async postNoAuth(endpoint, data) {
+        try {
+            const response = await fetch(`${Api.BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Đặt Content-Type là application/json
+                },
+                body: JSON.stringify(data), // Chuyển đổi dữ liệu sang chuỗi JSON
+            });
+            
+            if (!response.ok) {
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
+    
+            return await response.json();
+        } catch (error) {
+            console.error('Fetch POST error:', error);
+            throw error; // Ném lỗi lại để xử lý ở nơi gọi hàm
+        }
+    }    
+
     static getSpecByProduct =  async (productId)=>{
         const response = await this.get(`/specifications/get-by-product/${productId}`)
         return response
     }
 
     static getProductByImage =  async (data)=>{
-        const response = await this.post(`/product/get-product-by-image`,data)
+        const response = await this.postNoAuth(`/product/upload`,data)
         return response
     }
 
