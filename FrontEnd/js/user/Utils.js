@@ -230,11 +230,15 @@ export default class Utils{
                 Utils.getToast("error", "Vui lòng chọn hình ảnh trước khi tìm kiếm!");
                 return;
             }
+
+            const data = {
+                image_data: base64Image,
+            }
         
             try {
-                const response = await Api.getProductByImage(base64Image);
+                const response = await Api.getProductByImage(data);
                 if (response.status === 200) {
-                    localStorage.setItem('productsByImage', JSON.stringify(response.productDTOList));
+                    localStorage.setItem('productsByImage', JSON.stringify(response.productSpecDTOList));
                     window.location.href = "/product/search-by-image";
                 } else {
                     Utils.getToast("error", "Tìm kiếm thất bại!");

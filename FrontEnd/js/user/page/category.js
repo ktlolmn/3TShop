@@ -132,19 +132,23 @@ function handleFetchProducts() {
     const searchParams = new URLSearchParams(window.location.search);
 
     if (path.startsWith("/category/")) {
+        console.log("Thấy theo danh mục")
         const categoryId = path.split("/category/")[1];
         if (categoryId) {
             fetchProductByCategory(categoryId);
         }
     }
     else if (path.startsWith("/product/search") && searchParams.has("name")) {
+        console.log("Thấy theo tên")
         const productName = searchParams.get("name");
         if (productName) {
             fetchProductByName(productName);
         }
     }else if (path.startsWith("/product/search-by-image")) {
+        console.log("Thấy theo hình ảnh")
         const productContainer = document.querySelector(".category-product-list");
         const productsByImage = JSON.parse(localStorage.getItem('productsByImage') || '[]');
+        console.log(productsByImage)
         if (productsByImage.length > 0) {
             updateSizeFilter(productsByImage)
             renderProducts(productsByImage);
