@@ -117,7 +117,7 @@ export default class Api{
     }    
 
     static getSpecByProduct =  async (productId)=>{
-        const response = await this.get(`/specifications/get-by-product/${productId}`)
+        const response = await this.getNoAuth(`/specifications/get-by-product/${productId}`)
         return response
     }
 
