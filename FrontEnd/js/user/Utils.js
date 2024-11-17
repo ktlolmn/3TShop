@@ -65,7 +65,7 @@ export default class Utils{
                             <p>Bạn có chắc chắn muốn đăng xuất không?</p>
                             <div class="btn-container">
                                 <a class="cancel">Thoát</a>
-                                <a href="/login" class="submit">Đăng xuất</a>
+                                <a class="submit">Đăng xuất</a>
                             </div>
                         </div>
                     </div>
@@ -112,6 +112,7 @@ export default class Utils{
         const logoutContainer = document.querySelector("#logout");
         const closeLogout = document.querySelector("#logout .close");
         const cancelLogout = document.querySelector("#logout .cancel");
+        const logout = document.querySelector("#logout .submit");
         const btnLogout = document.querySelector(".btn-logout");
         
         btnLogout.addEventListener("click", () => {

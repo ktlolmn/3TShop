@@ -217,6 +217,7 @@ async function fetchAndRenderCartItems() {
             }
         }
     } catch (error) {
+        console.log(error)
         Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!");
     }
 }

@@ -39,10 +39,11 @@ app.get("/error", (req, res) => {
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "user/home.html"));
 });
-//
+
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "auth/login.html"));
 });
+
 app.get("/forgot-password", (req, res) => {
   res.sendFile(path.join(__dirname, "view", "auth/forgot-password.html"));
 });
