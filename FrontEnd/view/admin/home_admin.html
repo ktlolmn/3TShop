@@ -6,9 +6,7 @@
     <link rel="stylesheet" href="../../css/admin/navigation.css">
     <link rel="stylesheet" href="../../css/admin/modal.css">
     <link rel="stylesheet" href="../../css/admin/toast.css">
-    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon">
@@ -485,10 +483,11 @@
                             <div class="input__wrapper">
                                 <label for="" class="label__name">Mã màu</label>
                                 <div id="color__code__wrapper">
-                                    <input id="input__color__code" type="text">
-                                    <div id="color__code__preview">
+                                    <div class="color-picker"></div>
+                                    <input id="input__color__code" type="text" disabled>
+                                    <!-- <div id="color__code__preview">
                                         <img id="color__preview__icon" src="../../img/utils/paint-bucket.png" alt="Color preview">
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <label id="color__code__validate">Vui lòng nhập mã màu</label>
                             </div>
