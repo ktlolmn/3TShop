@@ -102,3 +102,7 @@ async function login() {
     alert("Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại!");
   }
 }
+
+document.addEventListener("DOMContentLoaded",()=>{
+  localStorage.removeItem("token")
+})
