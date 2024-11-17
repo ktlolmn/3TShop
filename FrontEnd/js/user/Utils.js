@@ -65,7 +65,7 @@ export default class Utils{
                             <p>Bạn có chắc chắn muốn đăng xuất không?</p>
                             <div class="btn-container">
                                 <a class="cancel">Thoát</a>
-                                <a class="submit">Đăng xuất</a>
+                                <a href="/login" class="submit">Đăng xuất</a>
                             </div>
                         </div>
                     </div>

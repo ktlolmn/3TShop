@@ -1,7 +1,7 @@
 export default class Api {
 
     static BASE_URL = 'http://localhost:8080/'
-    static authenticate = "Bearer " + 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW1VTRVJdIiwidXNlcm5hbWUiOiJUaGFuaFRydW9uZyIsInN1YiI6IlRoYW5oVHJ1b25nIiwiaWF0IjoxNzMxNTcwMDkyLCJleHAiOjE3MzE3NTY0OTJ9.Qj9A4yibgBMRc_Dn1Exa-BzqVcaHVlslQbGBCxjLRMs'
+    static authenticate = "Bearer " + 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiW0FETUlOXSIsInVzZXJuYW1lIjoibHV1dGhhbmgxMyIsInN1YiI6Imx1dXRoYW5oMTMiLCJpYXQiOjE3MzE4MzA4ODYsImV4cCI6MTczMjAxNzI4Nn0.id6Cp3L0M9b1U8m-COjZ8ymmOtD65E_s4cCkdhRcaSY'
 
     static async getData(URL) {
         try {
