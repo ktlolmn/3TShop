@@ -268,8 +268,8 @@ img:hover:not(#place__holder__image) {
     align-items: center;
     width: 100%;
     height: fit-content;
-    border-radius: 8px;
-    border: 2px solid #D0D0D0;
+    border-radius: 4px;
+    border: 1px solid #D0D0D0;
     padding: 4px;
 }
 
@@ -280,15 +280,14 @@ img:hover:not(#place__holder__image) {
     overflow-y: auto;
     scrollbar-width: thin;
     width: 100%;
-    min-height: 50px;
-    max-height: 230px;
+    height: 230px;
     padding: 4px;
 }
 
 .added__product__by__size {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     gap: 40px;
     border: 1px solid #D0D0D0;
@@ -364,6 +363,12 @@ img:hover:not(#place__holder__image) {
     width: 100%;
     justify-content: space-between;
     gap: 32px;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background-color: #FFFFFF;
+    padding: 40px 12px;
+    border-top: 1px solid #D0D0D0;
 }
 
 .handle__button {

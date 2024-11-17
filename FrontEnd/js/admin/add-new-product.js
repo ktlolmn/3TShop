@@ -1,3 +1,6 @@
+import Utils from "../../js/admin/Utils.js";
+import Api from "../../js/admin/Api.js";
+
 const displayImage = document.getElementById('uploaded__image')
 const placeholderImage = document.getElementById('place__holder__image')
 const button = document.querySelectorAll('button')
@@ -32,8 +35,23 @@ const validateInputSizeL = document.getElementById('validate__input__size__l')
 const validateInputSizeXL = document.getElementById('validate__input__size__xl')
 const validateInputSizeXXL = document.getElementById('validate__input__size__xxl')
 
+const productListSizeM = document.querySelector('.size__m')
+const productListSizeL = document.querySelector('.size__l')
+const productListSizeXL = document.querySelector('.size__xl')
+const productListSizeXXL = document.querySelector('.size__xxl')
+
 var images = []
 var count = false
+let dataSizeM = []
+let dataSizeL = []
+let dataSizeXL = []
+let dataSizeXXL = []
+var imageArr = []
+
+const backBtn = document.getElementById('button__back')
+backBtn.addEventListener('click', () => {
+    window.location.href = '/admin/manage-product'
+})
 
 button.forEach(btn => {
     btn.addEventListener('mousedown', () => {
@@ -93,6 +111,7 @@ inputImage.addEventListener('change', () => {
         placeholderImage.hidden = false
         productImageWrapper.classList.remove('show-image')
     }
+    createImageArray()
 })
 
 saveProduct.addEventListener('click', () => {
@@ -133,9 +152,13 @@ saveProduct.addEventListener('click', () => {
     } else {
         toggleValidate(validateDescription, 0)
     }
-    check = checkAllValidateSize()
+    // check = checkAllValidateSize()
+    // check = validateSpecification()
     if (check) {
+        // if(isEmptySpecification()) {return}
         resetValidate()
+        console.log(getInputData())
+        addNewProduct(getInputData())
     }
 })
 
@@ -156,7 +179,7 @@ function placeHolder() {
     productImageWrapper.innerHTML = '<img src="../../img/utils/image.png" alt="NO IMAGE" class="product__image" id="place__holder__image">'
 }
 
-function validateAddEachSizeClicked(btn, input, validate) {
+function validateAddEachSizeClicked(btn, input, validate, func) {
     btn.addEventListener('click', () => {
         if (input.value.trim() === '') {
             validate.textContent = "Vui lòng nhập số lượng sản phẩm"
@@ -168,6 +191,7 @@ function validateAddEachSizeClicked(btn, input, validate) {
             return false
         } else {
             validate.style.opacity = 0
+            func()
         }
         return true
     })
@@ -188,24 +212,396 @@ function validateAddEachSize(btn, input, validate) {
     return true
 }
 
-function checkAllValidateSize() {
-    check = true
-    if (!validateAddEachSize(addProductSizeM, inputQuantitySizeM, validateInputSizeM)) {
-         check = false
+addProductSizeM.addEventListener('click', () => {
+    if (inputQuantitySizeM.value.trim() === '') {
+        validateInputSizeM.textContent = "Vui lòng nhập số lượng sản phẩm"
+        validateInputSizeM.style.opacity = 1
+        return false
+    } else if (parseInt(inputQuantitySizeM.value, 10) <= 0 || isNaN(inputQuantitySizeM.value)) {
+        validateInputSizeM.textContent = "Số lượng sản phẩm không hợp lệ"
+        validateInputSizeM.style.opacity = 1
+        return false
+    } else {
+        validateInputSizeM.style.opacity = 0
+        addSpecificationSizeM()
     }
-    if (!validateAddEachSize(addProductSizeL, inputQuantitySizeL, validateInputSizeL)) {
-         check = false
+    return true
+})
+
+addProductSizeL.addEventListener('click', () => {
+    if (inputQuantitySizeL.value.trim() === '') {
+        validateInputSizeL.textContent = "Vui lòng nhập số lượng sản phẩm"
+        validateInputSizeL.style.opacity = 1
+        return false
+    } else if (parseInt(inputQuantitySizeL.value, 10) <= 0 || isNaN(inputQuantitySizeL.value)) {
+        validateInputSizeL.textContent = "Số lượng sản phẩm không hợp lệ"
+        validateInputSizeL.style.opacity = 1
+        return false
+    } else {
+        validateInputSizeL.style.opacity = 0
+        addSpecificationSizeL()
     }
-    if (!validateAddEachSize(addProductSizeXL, inputQuantitySizeXL, validateInputSizeXL)) {
-         check = false
+    return true
+})
+
+addProductSizeXL.addEventListener('click', () => {
+    if (inputQuantitySizeXL.value.trim() === '') {
+        validateInputSizeXL.textContent = "Vui lòng nhập số lượng sản phẩm"
+        validateInputSizeXL.style.opacity = 1
+        return false
+    } else if (parseInt(inputQuantitySizeXL.value, 10) <= 0 || isNaN(inputQuantitySizeXL.value)) {
+        validateInputSizeXL.textContent = "Số lượng sản phẩm không hợp lệ"
+        validateInputSizeXL.style.opacity = 1
+        return false
+    } else {
+        validateInputSizeXL.style.opacity = 0
+        addSpecificationSizeXL()
     }
-    if (!validateAddEachSize(addProductSizeXXL, inputQuantitySizeXXL, validateInputSizeXXL)) {
-         check = false
+    return true
+})
+
+addProductSizeXXL.addEventListener('click', () => {
+    if (inputQuantitySizeXXL.value.trim() === '') {
+        validateInputSizeXXL.textContent = "Vui lòng nhập số lượng sản phẩm"
+        validateInputSizeXXL.style.opacity = 1
+        return false
+    } else if (parseInt(inputQuantitySizeXXL.value, 10) <= 0 || isNaN(inputQuantitySizeXXL.value)) {
+        validateInputSizeXXL.textContent = "Số lượng sản phẩm không hợp lệ"
+        validateInputSizeXXL.style.opacity = 1
+        return false
+    } else {
+        validateInputSizeXXL.style.opacity = 0
+        addSpecificationSizeXXL()
     }
-    return check
+    return true
+})
+
+var categoryArr, colorArr
+async function getCategoryList() {
+    const categoryList = await Api.getCategoryList()
+    categoryArr = categoryList.categoryDTOList
+    console.log(categoryArr)
+    renderCategory()
 }
 
-validateAddEachSizeClicked(addProductSizeM, inputQuantitySizeM, validateInputSizeM)
-validateAddEachSizeClicked(addProductSizeL, inputQuantitySizeL, validateInputSizeL)
-validateAddEachSizeClicked(addProductSizeXL, inputQuantitySizeXL, validateInputSizeXL)
-validateAddEachSizeClicked(addProductSizeXXL, inputQuantitySizeXXL, validateInputSizeXXL)
+const categoryCombobox = document.getElementById('category__combobox')
+
+function renderCategory() {
+    let htmls = []
+    categoryArr.forEach(item => {
+        htmls.push(`
+            <option value="${item.category_id}">${item.name}</option>
+        `)
+    })
+    categoryCombobox.value = categoryArr[0]
+    categoryCombobox.innerHTML = htmls.join('')
+}
+
+async function getAllColors() {
+    const colorList = await Api.getAllColors()
+    colorArr = colorList.colorDTOList
+    console.log(colorArr)
+    renderColor()
+}
+
+function renderColor() {
+    let htmls = []
+    colorArr.forEach(item => {
+        htmls.push(`
+            <option value="${item.color_id}">${item.name}</option>
+        `)
+    })
+    const productColorCombobox = document.querySelectorAll('.product__color__combobox')
+    productColorCombobox.value = colorArr[0]
+    productColorCombobox.forEach(item => {
+        item.innerHTML = htmls.join('')
+    })
+}
+getCategoryList()
+getAllColors()
+
+const productTypeCombobox = document.getElementById('product__type__combobox')
+
+async function addNewProduct(data) {
+    console.log(data)
+    try {
+        const response = await Api.postData('product/add-product', data)
+        console.log(response)
+        if (response.status === 200) {
+            Utils.showToast("Thêm sản phẩm mới thành công", 'check_circle')
+            resetInput()
+        } else {
+            Utils.showToast("Có lỗi xảy ra. Vui lòng thử lại!", 'error')
+        }
+    } catch (error) {
+        console.log("Error: ", error)
+    }
+}
+
+function resetInput() {
+    const inputTag = document.querySelectorAll('input')
+    inputTag.forEach(input => {
+        input.value = ''
+    })
+    document.querySelector('textarea').value = ''
+    productListSizeM.innerHTML = ``
+    productListSizeL.innerHTML = ``
+    productListSizeXL.innerHTML = ``
+    productListSizeXXL.innerHTML = ``
+    dataSizeM.length = 0
+    dataSizeL.length = 0
+    dataSizeXL.length = 0
+    dataSizeXXL.length = 0
+    imageArr.length = 0
+    console.log(inputTag)
+}
+
+resetInput()
+
+function validateSpecification() {
+    if (dataSizeM.length != 0 || dataSizeL.length != 0 || dataSizeXL.length != 0 || dataSizeXXL.length != 0) {
+        Utils.showToast("Tất cả oke", 'warning')
+        return true
+    } 
+    return false
+}
+
+function isEmptySpecification() {
+    if (dataSizeM.length === 0 && dataSizeL.length === 0 && dataSizeXL.length === 0 && dataSizeXXL.length === 0) {
+        Utils.showToast("Vui lòng điền thông tin chi tiết của sản phẩm", 'warning')
+        return false
+    } 
+    return true
+}
+
+function convertToBase64(inputFile) {
+    const file = inputFile.files[0];
+    if (!file) {
+        throw new Error("No file selected");
+    }
+
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+        reader.onload = () => {
+            const base64String = reader.result.split(',')[1]; // Lấy phần base64 sau ","
+            resolve(base64String);
+        };
+        reader.onerror = () => {
+            reject("Error reading file");
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function convertFilesToBase64() {
+    const files = inputImage.files
+    if (!files || files.length === 0) {
+        throw new Error("No files provided");
+    }
+
+    const promises = Array.from(files).map(file => {
+        const reader = new FileReader();
+        return new Promise((resolve, reject) => {
+            reader.onload = () => {
+                const base64String = reader.result.split(',')[1]; 
+                resolve(base64String);
+            };
+            reader.onerror = () => {
+                reject("Error reading file");
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+    return Promise.all(promises);
+}
+
+
+
+async function createImageArray() {
+    try {
+        const base64Array = await convertFilesToBase64();
+        // imageArr.concat(base64Array)
+        console.log("Danh sách Base64:");
+        base64Array.forEach((base64, index) => {
+            imageArr.push(
+                {
+                    image_data: base64
+                }
+            )
+        });
+        console.log("Image arr: ", imageArr, base64Array)
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function getInputData() {
+    const specificationList = []
+    const inputData = {
+        productDTO : {
+            name : inputName.value.trim(),
+            description : inputDescription.value.trim(),
+            price : inputPrice.value.trim(),
+            sold : 0,
+            which_gender : productTypeCombobox.value,
+            categoryDTO : {
+                category_id : categoryCombobox.value
+            }
+        },
+        specificationsDTO : specificationList.concat(dataSizeM, dataSizeL, dataSizeXL, dataSizeXXL),
+        imagesDTOS : imageArr
+    }
+    console.log(inputData)
+    return inputData
+}
+
+
+let htmlsSizeM = []
+function addSpecificationSizeM() {
+    const colorSizeM = document.querySelector('.color__size__m')
+    htmlsSizeM.push(`
+        <div class="added__product__by__size">
+            <h3>Số lượng ${inputQuantitySizeM.value.trim()}</h3>
+            <h3>Màu sắc ${returnColorName(colorSizeM.value)}</h3>
+            <div class="detele__wrapper">
+                <span class="material-symbols-outlined remove__size__m" style="font-size: 16px">
+                    close
+                    </span>
+            </div>
+        </div>
+    `)
+    dataSizeM.push(
+        {
+            quantity : inputQuantitySizeM.value.trim(),
+            colorDTO : {
+                color_id : colorSizeM.value
+            },
+            sizeDTO : {
+                size_id : 1
+            }
+        }
+    )
+    productListSizeM.innerHTML = htmlsSizeM.join('')
+    inputQuantitySizeM.value = ''
+    console.log("M: ", dataSizeM, htmlsSizeM)
+}
+
+
+let htmlsSizeL = []
+function addSpecificationSizeL() {
+    const colorSizeL = document.querySelector('.color__size__l')
+    htmlsSizeL.push(`
+        <div class="added__product__by__size">
+            <h3>Số lượng ${inputQuantitySizeL.value.trim()}</h3>
+            <h3>Màu sắc ${returnColorName(colorSizeL.value)}</h3>
+            <div class="detele__wrapper">
+                <span class="material-symbols-outlined remove__size__l" style="font-size: 16px">
+                    close
+                    </span>
+            </div>
+        </div>
+    `)
+    dataSizeL.push(
+        {
+            quantity : inputQuantitySizeL.value.trim(),
+            colorDTO : {
+                color_id : colorSizeL.value
+            },
+            sizeDTO : {
+                size_id : 2
+            }
+        }
+    )
+    productListSizeL.innerHTML = htmlsSizeL.join('')
+    console.log("L: ", dataSizeL)
+}
+
+
+let htmlsSizeXL = []
+function addSpecificationSizeXL() {
+    const colorSizeXL = document.querySelector('.color__size__xl')
+    htmlsSizeXL.push(`
+        <div class="added__product__by__size">
+            <h3>Số lượng ${inputQuantitySizeXL.value.trim()}</h3>
+            <h3>Màu sắc ${returnColorName(colorSizeXL.value)}</h3>
+            <div class="detele__wrapper">
+                <span class="material-symbols-outlined remove__size__xl" style="font-size: 16px">
+                    close
+                    </span>
+            </div>
+        </div>
+    `)
+    dataSizeXL.push(
+        {
+            quantity : inputQuantitySizeXL.value.trim(),
+            colorDTO : {
+                color_id : colorSizeXL.value
+            },
+            sizeDTO : {
+                size_id : 3
+            }
+        }
+    )
+    productListSizeXL.innerHTML = htmlsSizeXL.join('')
+    console.log("XL: ", dataSizeXL)
+}
+
+
+let htmlsSizeXXL = []
+function addSpecificationSizeXXL() {
+    const colorSizeXXL = document.querySelector('.color__size__xxl')
+    htmlsSizeXXL.push(`
+        <div class="added__product__by__size">
+            <h3>Số lượng ${inputQuantitySizeXXL.value.trim()}</h3>
+            <h3>Màu sắc ${returnColorName(colorSizeXXL.value)}</h3>
+            <div class="detele__wrapper">
+                <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
+                    close
+                    </span>
+            </div>
+        </div>
+    `)
+    dataSizeXXL.push(
+        {
+            quantity : inputQuantitySizeXXL.value.trim(),
+            colorDTO : {
+                color_id : colorSizeXXL.value
+            },
+            sizeDTO : {
+                size_id : 4
+            }
+        }
+    )
+    productListSizeXXL.innerHTML = htmlsSizeXXL.join('')
+    console.log("XXL: ", dataSizeXXL)
+}
+
+function renderSpecSize(data) {
+    console.log(data)
+    let htmlsSize = []
+    data.forEach(item => {
+        htmlsSize.push(`
+            <div class="added__product__by__size">
+                <h3>Số lượng ${item.quantity}</h3>
+                <h3>Màu sắc ${returnColorName(item.colorDTO.color_id)}</h3>
+                <div class="detele__wrapper">
+                    <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
+                        close
+                        </span>
+                </div>
+            </div>
+        `)
+    })
+    productListSizeM.innerHTML = htmlsSize.join('')
+}
+
+function returnColorName(colorId) {
+    console.log(colorArr, colorArr.filter(color => color.color_id === parseInt(colorId))[0].name)
+    return colorArr.filter(color => color.color_id === parseInt(colorId))[0].name
+}
+
+cancelAddNew.addEventListener('click', () => {
+    setTimeout(() => {
+        window.location.href = '/admin/manage-product'
+    }, 250);
+})
