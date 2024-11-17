@@ -98,6 +98,11 @@ export default class Api{
         return response
     }
 
+    static getProductByImage =  async (data)=>{
+        const response = await this.post(`/product/get-product-by-image`,data)
+        return response
+    }
+
     static getDeleveryByUser =  async ()=>{
         const response = await this.get(`/delevery-information/get-by-user`)
         return response
