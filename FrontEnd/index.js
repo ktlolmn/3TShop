@@ -129,6 +129,10 @@ app.get('/admin/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'view', 'admin/dashboard.html'));
 });
 
+app.get('/admin/logout', (req, res) => {
+  res.sendFile(path.join(__dirname, 'view', 'auth/login.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

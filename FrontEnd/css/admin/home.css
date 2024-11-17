@@ -310,7 +310,7 @@ thead {
     top: 0;
     background-color: #eef0f3;
     height: 36px;
-    z-index: 2;
+    /* z-index: 2; */
 }
 
 .thead__spec {
