@@ -134,7 +134,7 @@ saveProduct.addEventListener('click', () => {
     else {
         toggleValidate(validatePrice, 0)
     }
-    if (inputImage.files.length === 0) {
+    if (inputImage.files.length === 0 && Array.from(images).length === 0) {
         validateImage.textContent = "Vui lòng tải lên hình ảnh sản phẩm"
         toggleValidate(validateImage, 1)
         check = false
@@ -155,7 +155,7 @@ saveProduct.addEventListener('click', () => {
     // check = checkAllValidateSize()
     // check = validateSpecification()
     if (check) {
-        // if(isEmptySpecification()) {return}
+        if(!isEmptySpecification()) {return}
         resetValidate()
         console.log(getInputData())
         addNewProduct(getInputData())
@@ -295,14 +295,14 @@ function renderCategory() {
         return
     }
     categoryCombobox.disabled = false
-        saveProduct.disabled = false
+    saveProduct.disabled = false
     let htmls = []
     categoryArr.forEach(item => {
         htmls.push(`
             <option value="${item.category_id}">${item.name}</option>
         `)
     })
-    categoryCombobox.value = categoryArr[0]
+    categoryCombobox.value = categoryArr[0].category_id
     categoryCombobox.innerHTML = htmls.join('')
 }
 
@@ -328,7 +328,7 @@ function renderColor() {
             <option value="${item.color_id}">${item.name}</option>
         `)
     })
-    productColorCombobox.value = colorArr[0]
+    productColorCombobox.value = colorArr[0].color_id
     productColorCombobox.forEach(item => {
         item.innerHTML = htmls.join('')
     })
@@ -369,6 +369,12 @@ function resetInput() {
     dataSizeXL.length = 0
     dataSizeXXL.length = 0
     imageArr.length = 0
+    Array.from(images).length = 0
+    inputImage.value = ''
+    count = false
+    placeHolder() 
+    categoryCombobox.value = categoryArr[0]
+    productColorCombobox.value = colorArr[0]
     console.log(inputTag)
 }
 
@@ -376,7 +382,6 @@ resetInput()
 
 function validateSpecification() {
     if (dataSizeM.length != 0 || dataSizeL.length != 0 || dataSizeXL.length != 0 || dataSizeXXL.length != 0) {
-        Utils.showToast("Tất cả oke", 'warning')
         return true
     } 
     return false
