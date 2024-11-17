@@ -34,7 +34,6 @@ const fetchCategories = async () => {
     }
 };
 
-// Filtering functions
 function filterByPrice(products, priceRange) {
     if (!priceRange) return products;
     
@@ -143,6 +142,15 @@ function handleFetchProducts() {
         if (productName) {
             fetchProductByName(productName);
         }
+    }else if (path.startsWith("/product/search-by-image")) {
+        const productContainer = document.querySelector(".category-product-list");
+        const productsByImage = JSON.parse(localStorage.getItem('productsByImage') || '[]');
+        if (productsByImage.length > 0) {
+            updateSizeFilter(productsByImage)
+            renderProducts(productsByImage);
+        } else {
+            productContainer.innerHTML = '<p>Không có sản phẩm nào được tìm thấy.</p>';
+        }
     }
 }
 
@@ -150,7 +158,7 @@ async function fetchProductByCategory(id) {
     try {
         const response = await Api.getProductByCategory(id);
         if (response.status === 200) {
-            currentProducts = response.productSpecDTOList; // Changed from productDTOList
+            currentProducts = response.productSpecDTOList;
             updateSizeFilter(currentProducts);
             renderProducts(currentProducts);
         } else {
@@ -168,8 +176,9 @@ async function fetchProductByName(name) {
     try {
         const response = await Api.getProductByName(name);
         if (response.status === 200) {
-            currentProducts = response.productSpecDTOList; // Changed from productDTOList
+            currentProducts = response.productSpecDTOList; 
             updateSizeFilter(currentProducts);
+            console.log(currentProducts)
             renderProducts(currentProducts);
         } else {
             if (response.status === 202) {
@@ -194,11 +203,6 @@ function renderProducts(products) {
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.classList.add('product');
-
-        let availableSizes = product.specifications
-            .filter(spec => spec.quantity > 0)
-            .map(spec => spec.size)
-            .join(', ');
 
         productElement.innerHTML = `
             <img src="${product.image ? `data:image/jpeg;base64,${product.image}` : '../../img/product/product.png'}" alt="${product.name}">

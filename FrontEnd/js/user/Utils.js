@@ -195,7 +195,7 @@ export default class Utils{
                 const file = files[0];
                 if (file.type.startsWith('image/')) {
                     console.log('Selected image:', file);
-                    
+        
                     // Clear any previous image
                     const existingImage = uploadArea.querySelector('img');
                     if (existingImage) {
@@ -203,7 +203,7 @@ export default class Utils{
                     }
         
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         const previewImg = document.createElement('img');
                         previewImg.src = e.target.result;
                         previewImg.style.maxWidth = '100%';
@@ -212,6 +212,9 @@ export default class Utils{
                         // Hide the placeholder and add the new image
                         uploadArea.querySelector('.upload-placeholder').style.display = 'none';
                         uploadArea.appendChild(previewImg);
+        
+                        // Store Base64 data for API submission
+                        uploadArea.dataset.base64Image = e.target.result.split(',')[1]; // Remove 'data:image/...;base64,'
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -220,10 +223,27 @@ export default class Utils{
             }
         }
         
-
-        searchProductBtn.addEventListener('click', () => {
-            console.log('Searching products by image...');
-        });
+        searchProductBtn.addEventListener('click', async () => {
+            const base64Image = uploadArea.dataset.base64Image;
+        
+            if (!base64Image) {
+                Utils.getToast("error", "Vui lòng chọn hình ảnh trước khi tìm kiếm!");
+                return;
+            }
+        
+            try {
+                const response = await Api.getProductByImage(base64Image);
+                if (response.status === 200) {
+                    localStorage.setItem('productsByImage', JSON.stringify(response.productDTOList));
+                    window.location.href = "/product/search-by-image";
+                } else {
+                    Utils.getToast("error", "Tìm kiếm thất bại!");
+                }
+            } catch (error) {
+                console.error('Unexpected error:', error);
+                Utils.getToast("error", "Có lỗi xảy ra trong quá trình tìm kiếm!");
+            }
+        });        
     }
     
 
