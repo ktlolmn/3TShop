@@ -3,6 +3,7 @@ import Utils from "./Utils.js";
 export default class Api {
 
     static BASE_URL = 'http://localhost:8080/'
+
     static authenticate = "Bearer " + window.localStorage.getItem('token')
 
     static async getData(URL) {
