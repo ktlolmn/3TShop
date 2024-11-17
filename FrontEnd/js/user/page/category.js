@@ -148,6 +148,8 @@ function handleFetchProducts() {
         console.log("Thấy theo hình ảnh")
         const productContainer = document.querySelector(".category-product-list");
         const productsByImage = JSON.parse(localStorage.getItem('productsByImage') || '[]');
+        const title = document.querySelector(".title-name")
+        title.textContent = "Kết quả tìm kiếm"
         console.log(productsByImage)
         if (productsByImage.length > 0) {
             updateSizeFilter(productsByImage)
@@ -163,6 +165,8 @@ async function fetchProductByCategory(id) {
         const response = await Api.getProductByCategory(id);
         if (response.status === 200) {
             currentProducts = response.productSpecDTOList;
+            const title = document.querySelector(".title-name")
+            title.textContent = currentProducts[0].categoryName
             updateSizeFilter(currentProducts);
             renderProducts(currentProducts);
         } else {
@@ -184,6 +188,8 @@ async function fetchProductByName(name) {
             updateSizeFilter(currentProducts);
             console.log(currentProducts)
             renderProducts(currentProducts);
+            const title = document.querySelector(".title-name")
+            title.textContent = "Kết quả tìm kiếm"
         } else {
             if (response.status === 202) {
                 const productContainer = document.querySelector(".category-product-list");
