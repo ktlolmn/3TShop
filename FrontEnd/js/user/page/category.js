@@ -46,6 +46,8 @@ function filterByPrice(products, priceRange) {
                 return price >= 150000 && price <= 200000;
             case '200-500':
                 return price > 200000 && price <= 500000;
+            case 'above-500':
+                return price > 500000;
             default:
                 return true;
         }
@@ -55,14 +57,14 @@ function filterByPrice(products, priceRange) {
 function filterBySize(products, size) {
     if (!size) return products;
     return products.filter(product => 
-        product.specifications.some(spec => spec.size === size && spec.quantity > 0)
+        product.specifications?.some(spec => spec.size === size && spec.quantity > 0)
     );
 }
 
 function getAvailableSizes(products) {
     const sizesSet = new Set();
     products.forEach(product => {
-        product.specifications.forEach(spec => {
+        product.specifications?.forEach(spec => {
             if (spec.quantity > 0) {
                 sizesSet.add(spec.size);
             }
@@ -114,6 +116,7 @@ priceFilter.innerHTML = `
     <option value="under-150">Dưới 150.000đ</option>
     <option value="150-200">Từ 150.000đ đến 200.000đ</option>
     <option value="200-500">Từ 200.000đ đến 500.000đ</option>
+    <option value="above-500">Trên 500.000đ</option>
 `;
 
 sortSelect.innerHTML = `
@@ -132,27 +135,24 @@ function handleFetchProducts() {
     const searchParams = new URLSearchParams(window.location.search);
 
     if (path.startsWith("/category/")) {
-        console.log("Thấy theo danh mục")
         const categoryId = path.split("/category/")[1];
         if (categoryId) {
             fetchProductByCategory(categoryId);
         }
     }
     else if (path.startsWith("/product/search") && searchParams.has("name")) {
-        console.log("Thấy theo tên")
         const productName = searchParams.get("name");
         if (productName) {
             fetchProductByName(productName);
         }
-    }else if (path.startsWith("/product/search-by-image")) {
-        console.log("Thấy theo hình ảnh")
+    } else if (path.startsWith("/product/search-by-image")) {
         const productContainer = document.querySelector(".category-product-list");
         const productsByImage = JSON.parse(localStorage.getItem('productsByImage') || '[]');
-        const title = document.querySelector(".title-name")
-        title.textContent = "Kết quả tìm kiếm"
-        console.log(productsByImage)
+        const title = document.querySelector(".title-name");
+        title.textContent = "Kết quả tìm kiếm";
         if (productsByImage.length > 0) {
-            updateSizeFilter(productsByImage)
+            currentProducts = productsByImage; // Đảm bảo cập nhật currentProducts
+            updateSizeFilter(productsByImage);
             renderProducts(productsByImage);
         } else {
             productContainer.innerHTML = '<p>Không có sản phẩm nào được tìm thấy.</p>';
@@ -165,8 +165,8 @@ async function fetchProductByCategory(id) {
         const response = await Api.getProductByCategory(id);
         if (response.status === 200) {
             currentProducts = response.productSpecDTOList;
-            const title = document.querySelector(".title-name")
-            title.textContent = currentProducts[0].categoryName
+            const title = document.querySelector(".title-name");
+            title.textContent = currentProducts[0].categoryName;
             updateSizeFilter(currentProducts);
             renderProducts(currentProducts);
         } else {
@@ -186,10 +186,9 @@ async function fetchProductByName(name) {
         if (response.status === 200) {
             currentProducts = response.productSpecDTOList; 
             updateSizeFilter(currentProducts);
-            console.log(currentProducts)
             renderProducts(currentProducts);
-            const title = document.querySelector(".title-name")
-            title.textContent = "Kết quả tìm kiếm"
+            const title = document.querySelector(".title-name");
+            title.textContent = "Kết quả tìm kiếm";
         } else {
             if (response.status === 202) {
                 const productContainer = document.querySelector(".category-product-list");
