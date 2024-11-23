@@ -367,7 +367,7 @@ img:hover:not(#place__holder__image) {
     bottom: 0;
     z-index: 2;
     background-color: #FFFFFF;
-    padding: 40px 12px;
+    padding: 24px 12px;
     border-top: 1px solid #D0D0D0;
 }
 

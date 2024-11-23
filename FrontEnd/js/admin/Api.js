@@ -8,6 +8,7 @@ export default class Api {
 
     static async getData(URL) {
         Utils.protectAdmin()
+        Utils.showLoading(true)
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "GET",
@@ -21,6 +22,7 @@ export default class Api {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
+            Utils.showLoading(false)            
             return data
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -29,6 +31,7 @@ export default class Api {
 
     static async postData(URL, data) {
         Utils.protectAdmin()
+        Utils.showLoading(true)
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "POST",
@@ -42,6 +45,7 @@ export default class Api {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             } 
+            Utils.showLoading(false)
             return await response.json()      
             
         } catch (error) {
@@ -51,6 +55,7 @@ export default class Api {
 
     static async putData(URL, data) {
         Utils.protectAdmin()
+        Utils.showLoading(true)
         try {
             const response = await fetch(Api.BASE_URL + URL, {
                 method: "PUT",
@@ -64,6 +69,7 @@ export default class Api {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             } 
+            Utils.showLoading(false)
             return await response.json()      
             
         } catch (error) {

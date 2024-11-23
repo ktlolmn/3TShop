@@ -124,7 +124,7 @@ export default class Utils {
         }
     }
 
-    static showModalConfirm(title, content, imagePath, modalName, func) {
+    static showModalConfirm(title, content, imagePath, modalName) {
         modalName.innerHTML = `
             <div class="confirm__order__wrapper confirm__order__animation">
                 <div class="icon__close close__modal__confirm">
@@ -218,7 +218,14 @@ export default class Utils {
         const wrapper = document.querySelector('.confirm__order__wrapper')
         const btn = document.querySelector('#hidden__confirm__order__btn')
         const closeModalConfirm = document.querySelector('.close__modal__confirm')
-        if (btn) {
+        if (option) {
+            wrapper.classList.add('disabled')
+            setTimeout(() => {
+                wrapper.classList.remove('active', 'disabled')
+                background.style.display = 'none'
+            }, 50);
+        }
+        // if (btn) {
             btn.addEventListener('click', (e) => {
                 wrapper.classList.add('disabled')
                 console.log(modalName, btn, wrapper)
@@ -238,7 +245,7 @@ export default class Utils {
                 }, 100);
                 return
             })
-        } 
+        // } 
         modalName.addEventListener('click', (e) => {
             if(e.target === modalName) {
                 wrapper.classList.add('disabled')
@@ -250,20 +257,21 @@ export default class Utils {
             return
         })
 
-        if (option) {
-            wrapper.classList.add('disabled')
-            setTimeout(() => {
-                wrapper.classList.remove('active', 'disabled')
-                modalName.style.display = 'none'
-            }, 100);
-        }
+        
     }
 
     static hiddenModalCancel(modalName, option = null) {
         const wrapper = document.querySelector('.cancel__order__wrapper')
         const btn = document.querySelector('#hidden__cancel__order__btn')
         const closeModalCancel = document.querySelector('.close__modal__cancel')
-
+        if (option) {
+            wrapper.classList.add('disabled')
+            setTimeout(() => {
+                wrapper.classList.remove('active', 'disabled')
+                modalName.style.display = 'none'
+            }, 100);
+            return
+        }
         // if (btn) {
             btn.addEventListener('click', (e) => {
                 wrapper.classList.add('disabled')
@@ -294,13 +302,7 @@ export default class Utils {
                 }, 300);
             }
         })
-        if (option) {
-            wrapper.classList.add('disabled')
-            setTimeout(() => {
-                wrapper.classList.remove('active', 'disabled')
-                modalName.style.display = 'none'
-            }, 100);
-        }
+        
     }
 
     static flexibleConfirmModalContent(title, content, handleFunc, modalName, btn) {
@@ -387,7 +389,7 @@ export default class Utils {
     }
 
     static hasSpecialCharacters(text) {
-        const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?~]/;
+        const specialChars = /[#$^_\\[\]{}\\<>~]/;
         return specialChars.test(text);
     }
 
@@ -431,4 +433,12 @@ export default class Utils {
             window.location.href = "/login";
         }
     }
+
+    static showLoading(option) {
+        if (option) {
+            document.querySelector('.loading__icon').style.display = 'flex'
+            return
+        }
+        document.querySelector('.loading__icon').style.display = 'none'
+    } 
 }

@@ -72,6 +72,7 @@ body {
 
 #list__category__wrapper {
     width: 480px;
+    height: 32px;
     border-radius: 50px;
     border: 2px solid #D0D0D0;
 }
@@ -81,6 +82,7 @@ body {
     flex-direction: row;
     gap: 12px;
     margin: 4px;
+    margin-left: 5px;
     overflow-x: auto;
     scrollbar-width: none;
     border-radius: 50px;
@@ -289,7 +291,7 @@ table {
     width: 100%;
     text-align: left;
     max-height: 70vh;
-    border-spacing: 0px 20px;
+    border-spacing: 0px 12px;
 }
 
 .order__number {
@@ -355,6 +357,8 @@ thead {
     overflow-y: auto;
     scrollbar-width: thin;
     margin-top: 12px;
+    /* border-top: 2px solid #D0D0D0;
+    border-bottom: 2px solid #D0D0D0; */
 }
 
 .title__outside {
@@ -1124,4 +1128,18 @@ button.active {
 #confirm__edit__btn {
     background-color: #222831;
     color: white;
+}
+
+.is__empty__order__list {
+    width: 100%;
+    /* height: 100%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.empty__order__list {
+    width: 200px;
+    height: auto;
 }

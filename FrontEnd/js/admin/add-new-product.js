@@ -157,7 +157,6 @@ saveProduct.addEventListener('click', () => {
     if (check) {
         if(!isEmptySpecification()) {return}
         resetValidate()
-        console.log(getInputData())
         addNewProduct(getInputData())
     }
 })
@@ -281,7 +280,6 @@ var colorArr = []
 async function getCategoryList() {
     const categoryList = await Api.getCategoryList()
     categoryArr = categoryList.categoryDTOList
-    console.log(categoryArr)
     renderCategory()
 }
 
@@ -309,7 +307,6 @@ function renderCategory() {
 async function getAllColors() {
     const colorList = await Api.getAllColors()
     colorArr = colorList.colorDTOList
-    console.log(colorArr)
     renderColor()
 }
 const productColorCombobox = document.querySelectorAll('.product__color__combobox')
@@ -335,14 +332,14 @@ function renderColor() {
 }
 getCategoryList()
 getAllColors()
-
 const productTypeCombobox = document.getElementById('product__type__combobox')
 
 async function addNewProduct(data) {
+    Utils.showLoading(true)
     console.log(data)
     try {
         const response = await Api.postData('product/add-product', data)
-        console.log(response)
+        Utils.showLoading(false)
         if (response.status === 200) {
             Utils.showToast("Thêm sản phẩm mới thành công", 'check_circle')
             resetInput()
@@ -439,10 +436,10 @@ function convertFilesToBase64() {
 
 
 async function createImageArray() {
+    Utils.showLoading(true)
     try {
         const base64Array = await convertFilesToBase64();
-        // imageArr.concat(base64Array)
-        console.log("Danh sách Base64:");
+        Utils.showLoading(false)
         base64Array.forEach((base64, index) => {
             imageArr.push(
                 {
@@ -450,7 +447,6 @@ async function createImageArray() {
                 }
             )
         });
-        console.log("Image arr: ", imageArr, base64Array)
     } catch (error) {
         console.error(error.message);
     }
@@ -472,7 +468,6 @@ function getInputData() {
         specificationsDTO : specificationList.concat(dataSizeM, dataSizeL, dataSizeXL, dataSizeXXL),
         imagesDTOS : imageArr
     }
-    console.log(inputData)
     return inputData
 }
 
@@ -616,7 +611,7 @@ function addSpecificationSizeXXL() {
             <div class="added__product__by__size">
                 <h3>Số lượng ${inputQuantitySizeXXL.value.trim()}</h3>
                 <h3>Màu sắc ${returnColorName(colorSizeXXL.value)}</h3>
-                <div class="detele__wrapper">
+                <div class="detele__wrapper detele__xxl__wrapper">
                     <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
                         close
                         </span>
@@ -637,19 +632,32 @@ function addSpecificationSizeXXL() {
         productListSizeXXL.innerHTML = htmlsSizeXXL.join('')
         inputQuantitySizeXXL.value = ''
         colorSizeXXL.value = colorArr[0].color_id
-        console.log("XXL: ", dataSizeXXL)
-    }
+    } 
+    renderSpecSize()
 }
 
-function renderSpecSize(data) {
-    console.log(data)
+function renderSpecSize() {
     let htmlsSize = []
+    const deleteXXL = document.querySelectorAll('.detele__xxl__wrapper')
+    deleteXXL.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            console.log("click")
+            dataSizeXXL.splice(index, 1)
+            htmlsSizeXXL.splice(index, 1)
+            productListSizeXXL.innerHTML = ''
+            productListSizeXXL.innerHTML = htmlsSizeXXL.join('')
+        })
+    })
+}
+
+function renderList(data) {
+    let html = []
     data.forEach(item => {
-        htmlsSize.push(`
+        html.push(`
             <div class="added__product__by__size">
                 <h3>Số lượng ${item.quantity}</h3>
                 <h3>Màu sắc ${returnColorName(item.colorDTO.color_id)}</h3>
-                <div class="detele__wrapper">
+                <div class="detele__wrapper detele__xxl__wrapper">
                     <span class="material-symbols-outlined remove__size__xxl" style="font-size: 16px">
                         close
                         </span>
@@ -657,7 +665,7 @@ function renderSpecSize(data) {
             </div>
         `)
     })
-    productListSizeM.innerHTML = htmlsSize.join('')
+    productListSizeXXL.innerHTML = html.join('')
 }
 
 function returnColorName(colorId) {
