@@ -1,6 +1,5 @@
 import Utils from "../../js/admin/Utils.js";
 import Api from "../../js/admin/Api.js";
-// import Pickr from '@simonwep/pickr';
 
 const elementId = document.querySelector('.navigation')
 const items = document.getElementsByClassName('manage__items')
@@ -66,21 +65,73 @@ var arrToHandle
 Utils.getHeader()
 
 
-async function getCategoryList() {
-    const data = await Api.getData('category/get-all')
-    if (data) {
-        renderAllCategory(data)
-        renderCategory(data)
-        Utils.categoryList = data
+const DEFAULT_COLOR = '#42445a';
+const pickr = Pickr.create({
+    el: '.color-picker',
+    theme: 'classic',
+    default: DEFAULT_COLOR,
+    swatches: [
+        '#ff0000',
+        '#00ff00',
+        '#0000ff',
+        '#ffff00',
+        '#ff00ff',
+        '#00ffff'
+    ],
+    components: {
+        preview: true,
+        opacity: true,
+        hue: true,
+        interaction: {
+            hex: true,  
+            rgba: true, 
+            hsla: true, 
+            hsva: true, 
+            cmyk: true, 
+            input: true,
+            clear: true,
+            save: true 
+        }
     }
+});
+
+pickr.on('init', instance => {
+    console.log('Pickr đã được khởi tạo');
+});
+
+pickr.on('change', (color) => {
+    inputColorCode.value = color.toHEXA().toString().replace('#', '')
+});
+
+pickr.on('save', (color) => {
+    pickr.hide();
+});
+
+pickr.on('clear', instance => {
+    console.log('Màu đã được xóa');
+});
+
+
+async function getCategoryList() {
+    try {
+        const data = await Api.getData('category/get-all')
+        if (data) {
+            renderAllCategory(data)
+            renderCategory(data)
+            Utils.categoryList = data
+        }        
+    } catch (error) {
+        console.log("Error: ", error)
+    }   
 }
 
 getCategoryList()
 
 async function addNewCategory(data) {
+    showLoading(true)
     try {
         const response = await Api.postData('category/add-category', data)
-        
+        showLoading(false)
         if (response.status === 200) {
             addNewCategoryBackground.style.display = 'none'
             Utils.showToast(
@@ -209,10 +260,10 @@ function setupCategoryModal(title, action) {
 }
 
 async function updateCategory(data) {
+    showLoading(true)
     try {
         const response = await Api.putData('category/update-category', data)
-        console.log(response)
-
+        showLoading(false )
         if (response.status === 200) {
             Utils.showToast(
                 'Cập nhật thông tin danh mục thành công',
@@ -226,10 +277,22 @@ async function updateCategory(data) {
     }
 }
 
+const productManageWrapper = document.getElementById('product__management__wrapper')
+const detailWrapper = document.querySelector('.detail__wrapper')
+
+function showLoading(option) {
+    if (option) {
+        document.querySelector('.loading__icon').style.display = 'flex'
+        return
+    }
+    document.querySelector('.loading__icon').style.display = 'none'
+} 
+
 async function getAllProductByCategory(id) {
+    showLoading(true)
     try {
         const data = await Api.getData('product/get-by-category/' + id.toString())
-
+        showLoading(false)
         if (data) {
             productList = data.productDTOList
             arrToHandle = productList.slice()
@@ -255,7 +318,9 @@ function renderProductList(data, isSearch) {
     // const productArr = data.productDTOList
     if (data.length === 0) {
         document.querySelector('.table__wrapper').innerHTML = `
-            <h2 style="text-align: center">Không có dữ liệu</h2>
+           <div class="is__empty__order__list">
+                <img src="../../img/utils/out-of-stock.png" class="empty__order__list" style="height: 200px; width: auto"  alt="Out of stock">
+            </div>                                       
         `
         return
     } else {
@@ -355,7 +420,7 @@ function returnHtml(id, colorId, hex, name, quantity, isHidden) {
             </td>
             <td class="stock">${quantity}</td>
             <td>
-                <div class="edit__info">
+                <div class="edit__info toggle__product">
                     <span class="material-symbols-outlined edit__specification">
                         edit
                     </span>
@@ -370,10 +435,10 @@ function returnHtml(id, colorId, hex, name, quantity, isHidden) {
         </tr>
     `
 }
+ 
 
 function getProductId() {
     const productItems = document.querySelectorAll('.product__item')
-    
     productItems.forEach(item => {
         item.addEventListener('click', () => {
             productId = item.querySelector('.product__id').textContent
@@ -384,9 +449,10 @@ function getProductId() {
 }
 
 async function getProductSpecifications(product_id) {
+    showLoading(true)
     try {
         const data = await Api.getData('specifications/get-by-product/' + product_id.toString());
-        
+        showLoading(false)
         if (data) {
             console.log(data)
             renderSpecificationList(data, productId)
@@ -397,9 +463,10 @@ async function getProductSpecifications(product_id) {
 }
 
 async function addNewColor(data) {
+    showLoading(true)
     try {
         const response = await Api.postData('color/add-new-color', data)
-        
+        showLoading(false)
         if (response.status === 200) {
             addNewColorBackground.style.display = 'none'
             Utils.showToast(
@@ -477,7 +544,7 @@ function editColor() {
             colorInfor = {
                 color_id: parent.querySelector('.color__id').textContent,
                 name : parent.querySelector('.color__name').textContent,
-                hex: removeLetters(parent.querySelector('.color__code').textContent)
+                hex: parent.querySelector('.color__code').textContent
             }
             console.log("Category original: ",categoryInfor)
             setupColorModal(
@@ -486,7 +553,7 @@ function editColor() {
             )
             inputColorName.value = colorInfor.name.toString()
             inputColorCode.value = colorInfor.hex.toString()
-            pickr.setColor('#' + colorInfor.hex.toString());
+            pickr.setColor('#' + colorInfor.hex.toString())
         })
     })
 }
@@ -501,10 +568,10 @@ function setupColorModal(title, action) {
 }
 
 async function updateColor(data) {
+    showLoading(true)
     try {
         const response = await Api.putData('color/update-color', data)
-        console.log(response)
-
+        showLoading(false)
         if (response.status === 200) {
             Utils.showToast(
                 'Cập nhật thông tin màu sắc thành công',
@@ -560,7 +627,7 @@ async function changeSpecificationStatus (id, status) {
                 content[status],
                 'check_circle'
             )
-            getProductSpecifications(categoryId)
+            getProductSpecifications(productId)
             Utils.hiddenModalConfirm(modal, true)
             return true
         } else {
@@ -573,8 +640,9 @@ async function changeSpecificationStatus (id, status) {
         }
     } catch (error) {
         console.error('Error fetching data:', error);
+    } finally {
+        // getProductSpecifications(id)
     }
-    console.log("Hide product")
 }
 
 function listeningConfirm(id, status, icon) {
@@ -678,7 +746,8 @@ const modal = document.querySelector('.confirm__order__background')
 function hideProduct() {
     const toggleProducts = document.querySelectorAll('.hide__product')
     toggleProducts.forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation()
             const parent = item.closest('.product__item')
             const productId = parent.querySelector('.product__id').textContent
             const productName = parent.querySelector('.item__name').textContent
@@ -701,7 +770,8 @@ function hideProduct() {
 function showProduct() {
     const toggleProducts = document.querySelectorAll('.show__product')
     toggleProducts.forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation()
             const parent = item.closest('.product__item')
             const productId = parent.querySelector('.product__id').textContent
             const productName = parent.querySelector('.item__name').textContent
@@ -726,14 +796,14 @@ function hideProductDetail() {
     toggleProuductDetails.forEach(item => {
         item.addEventListener('click', () => {
             const parent = item.closest('.size__detail')
-            const productId = parent.querySelector('.product__detail__id').textContent
+            const productDetailId = parent.querySelector('.product__detail__id').textContent
             Utils.showModalConfirm(
                 "XÁC NHẬN THAY ĐỔI",
-                `Bạn có chắc chắn muốn ẩn <br> chi tiết sản phẩm với mã ${productId} không ?`,
+                `Bạn có chắc chắn muốn ẩn <br> chi tiết sản phẩm với mã ${productDetailId} không ?`,
                 "../../img/utils/hide.png",
                 modal
             )
-            listeningConfirm(productId, 0   , item)
+            listeningConfirm(productDetailId, 0, item)
             Utils.hiddenModalConfirm(modal)
         })
     })
@@ -843,10 +913,24 @@ clickToSearch.addEventListener('click', () => {
     }
     searchArr = productList.filter(item => item.name.includes(inputToSearch.value.trim()))
     arrToHandle = searchArr.slice()
-    console.log('Search arr: ',searchArr)
-    console.log('Arr handle: ',arrToHandle)
     renderProductList(arrToHandle)
     inputToSearch.value = ''
+})
+
+inputToSearch.addEventListener('keydown', (e)=> {
+    if (e.key == 'Enter') {
+        if (inputToSearch.value.trim() === '') {
+            Utils.showToast(
+                'Vui lòng nhập nội dung tìm kiếm',
+                'warning'
+            )
+            return false
+        }
+        searchArr = productList.filter(item => item.name.includes(inputToSearch.value.trim()))
+        arrToHandle = searchArr.slice()
+        renderProductList(arrToHandle)
+        inputToSearch.value = ''
+    }
 })
 
 
@@ -1117,77 +1201,6 @@ addNewProductBtn.addEventListener('click', () => {
     window.location.href = '/admin/add-new-product'
 })
 
-const DEFAULT_COLOR = '#42445a';
-
-// Cấu hình và khởi tạo Pickr
-const pickr = Pickr.create({
-    // Phần tử sẽ kích hoạt color picker khi click
-    el: '.color-picker',
-    
-    // Chọn theme (classic, monolith, nano)
-    theme: 'classic',
-
-    // Các tùy chọn mặc định
-    default: DEFAULT_COLOR,
-
-    // Danh sách màu được đề xuất
-    swatches: [
-        '#ff0000',
-        '#00ff00',
-        '#0000ff',
-        '#ffff00',
-        '#ff00ff',
-        '#00ffff'
-    ],
-
-    // Cấu hình các thành phần hiển thị
-    components: {
-        // Xem trước màu
-        preview: true,
-        
-        // Điều chỉnh độ trong suốt
-        opacity: true,
-        
-        // Điều chỉnh sắc độ
-        hue: true,
-
-        // Hiển thị đầu vào tương tác
-        interaction: {
-            hex: true,  // Định dạng hex
-            rgba: true, // Định dạng rgba
-            hsla: true, // Định dạng hsla
-            hsva: true, // Định dạng hsva
-            cmyk: true, // Định dạng cmyk
-            input: true,// Ô input
-            clear: true,// Nút xóa
-            save: true  // Nút lưu
-        }
-    }
-});
-
-pickr.on('init', instance => {
-    console.log('Pickr đã được khởi tạo');
-});
-
-pickr.on('change', (color) => {
-    // Khi người dùng chọn màu mới
-    inputColorCode.value = color.toHEXA().toString().replace('#', '')
-    console.log('Màu mới:', color.toHEXA().toString());
-    
-    // Bạn có thể lấy màu theo nhiều định dạng khác nhau
-    console.log('HEX:', color.toHEXA().toString());
-    console.log('RGBA:', color.toRGBA().toString());
-    console.log('HSLA:', color.toHSLA().toString());
-});
-
-pickr.on('save', (color) => {
-    pickr.hide();
-});
-
-pickr.on('clear', instance => {
-    // Khi người dùng xóa màu
-    console.log('Màu đã được xóa');
-});
 
 
 

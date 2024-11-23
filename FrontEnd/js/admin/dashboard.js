@@ -31,9 +31,19 @@ resetInput()
 var dataListGlobal
 var revenueYear
 
+function showLoading(option) {
+    if (option) {
+        document.querySelector('.loading__icon').style.display = 'flex'
+        return
+    }
+    document.querySelector('.loading__icon').style.display = 'none'
+} 
+
 async function getRevenueByDate() {
+    showLoading(true)
     try {   
         const data = await Api.getData('analysis/get-revenue')
+        showLoading(false)
         if (data) {
             dataListGlobal = data.dataAnalysis    
             dataListGlobal.sort((a, b) => parseDate(b.date) - parseDate(a.date));
@@ -86,7 +96,6 @@ const productPercent = document.getElementById("product")
 const sucessOrderPercent = document.getElementById("success_order")
 
 function renderPercent(dataList, dateToCompare) {
-    console.log("Percent ",dataList)
     for (let i = 0; i < dataList.length; i++) {
         let j = i + 1
         if (dataList[i].date === Utils.formatDateTime(new Date(dateToCompare), true)) {
@@ -132,7 +141,6 @@ function renderPercent(dataList, dateToCompare) {
                 sucessOrderPercent.innerHTML = reutrnHtml(1, returnPercent(dataList[i].delivered_order_count, dataList[j].delivered_order_count))
             }
         }
-        
     }
 }
 
@@ -143,7 +151,7 @@ function returnPercent(a, b) {
 function showRevenueByDate(data) {
     console.log(data)
     if (data.length === 0) {
-        Utils.showToast('Không tìm thấy dữ liệu!', 'error')
+        Utils.showToast('Không tìm thấy dữ liệu!', 'warning')
         return
     }
     revenue.textContent = Utils.formatNumber(data[0].total_price)
@@ -169,8 +177,10 @@ getRevenueDetail()
 inputYear.value = parseInt(new Date().getFullYear())
 
 async function getRevenueDetail() {
+    showLoading(true)
     try {
         const data = await Api.getData('analysis/get-revenue-detail')
+        showLoading(false)
         if (data) {
             console.log(data)
             revenueYear = data.dataAnalysis
@@ -218,7 +228,11 @@ viewStatisticByYear.addEventListener('click', () => {
     }
 })
 
-const numberDateOfMonth = [31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+const numberDateOfMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+}
 
 function prepareDataToShowChartMonth(inputArr) {
     let check
@@ -244,10 +258,13 @@ function prepareDataToShowChartMonth(inputArr) {
     })
     let dateList = Array(numberDateOfMonth[month - 1]).fill(0)
     let renderDate = []
-    for (let i = 1; i <= numberDateOfMonth[month - 1]; i++) {
-        renderDate.push(i)
+    let monthLength = numberDateOfMonth[month - 1]
+    if (isLeapYear(parseInt(year)) && parseInt(month) == 2) {
+        monthLength += 1
     }
-    
+    for (let i = 1; i <= monthLength; i++) {
+        renderDate.push(i)
+    }    
     if (monthArr.length === 0 || dateArr.length === 0) {
         Utils.showToast('Không tìm thấy dữ liệu', 'warning')
         showToChartMonth(dateList, renderDate)
@@ -303,18 +320,18 @@ function showToChartYear(dataArr) {
                 x: {
                     title: {
                         display: true,
-                        text: 'Tháng', // Tên trục x
+                        text: 'Tháng',
                         color: '#393939',
                         font: {
                             size: 12
                         }
                     },
                     grid: {
-                    display: false // Ẩn grid lines trục x
+                    display: false 
                     },
                     ticks: {
-                        autoSkip: false, // Không tự động bỏ qua labels
-                        maxRotation: 0, // Xoay label 45 độ
+                        autoSkip: false, 
+                        maxRotation: 0, 
                         minRotation: 0
                     }
                 },
@@ -322,14 +339,34 @@ function showToChartYear(dataArr) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Doanh thu (triệu đồng)', // Tên trục x
+                        text: 'Doanh thu (triệu đồng)', 
                         color: '#393939',
                         font: {
                             size: 12
                         }
                     },
                     grid: {
-                    display: false // Ẩn grid lines trục y
+                    display: false 
+                    },
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                        // Xử lý các trường hợp đặc biệt
+                        if (value === null || value === undefined) {
+                            return '';
+                        }
+                        
+                        // Kiểm tra và chuyển đổi giá trị số
+                        const numValue = Number(value);
+                        
+                        if (numValue === 0) {
+                            return '0';
+                        }
+                        
+                        // Thu gọn giá trị lớn
+                        return numValue >= 1000 
+                            ? (numValue / 1000000)
+                            : numValue.toString();
+                        }
                     }
                 }
             }
@@ -358,24 +395,22 @@ function showToChartMonth(dataArr, monthArr) {
         },
         options: {
             responsive: true,
-            // maintainAspectRatio: false,  
-            // height: 400,
             scales: {
                 x: {
                     title: {
                         display: true,
-                        text: 'Ngày', // Tên trục x
+                        text: 'Ngày',
                         color: '#393939',
                         font: {
                             size: 12
                         }
                     },
                     grid: {
-                    display: false // Ẩn grid lines trục x
+                    display: false 
                     },
                     ticks: {
-                        autoSkip: false, // Không tự động bỏ qua labels
-                        maxRotation: 0, // Xoay label 45 độ
+                        autoSkip: false, 
+                        maxRotation: 0,
                         minRotation: 0
                     }
                 },
@@ -383,14 +418,34 @@ function showToChartMonth(dataArr, monthArr) {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Doanh thu (triệu đồng)', // Tên trục x
+                        text: 'Doanh thu (triệu đồng)', 
                         color: '#393939',
                         font: {
                             size: 12
                         }
                     },
                     grid: {
-                    display: false // Ẩn grid lines trục y
+                    display: false 
+                    },
+                    ticks: {
+                        callback: function(value, index, ticks) {
+                        // Xử lý các trường hợp đặc biệt
+                        if (value === null || value === undefined) {
+                            return '';
+                        }
+                        
+                        // Kiểm tra và chuyển đổi giá trị số
+                        const numValue = Number(value);
+                        
+                        if (numValue === 0) {
+                            return '0';
+                        }
+                        
+                        // Thu gọn giá trị lớn
+                        return numValue >= 1000 
+                            ? (numValue / 1000000)
+                            : numValue.toString();
+                        }
                     }
                 }
             }
@@ -403,8 +458,10 @@ function showToChartMonth(dataArr, monthArr) {
 var listCategory = [1,2,3,4,5]
 
 async function getMarketShare(time) {
+    Utils.showLoading(true)
     try {
         const data = await Api.postData('analysis/get-category-sold-quantity', time)
+        Utils.showLoading(false)
         if(data) {
             getData(data.dataAnalysis)
         }
@@ -448,12 +505,12 @@ let marketShare = []
 
 function getData(data) {
     if(data.length === 0) {
-        Utils.showToast('Không tìm thấy dữ liệu', 'warning')
         categoryList.length = 0
         marketShare.length = 0
         inputMonthMarketShare.value = getCurrentMonth()
         prepareDataToShowDoughnutChart()
         createDoughoutChart(categoryList, marketShare)
+        return
     }
     data.forEach(item => {
         categoryList.push(item.category_name)
@@ -482,7 +539,7 @@ function createDoughoutChart(category, data) {
             datasets: [{
                 label: "Thị phần bán ra",
                 data: data,
-                backgroundColor: applyColorToCategory(listCategory.length),
+                backgroundColor: generateUniquePastelColors(category.length),
                 tension: 0.0
             }]
         },
@@ -494,25 +551,31 @@ function createDoughoutChart(category, data) {
 }
 
 
-function getRandomColor() {
-    const r = Math.floor((Math.random() * 128) + 127); 
-    const g = Math.floor((Math.random() * 128) + 127); 
-    const b = Math.floor((Math.random() * 128) + 127); 
+function generateUniquePastelColors(count) {
+    const colors = [];
+    const usedColors = new Set();
 
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
+    while (colors.length < count) {
+        const r = Math.floor(Math.random() * 128 + 127);
+        const g = Math.floor(Math.random() * 128 + 127);
+        const b = Math.floor(Math.random() * 128 + 127);
 
-function applyColorToCategory(length) {
-    let colors = []
-    for (let i = 0; i < length; i++) {
-        colors.push(getRandomColor())
+        const color = `rgb(${r}, ${g}, ${b})`;
+    
+        if (!usedColors.has(color)) {
+            colors.push(color);
+            usedColors.add(color);
+        }
     }
-    return colors
+
+    return colors;
 }
 
 async function getProductBestSeller() {
+    Utils.showLoading(true)
     try {
         const data = await Api.getData('product/get-hot-products')
+        Utils.showLoading(false)
         if(data) {
             renderProductBestSeller(data.productDTOList)
         }

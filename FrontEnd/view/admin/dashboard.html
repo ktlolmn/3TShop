@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../../css/admin/dashboard.css">
     <link rel="stylesheet" href="../../css/admin/navigation.css">
     <link rel="stylesheet" href="../../css/admin/toast.css">
+    <link rel="stylesheet" href="../../css/admin/spinner.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/footer-logo.png" type="image/x-icon">
@@ -18,7 +19,9 @@
 <body>
     <div id="background">
         <div class="navigation"></div>
-
+        <div class="loading__icon">
+            <img src="../../img/utils/ball_loading.svg" id="loading__image" alt="Loading">
+        </div>
         <div class="wrapper">
             <div id="toast-container" class="toast-container">
             </div>
@@ -173,6 +176,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
     <script type="module" src="../../js/admin/dashboard.js"></script>
     <script type="module" src="../../js/admin/navigation.js"></script>

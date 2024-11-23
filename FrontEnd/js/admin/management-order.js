@@ -5,10 +5,10 @@ const orderStatus = document.querySelectorAll('.order__status')
 const buttons = document.querySelectorAll('button')
 const iconButtons = document.querySelectorAll('.material-symbols-outlined')
 
-const inputShipment = document.getElementById('input__shipment')
-const editShipment = document.getElementById('edit__shipment')
-const saveShipment = document.getElementById('save__shipment')
-const cancelEditShipmentWrapper = document.querySelector('.cancel__edit__shipment__wrapper')
+// const inputShipment = document.getElementById('input__shipment')
+// const editShipment = document.getElementById('edit__shipment')
+// const saveShipment = document.getElementById('save__shipment')
+// const cancelEditShipmentWrapper = document.querySelector('.cancel__edit__shipment__wrapper')
 
 const filterButton = document.getElementById('filter__button')
 const elementId = document.querySelector('.navigation')
@@ -18,10 +18,17 @@ const sortCombobox = document.getElementById('select__order__price')
 
 const startDateInput = document.getElementById('input__start__date')
 const endDateInput = document.getElementById('input__end__date') 
-// Utils.includeNavigation(elementId)
+
+const orderDetailOutside = document.querySelector('.order__detail__outside')
+const footerShowInfor = document.querySelector('.footer__show__information')
+const placeholderImage = document.getElementById('placeholder__image')
+const emptyOrderList = document.querySelector('.is__empty__order__list')
+const orderListWrapper = document.querySelector('.order__list__wrapper')
+const orderDetailWrapper = document.querySelector('.order__detail__wrapper')
+
 Utils.getHeader()
 
-var originalList
+var originalList = []
 var orderList
 var orderId
 var orderStatusDTO
@@ -31,6 +38,7 @@ orderStatus[0].classList.add('active')
 orderStatus.forEach(item => {
     item.addEventListener('click', () => {
         resetContent()
+        resetShowOrderDetail()
         orderStatus.forEach(i => i.classList.remove('active'))
         item.classList.toggle('active')
         console.log(item.getAttribute('id'), filterOrderByStatus(item.getAttribute('id')))
@@ -65,13 +73,25 @@ function filterOrderByStatus(condition) {
     return originalList.filter(item => item.orderStatusDTO.status === filterObj[condition])
 }
 
-
-
 getAllOrder()
 
+function showLoading(option) {
+    if (option) {
+        document.querySelector('.loading__icon').style.display = 'flex'
+        orderListWrapper.style.display = 'none'
+        orderDetailWrapper.style.display = 'none'
+        return
+    }
+    document.querySelector('.loading__icon').style.display = 'none'
+    orderListWrapper.style.display = 'flex'
+    orderDetailWrapper.style.display = 'flex'
+} 
+
 async function getAllOrder(option = null) {
+    showLoading(true)
     try {
         const data = await Api.getData('order/get-all')
+        showLoading(false)
         if (data) {
             if (option != null) {
                 originalList = data.orderResponses
@@ -110,14 +130,19 @@ const orderStatusArr = [
     }
 ]
 
-const orderDetailOutside = document.querySelector('.order__detail__outside')
-const footerShowInfor = document.querySelector('.footer__show__information')
-const placeholderImage = document.getElementById('placeholder__image')
+
 
 function renderOrder(dataArr) {
-    console.log("Order list in render: ", orderList)
+    if (dataArr.length === 0) {
+        emptyOrderList.style.display = 'flex'
+        orderListWrapper.style.display = 'none'
+        orderDetailWrapper.style.display = 'none'
+        return
+    }
+    emptyOrderList.style.display = 'none'
+    orderListWrapper.style.display = 'flex'
+    orderDetailWrapper.style.display = 'flex'
     orderList = dataArr.slice()
-    console.log("Input arr: ", dataArr)
     document.getElementById('number__of__order').textContent = dataArr.length
     const htmls = []
     dataArr.forEach(item => {
@@ -214,6 +239,7 @@ function showOrderDetail(data) {
     renderStatus(data.orderStatusDTO)
 
     showPlaceholderImage(false)
+
     orderDetailOutside.innerHTML = `
         <div class="title__order__detail__wrapper">
                     <h3 id="order__id__title">MÃ ĐƠN HÀNG</h3>
@@ -280,8 +306,9 @@ function showOrderDetail(data) {
                 </table>
         `
     const tbodyTable = document.getElementById('tbody__table')
+    let htmls = []
     detailDTO.forEach((item, index) => {
-        tbodyTable.innerHTML =  `
+        htmls.push( `
             <tr class="table__row">
                 <td>${index + 1}</td>
                 <td>
@@ -298,9 +325,9 @@ function showOrderDetail(data) {
                 <td>${Utils.formatCurrency(item.specificationsDTO.productDTO.price)}</td>
                 <td>${Utils.formatCurrency((item.specificationsDTO.productDTO.price * item.quantity))}</td>
             </tr>
-        `
+        `)
     }) 
-
+    tbodyTable.innerHTML = htmls.join('')
     const footerShowInformation = document.querySelector('.footer__show__information')
     footerShowInformation.innerHTML = renderStatus(data.orderStatusDTO)[data.orderStatusDTO.status - 1]
     if (data.orderStatusDTO.status === 1) {
@@ -316,9 +343,9 @@ function resetShowOrderDetail() {
     orderDetailOutside.innerHTML = `
         <img src="../../img/utils/info-sign.png" alt="no information" id="placeholder__image">
     `
-    orderDetailOutside.classList.toggle('empty')
+    orderDetailOutside.classList.add('empty')
     document.querySelector('.footer__show__information').innerHTML = ''
-    document.querySelector('.footer__show__information').classList.toggle('empty')
+    document.querySelector('.footer__show__information').classList.add('empty')
 }
 
 function showModalToApproveOrder() {
@@ -543,62 +570,62 @@ iconButtons.forEach(i => {
     })
 })
 
-editShipment.addEventListener('click', () => {
-    console.log('Edit')
-    toggleEditShipment(false)
-    toggleSaveShipment(true)
-})
+// editShipment.addEventListener('click', () => {
+//     console.log('Edit')
+//     toggleEditShipment(false)
+//     toggleSaveShipment(true)
+// })
 
-saveShipment.addEventListener('click', () => {
-    if (parseFloat(inputShipment.value) < 0) {
-        showToast('Mức phí giao hàng không hợp lệ!');
-        return
-    } else if (inputShipment.value.trim() === '') {
-        showToast('Vui lòng nhập phí giao hàng!');
-        return
-    }
-    toggleEditShipment(true)
-    toggleSaveShipment(false)
-})
+// saveShipment.addEventListener('click', () => {
+//     if (parseFloat(inputShipment.value) < 0) {
+//         showToast('Mức phí giao hàng không hợp lệ!');
+//         return
+//     } else if (inputShipment.value.trim() === '') {
+//         showToast('Vui lòng nhập phí giao hàng!');
+//         return
+//     }
+//     toggleEditShipment(true)
+//     toggleSaveShipment(false)
+// })
 
-cancelEditShipmentWrapper.addEventListener('click', () => {
-    setTimeout(() => {
-        cancelEditShipmentWrapper.classList.remove('active')
-        cancelEditShipmentWrapper.style.display = 'none'
-        toggleSaveShipment(false)
-        toggleEditShipment(true)
-    }, 100);
-})
+// cancelEditShipmentWrapper.addEventListener('click', () => {
+//     setTimeout(() => {
+//         cancelEditShipmentWrapper.classList.remove('active')
+//         cancelEditShipmentWrapper.style.display = 'none'
+//         toggleSaveShipment(false)
+//         toggleEditShipment(true)
+//     }, 100);
+// })
 
 
-function toggleEditShipment(option) {
-    if (option) {
-        editShipment.style.display = 'flex'
-        inputShipment.disabled = true
-        // inputShipment.value = ''  
-        return  
-    } 
-    editShipment.style.display = 'none'
-    inputShipment.disabled = false
-    setTimeout(() => {
-        cancelEditShipmentWrapper.classList.add('active')
-    }, 200);
-}
+// function toggleEditShipment(option) {
+//     if (option) {
+//         editShipment.style.display = 'flex'
+//         inputShipment.disabled = true
+//         // inputShipment.value = ''  
+//         return  
+//     } 
+//     editShipment.style.display = 'none'
+//     inputShipment.disabled = false
+//     setTimeout(() => {
+//         cancelEditShipmentWrapper.classList.add('active')
+//     }, 200);
+// }
 
-function toggleSaveShipment(option) {
-    if (option) {
-        saveShipment.style.display = 'flex'
-        cancelEditShipmentWrapper.style.display = 'flex'
-        setTimeout(() => {
-            cancelEditShipmentWrapper.classList.add('active')
-        }, 200);
-        inputShipment.disabled = false
-        return  
-    } 
-    saveShipment.style.display = 'none'
-    inputShipment.disabled = true
-    inputShipment.value = ''
-}
+// function toggleSaveShipment(option) {
+//     if (option) {
+//         saveShipment.style.display = 'flex'
+//         cancelEditShipmentWrapper.style.display = 'flex'
+//         setTimeout(() => {
+//             cancelEditShipmentWrapper.classList.add('active')
+//         }, 200);
+//         inputShipment.disabled = false
+//         return  
+//     } 
+//     saveShipment.style.display = 'none'
+//     inputShipment.disabled = true
+//     inputShipment.value = ''
+// }
 
 
 
@@ -617,18 +644,7 @@ function showPlaceholderImage(option) {
 
 showPlaceholderImage(true)
 
-// const confirmOrderBtn = document.getElementById('confirm__order__btn')
-// const hiddenConfirmOrderBtn = document.getElementById('hidden__confirm__order__btn')
 
-// const hiddenCancelOrderBtn = document.getElementById('hidden__cancel__order__btn')
-// const cancelOrderBtn = document.getElementById('cancel__order__btn')
-
-
-
-// const confirmOrderWrapper = document.querySelector('.confirm__order__animation')
-// const cancelOrderWrapper = document.querySelector('.cancel__order__animation')
-
-// const completeOrder = document.getElementById('complete__order')
 
 
 
