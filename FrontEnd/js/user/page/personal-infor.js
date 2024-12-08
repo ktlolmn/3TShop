@@ -142,6 +142,7 @@ async function editInformationUser(data) {
             submitBtnInforForm.disabled = true
         }
     } catch (error) {
+        console.log('Lỗi nè: ',error)
         if(error.status === 408){
             console.log(errorPhone)
             phone.nextElementSibling.style.opacity = 1
