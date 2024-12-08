@@ -317,8 +317,15 @@ img:hover:not(#place__holder__image) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    /* gap: 12px; */
     width: 100%;
+}
+
+.attribute__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;    
 }
 
 .input__quantity {
