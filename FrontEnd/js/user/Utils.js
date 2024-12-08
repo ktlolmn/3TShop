@@ -530,7 +530,7 @@ export default class Utils{
         const categoryItems = categories.map(category => `
             <div class="item">
                 <a href="/category/${category.category_id}">
-                    <img src="../../img/items/Category4.png" alt="${category.name || ''}">
+                    <img src="${category.image? `data:image/jpeg;base64,${category.image}` : '../../img/utils/default.png'}" alt="${category.name || ''}">
                     <p class="category-name">${category.name || ''}</p>
                 </a>
             </div>
