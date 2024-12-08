@@ -126,6 +126,11 @@ export default class Api{
         return response
     }
 
+    static feedback =  async (data)=>{
+        const response = await this.postNoAuth(`/product/feedback`,data)
+        return response
+    }
+
     static getDeleveryByUser =  async ()=>{
         const response = await this.get(`/delevery-information/get-by-user`)
         return response

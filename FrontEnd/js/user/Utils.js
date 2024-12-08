@@ -239,6 +239,8 @@ export default class Utils{
                 const response = await Api.getProductByImage(data);
                 if (response.status === 200) {
                     localStorage.setItem('productsByImage', JSON.stringify(response.productSpecDTOList));
+                    localStorage.setItem('imageID', JSON.stringify(response.message));
+                    localStorage.removeItem('viewTimes');
                     window.location.href = "/product/search-by-image";
                 } else {
                     Utils.getToast("error", "Tìm kiếm thất bại!");

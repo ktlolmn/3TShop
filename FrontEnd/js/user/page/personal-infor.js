@@ -131,6 +131,7 @@ cancelBtnInforForm.addEventListener("click", (e) => {
 
 async function editInformationUser(data) {
     try {
+        console.log(data)
         const response = await Api.editInforUser(data)
         if(response.status === 200){
             Utils.getToast("success","Cập nhật thông tin thành công!")
@@ -770,11 +771,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     email.value = response.accountDTO.email
                     console.log(response)
                     document.querySelector(".username").textContent = response.accountDTO.username
-                    document.querySelector(".create-at").textContent = response.accountDTO.createAt.toLocalString("vi-VN")
+                    // document.querySelector(".create-at").textContent = response.accountDTO.createAt
+                    document.querySelector(".create-at").textContent = 
+                    new Date(response.accountDTO.createAt).toLocaleString("vi-VN");                
                 }
             }
         } catch (error) {
-            Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
+            console.log(error)
+            if(error.status === 400){
+                Utils.getToast("warning","Thông tin cá nhân trống!")
+            }else{
+                Utils.getToast("error","Máy chủ lỗi, vui lòng thử lại!")
+            }
         }
     }
     fetchData()

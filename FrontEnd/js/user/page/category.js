@@ -1,5 +1,48 @@
 import Utils from "../Utils.js";
 import Api from "../Api.js";
+import ViewTracker from './view-tracker.js';
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const viewTimes = JSON.parse(localStorage.getItem('viewTimes') || '{}');
+    
+//     console.log('Dữ liệu lấy từ localStorage:', viewTimes);
+    
+//     Object.keys(viewTimes).forEach(productId => {
+//         ViewTracker.stopTracking(productId);
+//     });
+
+//     ViewTracker.saveToStorage();
+// });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Lấy dữ liệu từ localStorage (hoặc khởi tạo nếu chưa có)
+    let viewTimes = JSON.parse(localStorage.getItem('viewTimes') || '{}');
+    
+    // Nếu chưa có sản phẩm nào trong viewTimes, tạo danh sách tất cả các sản phẩm
+    if (Object.keys(viewTimes).length === 0) {
+        const productIds = document.querySelectorAll('.product'); // Lấy tất cả các sản phẩm từ DOM
+        productIds.forEach(product => {
+            const productId = product.getAttribute('data-product-id');
+            if (!viewTimes[productId]) {
+                viewTimes[productId] = { totalTime: 0, startTime: null };
+            }
+        });
+        // Lưu lại vào localStorage
+        localStorage.setItem('viewTimes', JSON.stringify(viewTimes));
+    }
+
+    console.log('Dữ liệu lấy từ localStorage:', viewTimes);
+
+    // Khởi tạo việc theo dõi cho tất cả các sản phẩm đã được lưu trữ
+    Object.keys(viewTimes).forEach(productId => {
+        ViewTracker.stopTracking(productId);
+    });
+
+    ViewTracker.saveToStorage();
+});
+
+
 
 const slider = document.querySelector(".slider");
 const carouselContainer = document.querySelector(".carousel-container");
@@ -146,6 +189,7 @@ function handleFetchProducts() {
             fetchProductByName(productName);
         }
     } else if (path.startsWith("/product/search-by-image")) {
+        document.getElementById('feedback').style.display = "block"
         const productContainer = document.querySelector(".category-product-list");
         const productsByImage = JSON.parse(localStorage.getItem('productsByImage') || '[]');
         const title = document.querySelector(".title-name");
@@ -212,6 +256,7 @@ function renderProducts(products) {
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.classList.add('product');
+        productElement.setAttribute('data-product-id', product.product_id);
 
         productElement.innerHTML = `
             <img src="${product.image ? `data:image/jpeg;base64,${product.image}` : '../../img/product/product.png'}" alt="${product.name}">
@@ -226,6 +271,54 @@ function renderProducts(products) {
             window.location.href = `/product-detail/${product.product_id}`;
         });
 
+        // productElement.addEventListener('mouseenter', () => ViewTracker.startTracking(product.product_id));
+        // productElement.addEventListener('mouseleave', () => ViewTracker.stopTracking(product.product_id));
         productContainer.appendChild(productElement);
     });
 }
+// Hàm xử lý gửi phản hồi
+async function handleFeedback(feedbackType) {
+    console.log("feedback");
+    const mostViewedProduct = ViewTracker.getMostViewedProduct();
+    console.log("Most Viewed Product:", mostViewedProduct);
+
+    const productToEvaluate = mostViewedProduct
+        ? currentProducts.find(product => String(product.product_id) === mostViewedProduct.productId)
+        : currentProducts[0]; // Lấy sản phẩm đầu tiên nếu không có sản phẩm được xem
+
+    console.log("Product to Evaluate:", productToEvaluate);
+    console.log("Current Products:", currentProducts);
+
+    const imageId = JSON.parse(localStorage.getItem('imageID'));
+
+    if (!imageId) {
+        Utils.getToast("error", "Không tìm thấy thông tin hình ảnh, vui lòng thử lại!");
+        return;
+    }
+
+    if (!productToEvaluate) {
+        Utils.getToast('warning', 'Không có sản phẩm nào để đánh giá.');
+        return;
+    }
+
+    const data = {
+        imageId: imageId,
+        productId: productToEvaluate.product_id,
+        feedback: feedbackType
+    };
+
+    try {
+        const response = await Api.feedback(data);
+        if (response.status === 200) {
+            Utils.getToast("success", "Gửi phản hồi thành công!");
+        } else {
+            Utils.getToast("error", "Gửi phản hồi thất bại, vui lòng thử lại!");
+        }
+    } catch (error) {
+        Utils.getToast("error", "Có lỗi xảy ra, vui lòng thử lại!");
+        console.error(error);
+    }
+}
+
+document.getElementById('feedback-ok').addEventListener('click', () => handleFeedback(true));
+document.getElementById('feedback-bad').addEventListener('click', () => handleFeedback(false));

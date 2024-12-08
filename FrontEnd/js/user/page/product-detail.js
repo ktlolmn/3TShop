@@ -1,7 +1,24 @@
 import Api from "../Api.js";
 import Utils from "../Utils.js";
+import ViewTracker from "./view-tracker.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Lấy ID sản phẩm từ URL
+    const path = window.location.pathname;
+    const match = path.match(/\/product-detail\/(\d+)/);
+    const productId = match ? match[1] : null;
+
+    // Bắt đầu đếm thời gian
+    if (productId) {
+        ViewTracker.startTracking(productId);
+    }
+
+    // Dừng đếm khi rời khỏi trang
+    window.addEventListener('beforeunload', () => {
+        ViewTracker.stopTracking(productId);
+        ViewTracker.saveToStorage();
+    });
+    
     const state = {
         data: {},
         specifications: [],
@@ -11,10 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         itemsPerPageSameProduct: 4
     };
     
-    const path = window.location.pathname;
-    const match = path.match(/\/product-detail\/(\d+)/);
     const imageSrc = document.querySelector(".detail-container .image img");
-    const productId = match ? match[1] : null;
     
     async function fetchSpecifications(productId) {
         try {
