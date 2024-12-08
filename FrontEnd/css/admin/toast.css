@@ -20,7 +20,7 @@
     justify-content: space-between;
     animation: fadeIn 0.4s ease-in-out;
     gap: 12px;
-    max-width: 390px;
+    max-width: 350px;
 }
 
 .toast-close {
@@ -59,6 +59,6 @@
 
 p {
     color: white;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 20px;
 }

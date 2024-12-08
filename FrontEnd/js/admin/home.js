@@ -196,6 +196,20 @@ function renderAllCategory(data) {
     categoryIsActive()
 }
 
+
+const content = document.getElementById('list__category')
+const nextBtn = document.querySelector('.scroll__to__next')
+const prevBtn = document.querySelector('.scroll__to__previous')
+const contentWidth = content.clientWidth
+
+nextBtn.addEventListener('click', () => {
+    content.scrollLeft += contentWidth;
+});
+
+prevBtn.addEventListener('click', () => {
+    content.scrollLeft -= contentWidth;
+});
+
 function renderCategory(data) {
     const categoryArr = data.categoryDTOList
     const htmls = []
@@ -354,7 +368,7 @@ function renderProductList(data, isSearch) {
                     </td>
                     <td class="item__name">${item.name}</td>
                     <td class="item__price">${Utils.formatCurrency(parseInt(item.price))}</td>
-                    <td class="item__sold">${item.sold}</td>
+                    <td class="item__sold">${Utils.formatNumber(item.sold)}</td>
                     <td class="item__stock">${Utils.formatDateTime(item.create_at)}</td>
                     <td>
                         <div id="operation__wrapper">
@@ -418,7 +432,7 @@ function returnHtml(id, colorId, hex, name, quantity, isHidden) {
                     <div class="color__name__product">${name}</div>
                 </div>
             </td>
-            <td class="stock">${quantity}</td>
+            <td class="stock">${Utils.formatNumber(quantity)}</td>
             <td>
                 <div class="edit__info toggle__product">
                     <span class="material-symbols-outlined edit__specification">
