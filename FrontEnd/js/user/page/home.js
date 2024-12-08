@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const totalNewProduct = document.querySelectorAll('.new-product-list .product').length;
     const nextNewProductBtn = document.querySelector(".next-new-product")
     const prevNewProductBtn = document.querySelector(".prev-new-product")
+    
 
     totalNewProduct > 4 ? nextNewProductBtn.style.display = "inline-block" : nextNewProductBtn.style.display = "none"
 

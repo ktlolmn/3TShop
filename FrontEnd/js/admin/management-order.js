@@ -628,8 +628,6 @@ iconButtons.forEach(i => {
 // }
 
 
-
-
 function showPlaceholderImage(option) {
     if (option) {
         placeholderImage.hidden = false

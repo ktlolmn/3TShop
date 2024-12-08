@@ -16,7 +16,6 @@ const inputYear = document.getElementById('input__year')
 const inputMonth = document.getElementById('input__month')
 const viewStatisticByMonth = document.getElementById('statistic__month')
 const elementId = document.querySelector('.navigation')
-// Utils.includeNavigation(elementId)
 Utils.getHeader()
 
 function resetInput() {
@@ -47,7 +46,10 @@ async function getRevenueByDate() {
         if (data) {
             dataListGlobal = data.dataAnalysis    
             dataListGlobal.sort((a, b) => parseDate(b.date) - parseDate(a.date));
-            console.log("Datalist: ", dataListGlobal)
+            
+            if (data.dataAnalysis.filter(item => item.date === Utils.formatDateTime(inputStatisticByDate.value.trim(), true)).length === 0) {
+                return
+            }
             showRevenueByDate(data.dataAnalysis.filter(item => item.date === Utils.formatDateTime(inputStatisticByDate.value.trim(), true)))
             renderPercent(data.dataAnalysis.sort((a, b) => parseDate(b.date) - parseDate(a.date)), inputStatisticByDate.value)
         }
@@ -151,7 +153,7 @@ function returnPercent(a, b) {
 function showRevenueByDate(data) {
     console.log(data)
     if (data.length === 0) {
-        Utils.showToast('Không tìm thấy dữ liệu!', 'warning')
+        Utils.showToast('Không tìm thấy dữ liệu doanh thu ngày này', 'warning')
         return
     }
     revenue.textContent = Utils.formatNumber(data[0].total_price)
@@ -181,8 +183,7 @@ async function getRevenueDetail() {
     try {
         const data = await Api.getData('analysis/get-revenue-detail')
         showLoading(false)
-        if (data) {
-            console.log(data)
+        if (data && data.dataAnalysis.length != 0) {
             revenueYear = data.dataAnalysis
             renderRenvenue(data.dataAnalysis)
             prepareDataToShowChartMonth(data.dataAnalysis)
@@ -209,7 +210,7 @@ function renderRenvenue(data) {
         }    
     });
     if (!check) {
-        Utils.showToast('Không tìm thấy dữ liệu', 'warning')
+        Utils.showToast('Không tìm thấy dữ liệu năm này', 'warning')
         showToChartYear(renvenueByYearArr)
         return
     }
@@ -266,7 +267,7 @@ function prepareDataToShowChartMonth(inputArr) {
         renderDate.push(i)
     }    
     if (monthArr.length === 0 || dateArr.length === 0) {
-        Utils.showToast('Không tìm thấy dữ liệu', 'warning')
+        Utils.showToast('Không tìm thấy dữ liệu doanh thu tháng này', 'warning')
         showToChartMonth(dateList, renderDate)
         return
     }
@@ -462,7 +463,10 @@ async function getMarketShare(time) {
     try {
         const data = await Api.postData('analysis/get-category-sold-quantity', time)
         Utils.showLoading(false)
-        if(data) {
+        if(data && data.dataAnalysis.length != 0) {
+            if (data.dataAnalysis.length === 0) {
+                return
+            }
             getData(data.dataAnalysis)
         }
     } catch (error) {
@@ -510,6 +514,7 @@ function getData(data) {
         inputMonthMarketShare.value = getCurrentMonth()
         prepareDataToShowDoughnutChart()
         createDoughoutChart(categoryList, marketShare)
+        Utils.showToast("Không tìm thấy dữ liệu!", 'warning')
         return
     }
     data.forEach(item => {
@@ -576,7 +581,7 @@ async function getProductBestSeller() {
     try {
         const data = await Api.getData('product/get-hot-products')
         Utils.showLoading(false)
-        if(data) {
+        if(data && data.productDTOList.length != 0) {
             renderProductBestSeller(data.productDTOList)
         }
     } catch (error) {
